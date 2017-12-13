@@ -1,4 +1,6 @@
 {
+    "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+    "description": "Workspace for: Modular convention-driven framework for React and Friends.",
     "private": true,
     "version": "0.1.0",
     "workspaces": [
