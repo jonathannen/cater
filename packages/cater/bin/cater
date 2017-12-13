@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+// Copyright Jon Williams 2017. See LICENSE file.
+
+const cater = require('../index.js');
+const command = (process.argv[2] || "--help").toLowerCase();
+
+if(command === 'dev') return cater.dev();
+
+console.log(`Cater Framework.
+
+Usage:
+    cater dev
+    cater --help
+
+Options:
+    --help      Show this screen.
+`)
