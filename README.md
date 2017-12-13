@@ -14,3 +14,10 @@ Very much v0.1.1. But feel free to have a poke around. If you want to get an ide
 
 Good luck. To get in touch, drop me a line at the author details listed in package.json.
 
+## Examples
+
+    /examples/hello-world
+    The eponymous introduction application. Hello World is a single App Component that gives the world a friendly "Hello"
+
+    /examples/express-server
+    By default, Cater in development will launch it's own http.Server. However, you use your own. In this example, we plug Cater in to the Express web framework. Express handles the incoming requests, delegating to the Cater handler.

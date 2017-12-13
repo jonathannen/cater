@@ -1,0 +1,16 @@
+{
+  "name": "express-server",
+  "version": "0.1.1",
+  "description": "Cater Framework hosted in the Express server framework",
+  "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+  "license": "MIT",
+  "dependencies": {
+    "cater": "^0.1.1",
+    "express": "^4.16.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "scripts": {
+    "dev": "node index.js"
+  }
+}

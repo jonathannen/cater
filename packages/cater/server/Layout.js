@@ -17,7 +17,7 @@ class Layout extends Component {
                     <title></title>
                 </head>
                 <body>
-                    <div id="root"><App title="Server Siiiiide"/></div>
+                    <div id="root"><App/></div>
                     <script src={bundlePath}></script>
                 </body>
             </html>

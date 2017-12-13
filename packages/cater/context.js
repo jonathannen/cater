@@ -2,6 +2,12 @@
 const fs = require('fs');
 const path = require('path');
 
+// Babel options common to client and server sides
+const UNIVERSAL_BABEL_OPTIONS = {
+    presets: ["env", "react"],
+    plugins: [["add-module-exports"]],
+}
+
 const isDebug = (v) => v !== 'production';
 
 // Options represents the non-calculated fields for the context.
@@ -21,15 +27,8 @@ const options = {
     sides: ['client', 'server'],
     universal: ['app'],
 }
-
-// Babel options common to client and server sides
-const UNIVERSAL_BABEL_OPTIONS = {
-    "presets": ["env", "react"],
-    "plugins": [["add-module-exports"]],
-}
-
 // Represents the configuration for the client or server side.
-class Side {
+class SideConfiguration {
 
     constructor(side, options) {
         this.side = side;
@@ -37,7 +36,8 @@ class Side {
         this.extensions = options.extensions;
         this.hot = options.hot;
         this.priorities = options.universal.concat([side]);
-        
+        this.publicPath = options.bundlePublicPath;
+         
         this.appRootPath = process.cwd();
         this.caterRootPath = __dirname;
         this.debug = isDebug(process.NODE_ENV);
@@ -46,9 +46,11 @@ class Side {
         this.rootPaths = [this.appRootPath, this.caterRootPath];
 
         this.modulePaths = this.generateModulePaths();
-
         this.babelOptions = this.generateBabelOptions();
 
+        this.entryPath = this.resolve(options.entryScriptName);
+        this.bundlePath = `${options.bundlePublicPath}${options.bundleFilename}`;
+    
         this.isClient = this.side == 'client';
         this.isServer = this.side == 'server';
     }
@@ -101,13 +103,10 @@ class Context {
     constructor(options) {
         this.options = options;
         for(let side of options.sides) {
-            this[side] = new Side(side, this.options);
+            this[side] = new SideConfiguration(side, this.options);
         }
     }
 
-    bundlePath() {
-        return `${this.options.bundlePublicPath}${this.options.bundleFilename}`;
-    }
 }
 
 const createContext = function () {

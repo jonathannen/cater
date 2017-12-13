@@ -6,7 +6,7 @@ import path from 'path';
  * running node instance. The modules will still need to be require()'d
  * again.
  */
-module.exports = function(source, map) {	
+module.exports = function(source, map) {
 	this.cacheable(false);
 	delete require.cache[this.resourcePath];
 	var result = this.exec(source, this.resourcePath);

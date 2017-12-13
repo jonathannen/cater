@@ -1,17 +1,25 @@
 #!/usr/bin/env node
-// Copyright Jon Williams 2017. See LICENSE file.
 
-const cater = require('../index.js');
+// Copyright Jon Williams 2017. See LICENSE file.
+const path = require('path')
+const cater = require(path.join(__dirname, '..', 'index.js'));
+
+COMMANDS = ['dev']
+
 const command = (process.argv[2] || "--help").toLowerCase();
 
-if(command === 'dev') return cater.dev();
+if(COMMANDS.includes(command)) {
+    app = cater();
+    app.commands.dev();
+}
+else {
+    console.log(`Cater Framework.
 
-console.log(`Cater Framework.
+    Usage:
+        cater dev
+        cater --help
 
-Usage:
-    cater dev
-    cater --help
-
-Options:
-    --help      Show this screen.
+    Options:
+        --help      Show this screen.
 `)
+}
