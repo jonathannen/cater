@@ -20,7 +20,7 @@ const options = {
     debug: true,
     entryScriptName: '_entry.js', // Webpack needs an "entry" for generating a bundle
     extensions: ['', '.js', '.jsx'],
-    httpPort: 8080,
+    httpPort: 3000,
     hot: true,
     layoutComponentName: 'Layout.js',
     publicPath: '/static/',
