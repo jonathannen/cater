@@ -1,0 +1,16 @@
+{
+    "name": "built-in-components",
+    "version": "0.1.2",
+    "description": "Demonstrates some build in components of the Cater Framework",
+    "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+    "license": "MIT",  
+    "dependencies": {
+      "cater": "^0.1.2",
+      "react": "^16.0.0",
+      "react-dom": "^16.0.0"
+    },
+    "scripts": {
+      "dev": "cater dev"
+    }
+  }
+  
