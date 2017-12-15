@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Simplified the Webpack client and server side compilation by using MultiCompiler feature of Webpack.
 
+### Fixed
+- Wasn't able to supply a custom Layout component from the hosted App. Fixed this and added example/custom-layout to demonstrate.
+
 ## [0.1.2] - 2017-12-13
 ### Added
 - Added in the examples/express-server and refactored cater/src to suit plugging in as an http.Handler. A number of files added, but was largely atomizing the old src/server.js into specific middleware components.
