@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Added in the SkipServerSideRender component that conditionally renders children only if it's client-side. Added in examples/built-in-components to demonstrate it in action. It also is a good example of differential client-server-side components.
+- Added in the Jest test framework and some basic tests.
+
+### Changed
+- Simplified the Webpack client and server side compilation by using MultiCompiler feature of Webpack.
 
 ## [0.1.2] - 2017-12-13
 ### Added
