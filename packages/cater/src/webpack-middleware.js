@@ -14,8 +14,6 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
  * the webpack client side development server.
  */
 const generateHandler = function (context, reloadCallback = null) {
-    // const clientCompiler = webpack(generator(context, context.client));
-    // const serverCompiler = webpack(generator(context, context.server));;
     const clientConfig = generator(context, context.client);
     const serverConfig = generator(context, context.server)
     const compiler = webpack([clientConfig, serverConfig]);
@@ -47,7 +45,7 @@ const generateHandler = function (context, reloadCallback = null) {
     return client
         .then (() => { return middleware })
         .catch((err) => {
-            console.log(err);
+            console.error(err);
             process.exit(-1);
         })
 }
