@@ -12,7 +12,7 @@ const server = express();
 
 // Add in some other routes, to make it interesting
 server.get('/express', (req, res) => { 
-    res.setHeader('Context-Type', 'text/plain');
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.end('This page is rendered directly in Express.'); 
 })
 
