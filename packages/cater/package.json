@@ -6,12 +6,17 @@
   "license": "MIT",
   "bin": "./bin/cater",
   "homepage": "https://github.com/jonathannen/cater",
+  "jest": {
+    "transform": { "\\.js$": "<rootDir>/__tests__/util.babel-jest.js" }
+  },
   "keywords": [
     "react"
   ],
   "main": "index.js",
   "repository": "jonathannen/cater",
-  "scripts": {},
+  "scripts": {
+    "test": "jest --no-cache \\.test.js"
+  },
   "dependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -20,15 +25,14 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "pretty-bytes": "^4.0.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "webpack": "^3.10.0",
     "webpack-dev-middleware": "^1.12.2"
   },
   "devDependencies": {
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0"
-  },
-  "peerDependencies": {
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "jest": "^21.2.1",
+    "jest-babel": "^1.0.1",
+    "react-test-renderer": "^16.2.0"
   }
 }
