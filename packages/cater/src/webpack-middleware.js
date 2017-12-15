@@ -41,7 +41,6 @@ const generateHandler = function (context, reloadCallback = null) {
     // Returned promise waits for both the client and server compilations
     // to complete. The promise will return the handler to the webpack
     // development server.
-    // return Promise.all([client, server])
     return client
         .then (() => { return middleware })
         .catch((err) => {
