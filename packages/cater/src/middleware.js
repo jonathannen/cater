@@ -36,11 +36,11 @@ const notFoundHandler = function(req, res, handlers) {
  */
 const generate = function (context) {
     const config = context.server;
-    const caterHandler = caterMiddleware(config.entryPath, config.bundlePath, config.publicPath);
+    const caterHandler = caterMiddleware(config.entryPath, config.bundlePath, context.options.publicPath);
     const loggingHandler = loggingMiddleware;
 
     // Non-debug (production) skips direct to the cater middleware
-    if(!config.debug) {
+    if(!context.debug) {
         caterHandler.reload();
         const handlers = [caterHandler, notFoundHandler];
         const handler = function(req, res, next = null) {

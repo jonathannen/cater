@@ -2,8 +2,7 @@
 const createContext = require('./context');
 
 const context = createContext();
-const babelOptions = Object.assign({ cache: false}, context.server.babelOptions)
-require('babel-register')(babelOptions);
+require('babel-register')(context.babelOptions);
 
 const app = function() {
     const cater = require('./src');

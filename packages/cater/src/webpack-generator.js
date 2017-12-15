@@ -33,7 +33,7 @@ const generate = function (context, side) {
 
     const output = {
         chunkFilename: '[name]_[chunkhash].js',
-        path: side.buildPath,
+        path: context.buildPath,
         publicPath: context.options.bundlePublicPath,
     };
 
@@ -44,7 +44,7 @@ const generate = function (context, side) {
     };
 
     // Post-process for various environments
-    if (side.debug) forDebug(config, side, context);
+    if (context.debug) forDebug(config, side, context);
     if (side.isServer) forServer(config, side, context);
 
     return config;

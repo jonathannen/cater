@@ -8,96 +8,68 @@ const UNIVERSAL_BABEL_OPTIONS = {
     plugins: [["add-module-exports"]],
 }
 
-const isDebug = (v) => v !== 'production';
+const isDebug = function () {
+    return process.env.NODE_ENV != 'production';
+};
+
+const resolveWithPaths = function(source, paths, extensions) {
+    const ext = path.extname(source).toLowerCase();
+    const exts = ext.length > 0 ? [''] : extensions;
+
+    for (let modulePath of paths) {
+        for (let extension of exts) {
+            const potential = path.join(modulePath, source + extension);
+            if (fs.existsSync(potential)) return potential;
+        }
+    }
+    return source;
+}
 
 // Options represents the non-calculated fields for the context.
 const options = {
     appComponentName: 'App.js',
-    appModulePrefix: 'app/',
     buildDirectory: 'build',
     bundleFilename: 'bundle.js',
     bundlePublicPath: '/static/',
-    debug: true,
     entryScriptName: '_entry.js', // Webpack needs an "entry" for generating a bundle
     extensions: ['', '.js', '.jsx'],
     httpPort: 3000,
     hot: true,
     layoutComponentName: 'Layout.js',
     publicPath: '/static/',
+
     sides: ['client', 'server'],
     universal: ['app'],
+    universalPrefix: 'app',
 }
+
 // Represents the configuration for the client or server side.
 class SideConfiguration {
 
-    constructor(side, options) {
+    constructor(context, side) {
         this.side = side;
-        this.appModulePrefix = options.appModulePrefix;
+        const options = context.options;
         this.extensions = options.extensions;
-        this.hot = options.hot;
-        this.priorities = options.universal.concat([side]);
-        this.publicPath = options.bundlePublicPath;
-         
-        this.appRootPath = process.cwd();
-        this.caterRootPath = __dirname;
-        this.debug = isDebug(process.env.NODE_ENV);
-
-        this.buildPath = path.join(this.appRootPath, options.buildDirectory);
-        this.rootPaths = [this.appRootPath, this.caterRootPath];
-
-        this.modulePaths = this.generateModulePaths();
-        this.babelOptions = this.generateBabelOptions();
-
-        this.entryPath = this.resolve(options.entryScriptName);
-        this.bundlePath = `${options.bundlePublicPath}${options.bundleFilename}`;
-
         this.isClient = this.side == 'client';
         this.isServer = this.side == 'server';
+    
+        this.sidePaths = context.generatePaths([side])
+        this.paths = context.universalPaths.concat(this.sidePaths);
+        this.bundlePath = `${options.bundlePublicPath}${options.bundleFilename}`;
+
+        this.entryPath = this.resolve(options.entryScriptName);
 
         this.bundleName = path.parse(options.bundleFilename).name;
-        if(this.isServer) this.bundleName = '__serverside_' + this.bundleName;
-    }
-
-    generateBabelOptions() {
-        const babel = Object.assign({}, UNIVERSAL_BABEL_OPTIONS);
-        
-        // If hot reloading is in play, add in the react-specific plugin
-        if(this.hot) babel.plugins[0].push([ "react-hot-loader/babel"]);
-
-        // Custom resolver. This is so an import of "app/Blah" resolves
-        // to /home/user/code/yourApp/app/Blah.js (for example).
-        babel.resolveModuleSource = (source, filename) => {
-            if(!source.startsWith(this.appModulePrefix)) {
-                return source;
-            }
-            const base = source.substring(this.appModulePrefix.length);
-            return this.resolve(base);
-        }
-        return babel;
-    }
-
-    generateModulePaths() {
-        const result = [];
-        for(let root of this.rootPaths) {
-            for(let priority of this.priorities) {
-                result.push(path.join(root, priority));
-            }
-        }
-        return result;
+        if (this.isServer) this.bundleName = '__serverside_' + this.bundleName;
     }
 
     resolve(source) {
-        const ext = path.extname(source).toLowerCase();
-        const extensions = ext.length > 0 ? [''] : this.extensions;
+        return resolveWithPaths(source, this.paths, this.extensions);
+    }
 
-        for(let modulePath of this.modulePaths) {
-            for(let extension of extensions) {
-                const potential = path.join(modulePath, source + extension);
-                if(fs.existsSync(potential)) return potential;                    
-            }
-        }
-        return source;        
-    }    
+    resolveSide(source) {
+        return resolveWithPaths(source, this.sidePaths, this.extensions);
+    }
 
 }
 
@@ -105,9 +77,61 @@ class Context {
 
     constructor(options) {
         this.options = options;
-        for(let side of options.sides) {
-            this[side] = new SideConfiguration(side, this.options);
+
+        this.appRootPath = process.cwd();
+        this.buildPath = path.join(this.appRootPath, options.buildDirectory);
+        this.caterRootPath = __dirname;
+        this.debug = isDebug(this);
+
+        this.rootPaths = [this.appRootPath, this.caterRootPath];
+        this.universalPaths = this.generatePaths(options.universal);
+
+        for (let side of options.sides) {
+            const sideConfig = this[side] = new SideConfiguration(this, side);
+            sideConfig.babelOptions = this.generateBabelOptions(sideConfig);
         }
+        this.babelOptions = this.server.babelOptions;
+
+        this.importPrefixResolvers = {
+            app: (side) => side.resolve.bind(side),
+            client: () => this.client.resolveSide.bind(this.client),
+            server: () => this.server.resolveSide.bind(this.server),
+        }
+    }
+
+    generateBabelOptions(sideConfig) {
+        const babel = Object.assign({}, UNIVERSAL_BABEL_OPTIONS);
+        babel.resolveModuleSource = this.generateBabelResolveModuleSource(sideConfig);
+        return babel;
+    }
+
+    generateBabelResolveModuleSource(side) {
+        return (source, filename) => {
+            for (let prefix of Object.keys(this.importPrefixResolvers)) {
+                if (source.startsWith(`${prefix}/`)) {
+                    const base = source.substring(prefix.length + 1);
+                    const resolve = this.importPrefixResolvers[prefix];
+                    const result = resolve(side)(base);
+                    return result;
+                }
+            }
+            return source;
+        };
+    }
+
+    generatePaths(dirNames) {
+        const result = [];
+        for (let root of this.rootPaths) {
+            for (let dir of dirNames) {
+                const candidate = path.join(root, dir);
+                if (fs.existsSync(candidate)) result.push(candidate);
+            }
+        }
+        return result;
+    }
+
+    resolve(source, side = 'server') {
+        return this.resolveWithPaths(source, this.sides[side].paths, this.options.extensions);
     }
 
 }
