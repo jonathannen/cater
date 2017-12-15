@@ -23,7 +23,9 @@ const generateHandler = function(entryPath, bundlePath, publicPath) {
         if(!req.url.startsWith(publicPath)) {
             reactHandler(req, res, bundlePath, handler.App, handler.Layout);
         }
-        if(next !== null) next();
+        else if(next !== null) {
+            next();
+        }
         return;
     }  
 
@@ -31,7 +33,6 @@ const generateHandler = function(entryPath, bundlePath, publicPath) {
         const components = require(entryPath)();
         Object.assign(handler, components);    
     };
-    // handler.reload();
 
     return handler;
 }

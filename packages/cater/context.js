@@ -40,7 +40,7 @@ class SideConfiguration {
          
         this.appRootPath = process.cwd();
         this.caterRootPath = __dirname;
-        this.debug = isDebug(process.NODE_ENV);
+        this.debug = isDebug(process.env.NODE_ENV);
 
         this.buildPath = path.join(this.appRootPath, options.buildDirectory);
         this.rootPaths = [this.appRootPath, this.caterRootPath];

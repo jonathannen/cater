@@ -40,8 +40,16 @@ const generate = function (context) {
     const loggingHandler = loggingMiddleware;
 
     // Non-debug (production) skips direct to the cater middleware
-    if(!config.debug) return Promise.resolve(cater);
-
+    if(!config.debug) {
+        caterHandler.reload();
+        const handlers = [caterHandler, notFoundHandler];
+        const handler = function(req, res, next = null) {
+            middlewareHandler(req, res, handlers);        
+            if(next !== null) next();
+        }    
+        return Promise.resolve(handler);
+    }
+    
     // Otherwise enable request logging along with webpack middleware
     const promise = webpackMiddleware(context, caterHandler.reload).then((webpackHandler) => {
         const handlers = [loggingHandler, caterHandler, webpackHandler, notFoundHandler];
