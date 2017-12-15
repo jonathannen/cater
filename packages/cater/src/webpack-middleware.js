@@ -9,63 +9,42 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
 }
 
 /**
- * Utility hook that generate a Promise from events from a webpack compiler.
- * @param {String} name identifies the compiler. Usually "client" or "server".
- * @param {Compiler} compiler the webpack compiler object.
- * @param {Function} next an optional callback.
- */
-const webpackPromise = function (name, compiler, next = null) {
-    const promise = new Promise((resolve, reject) => {
-        compiler.plugin('done', (stats) => {
-            console.log(`Webpack ${name}-side compilation complete.`);
-            if (next !== null) next();
-            let isError = stats.compilation.errors.length > 0;
-            return isError ? reject(stats.compilation.errors) : resolve(compiler);
-        });
-    });
-    return promise;
-}
-
-/**
  * Returns a Promise that'll complete based upon the initial webpack
  * compilation. In the resolved case it'll provide the http.Handler for
  * the webpack client side development server.
  */
 const generateHandler = function (context, reloadCallback = null) {
-    const clientCompiler = webpack(generator(context, context.client));
-    const serverCompiler = webpack(generator(context, context.server));;
+    // const clientCompiler = webpack(generator(context, context.client));
+    // const serverCompiler = webpack(generator(context, context.server));;
+    const clientConfig = generator(context, context.client);
+    const serverConfig = generator(context, context.server)
+    const compiler = webpack([clientConfig, serverConfig]);
 
-    const watchOptions = Object.assign({}, DEFAULT_WEBPACK_WATCH_OPTIONS);
-    watchOptions.publicPath = context.server.publicPath;
+    const client = new Promise((resolve, reject) => {
+        compiler.plugin('done', (result) => {
+            console.log(`Webpack compilation complete.`);
+            const errors = result.stats.reduce((result, stat) => {
+                return result.concat(stat.compilation.errors);
+            }, []);
 
-    // Stops the server side Webpack compiler emiting to the file system.
-    // The client side compiler has the same hack in webpack-dev-middleware.
-    serverCompiler.outputFileSystem = new MemoryFileSystem();
-    let serverWatchStarted = false;
+            const isError = errors.length > 0;
+            if(isError) return reject(errors);
 
-    // Start the client-side Webpack. If this completes successfully, start
-    // the server-side Webpack watch.
-    const client = webpackPromise('client', clientCompiler, () => {
-        const callback = (err, stats) => {
-            if (err) console.log(err); // Need something better here
-        }
-        if (!serverWatchStarted) {
-            serverCompiler.watch(watchOptions, callback);
-            serverWatchStarted = true;
-        }
+            if(reloadCallback !== null) reloadCallback();            
+            resolve(compiler);
+        });
     });
 
-    // One each server compilation, reimport the server entry point. This
-    //mwill also send the reload trigger.
-    const server = webpackPromise('server', serverCompiler, reloadCallback);
-
     // Good to go. Start the server.
-    const middleware = webpackDevMiddleware(clientCompiler, watchOptions);
+    const watchOptions = Object.assign({}, DEFAULT_WEBPACK_WATCH_OPTIONS);
+    watchOptions.publicPath = context.server.publicPath;
+    const middleware = webpackDevMiddleware(compiler, watchOptions);
 
     // Returned promise waits for both the client and server compilations
     // to complete. The promise will return the handler to the webpack
     // development server.
-    return Promise.all([client, server])
+    // return Promise.all([client, server])
+    return client
         .then (() => { return middleware })
         .catch((err) => {
             console.log(err);

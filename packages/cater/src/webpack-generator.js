@@ -11,20 +11,17 @@ const serverSideHotReloader = require.resolve('./server-side-hot-loader');
  */
 const generate = function (context, side) {
     // Component parts of the Webpack configuration
-    const entry = {
-        app: [
-            // 'babel-polyfill/dist/polyfill.js',
-            side.entryPath,
-        ]
-    };
+    const entry = {}
+    entry[side.bundleName] = [ side.entryPath ];
 
-    const query = side.babelOptions;
+    const options = side.babelOptions;
     const module = {
         loaders: [{
-            query,
+            options,
             test: /\.js$/,
             loader: 'babel-loader',
             include: side.modulePaths,
+            exclude: /\/node_modules\//,
         }],
     }
 
@@ -36,7 +33,6 @@ const generate = function (context, side) {
 
     const output = {
         chunkFilename: '[name]_[chunkhash].js',
-        filename: context.options.bundleFilename,
         path: side.buildPath,
         publicPath: context.options.bundlePublicPath,
     };

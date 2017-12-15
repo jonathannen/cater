@@ -50,9 +50,12 @@ class SideConfiguration {
 
         this.entryPath = this.resolve(options.entryScriptName);
         this.bundlePath = `${options.bundlePublicPath}${options.bundleFilename}`;
-    
+
         this.isClient = this.side == 'client';
         this.isServer = this.side == 'server';
+
+        this.bundleName = path.parse(options.bundleFilename).name;
+        if(this.isServer) this.bundleName = '__serverside_' + this.bundleName;
     }
 
     generateBabelOptions() {
