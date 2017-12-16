@@ -1,0 +1,16 @@
+{
+    "name": "hello-world-with-emotion",
+    "version": "0.1.2",
+    "description": "Hello World example for the Cater Framework using Emotion CSS-in-JS library",
+    "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+    "license": "MIT",  
+    "dependencies": {
+      "cater": "^0.1.1",
+      "react": "^16.0.0",
+      "react-dom": "^16.0.0"
+    },
+    "scripts": {
+      "dev": "cater dev"
+    }
+  }
+  

@@ -11,10 +11,17 @@ const UNIVERSAL_BABEL_OPTIONS = {
     ],
 }
 
+UNIVERSAL_BABEL_OPTIONS.plugins.unshift(['emotion']);
+
 const isDebug = function () {
     return process.env.NODE_ENV != 'production';
 };
 
+/**
+ * Resolves the given partial filename source name "app/Blah" in the given
+ * paths ["/hello/world", "/hello/other"] with the given extensions [".js", 
+ * ".jsx"].
+ */
 const resolveWithPaths = function(source, paths, extensions) {
     const ext = path.extname(source).toLowerCase();
     const exts = ext.length > 0 ? [''] : extensions;

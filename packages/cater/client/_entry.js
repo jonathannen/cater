@@ -1,7 +1,7 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import App from 'app/App';
 import React from 'react';
-import { render } from 'react-dom'
+import { hydrate } from "react-dom"
 
 /**
  * The _entry.js files are the Webpack 'entry' point for compiling the bundle.
@@ -10,7 +10,4 @@ import { render } from 'react-dom'
  * the #root <div id='root></div> on the page.
  */
 
-render(
-    <App/>,
-    document.getElementById('root')
-)
+hydrate(<App/>, document.getElementById("root"));

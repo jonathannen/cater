@@ -29,6 +29,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "emotion": "^8.0.12",
+    "emotion-server": "^8.0.12",
     "pretty-bytes": "^4.0.2",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
