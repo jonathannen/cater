@@ -31,8 +31,10 @@ const generateHandler = function(entryPath, bundlePath, publicPath) {
 
     handler.reload = function() {
         const components = require(entryPath)();
-        Object.assign(handler, components);    
-    };
+        return Object.assign(handler, components);   
+        return handler.reload; 
+    }
+    handler.reload();
 
     return handler;
 }

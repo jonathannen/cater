@@ -7,7 +7,7 @@ const UNIVERSAL_BABEL_OPTIONS = {
     presets: ["env", "react"],
     plugins: [
         ["add-module-exports"],
-        ["transform-class-properties"]
+        ["transform-class-properties"],
     ],
 }
 
@@ -88,7 +88,7 @@ class Context {
     constructor(options) {
         this.options = options;
 
-        this.appRootPath = process.cwd();
+        this.appRootPath = options.appRootPath || process.cwd();
         this.buildPath = path.join(this.appRootPath, options.buildDirectory);
         this.caterRootPath = __dirname;
         this.debug = isDebug(this);
@@ -150,8 +150,9 @@ class Context {
 
 }
 
-const createContext = function () {
-    return new Context(options);
+const createContext = function (appRootPat = null) {
+    const opts = Object.assign({ appRootPath }, options);
+    return new Context(opts);
 }
 
 module.exports = createContext;

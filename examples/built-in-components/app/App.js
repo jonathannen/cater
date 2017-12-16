@@ -7,8 +7,10 @@ export default () => (
         <h1>Demonstration of some Built-In Cater components:</h1>
         <hr/>
         <h2>SkipServerSideRender Component:</h2>
+        <p>SkipServerSideRender/server -- This only shows when rendering on the server-side.</p>
+
         <SkipServerSideRender>
-            <div>This only shows when rendering on the client-side.</div>
+            <p>SkipServerSideRender/client -- This only shows when rendering on the client-side.</p>
         </SkipServerSideRender>
     </div>
 )

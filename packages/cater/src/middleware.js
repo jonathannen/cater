@@ -8,7 +8,7 @@ import webpackMiddleware from './webpack-middleware';
  * handlers. Used in non-production cases to enable things like 
  * logging and webpack compilation.
  */
-const middlewareHandler = function(req, res, handlers) {
+export const middlewareHandler = function(req, res, handlers) {
     const queue = handlers.slice(0); // Clone handler list
     const next = () => {
         var handler = queue.shift();
@@ -37,11 +37,9 @@ const notFoundHandler = function(req, res, handlers) {
 const generate = function (context) {
     const config = context.server;
     const caterHandler = caterMiddleware(config.entryPath, config.bundlePath, context.options.publicPath);
-    const loggingHandler = loggingMiddleware;
 
     // Non-debug (production) skips direct to the cater middleware
     if(!context.debug) {
-        caterHandler.reload();
         const handlers = [caterHandler, notFoundHandler];
         const handler = function(req, res, next = null) {
             middlewareHandler(req, res, handlers);        
@@ -52,6 +50,7 @@ const generate = function (context) {
     
     // Otherwise enable request logging along with webpack middleware
     const promise = webpackMiddleware(context, caterHandler.reload).then((webpackHandler) => {
+        const loggingHandler = loggingMiddleware;
         const handlers = [loggingHandler, caterHandler, webpackHandler, notFoundHandler];
         return function(req, res, next = null) {
             middlewareHandler(req, res, handlers);        

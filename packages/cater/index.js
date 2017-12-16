@@ -1,14 +1,19 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 const createContext = require('./context');
 
-const context = createContext();
-require('babel-register')(context.babelOptions);
+const app = function(appRootPath = null) {
+    const context = createContext(appRootPath);
+    require('babel-register')(context.babelOptions);
 
-const app = function() {
-    const cater = require('./src');
+    const cater = require('./src/index.js');
     const instance = new cater(context);
+
     configureCli(instance);
     return instance; 
+}
+
+app.harness = function() {
+    return require('./src/harness.js');
 }
 
 const catchFatal = function(err) {

@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-const middleware = require('./middleware');
+import middleware from './middleware';
 
 /**
  * The class shared when cater is used API-level as a library.

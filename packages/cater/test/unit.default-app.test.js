@@ -7,7 +7,7 @@ import { renderToString } from 'react-dom/server';
 // that the basic functionality (Babel, React) are working as intended.
 
 test('should throw an error if the default App is loaded', () => {
-    expect(() => require('./util.default-app')).toThrow();
+    expect(() => require('./util.default-app')()).toThrow();
 })
 
 test('is polite and says Hello to the World', () => {

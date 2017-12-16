@@ -8,8 +8,11 @@
   "homepage": "https://github.com/jonathannen/cater",
   "jest": {
     "transform": {
-      "\\.js$": "<rootDir>/__tests__/util.babel-jest.js"
-    }
+      "\\.js$": "<rootDir>/test/util.babel-jest.js"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(cater)/)"
+    ]
   },
   "keywords": [
     "react"
@@ -17,7 +20,7 @@
   "main": "index.js",
   "repository": "jonathannen/cater",
   "scripts": {
-    "test": "jest --no-cache \\.test.js"
+    "test": "jest --no-cache"
   },
   "dependencies": {
     "babel-core": "^6.26.0",
@@ -40,6 +43,7 @@
   "devDependencies": {
     "jest": "^21.2.1",
     "jest-babel": "^1.0.1",
-    "react-test-renderer": "^16.2.0"
+    "react-test-renderer": "^16.2.0",
+    "supertest": "^3.0.0"
   }
 }
