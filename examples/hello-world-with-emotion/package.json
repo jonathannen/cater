@@ -1,16 +1,30 @@
 {
-    "name": "hello-world-with-emotion",
-    "version": "0.1.2",
-    "description": "Hello World example for the Cater Framework using Emotion CSS-in-JS library",
-    "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
-    "license": "MIT",  
-    "dependencies": {
-      "cater": "^0.1.1",
-      "react": "^16.0.0",
-      "react-dom": "^16.0.0"
+  "name": "hello-world-with-emotion",
+  "version": "0.1.2",
+  "description": "Hello World example for the Cater Framework using Emotion CSS-in-JS library",
+  "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+  "license": "MIT",
+  "dependencies": {
+    "cater": "^0.1.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "scripts": {
+    "dev": "cater dev",
+    "test": "jest --no-cache"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1",
+    "jest-babel": "^1.0.1",
+    "react-test-renderer": "^16.2.0",
+    "supertest": "^3.0.0"
+  },
+  "jest": {
+    "transform": {
+      "\\.js$": "<rootDir>/../../packages/cater/test/util.babel-jest.js"
     },
-    "scripts": {
-      "dev": "cater dev"
-    }
+    "transformIgnorePatterns": [
+      "node_modules/(?!(cater)/)"
+    ]
   }
-  
+}

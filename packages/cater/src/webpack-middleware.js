@@ -5,7 +5,7 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 
 const DEFAULT_WEBPACK_WATCH_OPTIONS = {
-    noInfo: true, hot: false, inline: true, stats: { colors: true, },
+    noInfo: false, hot: false, inline: true, stats: { colors: true, },
 }
 
 /**

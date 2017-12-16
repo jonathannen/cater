@@ -1,0 +1,98 @@
+#!/usr/bin/env node
+
+// Copyright Jon Williams 2017. See LICENSE file.
+const fs = require('fs');
+const path = require('path');
+
+const readPackageFile = function (...args) {
+    const packageFile = path.join(...args);
+    if (!fs.existsSync(packageFile)) return null;
+    const content = fs.readFileSync(packageFile).toString();
+    return JSON.parse(content);
+}
+
+const updatePackageFile = function (...args) {
+    const fn = args.pop();
+    const packageFile = path.join(...args);
+    const package = readPackageFile(...args);
+    if(package === null) return null;
+    const updatedPackage = fn(package);
+    fs.writeFileSync(packageFile, JSON.stringify(updatedPackage, null, 2));
+    return updatedPackage;
+}
+
+const masterPackage = readPackageFile(__dirname, 'package.json');
+
+const exampleTemplate = {
+    "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+    "license": "MIT",
+    "version": masterPackage.version,
+    "dependencies": {
+        "cater": "^0.1.2",
+        "react": "^16.0.0",
+        "react-dom": "^16.0.0"
+    },
+    "scripts": {
+        "dev": "cater dev",
+        "test": "jest --no-cache"
+    },
+    "devDependencies": {
+        "jest": "^21.2.1",
+        "jest-babel": "^1.0.1",
+        "react-test-renderer": "^16.2.0",
+        "supertest": "^3.0.0"
+    },
+    "jest": {
+        "transform": {
+            "\\.js$": "<rootDir>/../../packages/cater/test/util.babel-jest.js"
+        },
+        "transformIgnorePatterns": ["node_modules/(?!(cater)/)"]
+    }
+}
+
+const packageTemplate = {
+    "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+    "license": "MIT",
+    "version": masterPackage.version,
+    "jest": {
+        "transform": {
+            "\\.js$": "<rootDir>/../cater/test/util.babel-jest.js"
+        },
+        "transformIgnorePatterns": ["node_modules/(?!(cater)/)"]
+    }
+
+}
+
+// Example Packages
+const exampleDirectory = path.join(__dirname, 'examples');
+fs.readdirSync(exampleDirectory).forEach((directory) => {
+    const result = updatePackageFile(exampleDirectory, directory, 'package.json', (pkg) => {
+        pkg.name = directory;
+        return Object.assign(pkg, exampleTemplate);
+    })
+});
+
+// Regular Packages
+const packageDirectory = path.join(__dirname, 'packages');
+fs.readdirSync(packageDirectory).forEach((directory) => {
+    const result = updatePackageFile(exampleDirectory, directory, 'package.json', (pkg) => {
+        pkg.name = directory;
+        return Object.assign(pkg, packageTemplate);
+    })
+});
+
+// //
+// fs.readdirSync(__dirname).forEach((directory) => {
+//     const packageFile = path.join(__dirname, directory, 'package.json');
+//     console.log(packageFile);
+//     if (!fs.existsSync(packageFile)) return;
+
+//     const content = fs.readFileSync(packageFile).toString();
+//     const package = JSON.parse(content);
+
+
+//     fs.writeFileSync(packageFile, JSON.stringify(package, null, 2));
+//     process.exit(0);
+//     // console.log(JSON.stringify(content));
+// });
+

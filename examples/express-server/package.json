@@ -5,12 +5,26 @@
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.1.1",
-    "express": "^4.16.2",
+    "cater": "^0.1.2",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
   "scripts": {
-    "dev": "node index.js"
+    "dev": "cater dev",
+    "test": "jest --no-cache"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1",
+    "jest-babel": "^1.0.1",
+    "react-test-renderer": "^16.2.0",
+    "supertest": "^3.0.0"
+  },
+  "jest": {
+    "transform": {
+      "\\.js$": "<rootDir>/../../packages/cater/test/util.babel-jest.js"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(cater)/)"
+    ]
   }
 }
