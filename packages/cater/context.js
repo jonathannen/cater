@@ -150,7 +150,7 @@ class Context {
 
 }
 
-const createContext = function (appRootPat = null) {
+const createContext = function (appRootPath = null) {
     const opts = Object.assign({ appRootPath }, options);
     return new Context(opts);
 }
