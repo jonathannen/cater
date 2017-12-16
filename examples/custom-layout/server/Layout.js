@@ -1,16 +1,13 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import CaterLayout from 'app/cater/Layout';
+import CaterLayout, { Body, Scripts } from 'app/cater/Layout';
 
 /**
- * Layout is used on the Server Side to render the HTML surrounding the
- * #root <div id="root"></div> DOM "home" of the application. 
+ * Custom Layout that extends the CaterLayout.
  */
 class Layout extends CaterLayout {
     render() {
-        const App = this.props.app;
-        const bundlePath = this.props.bundlePath
         return (
             <html>
                 <head>
@@ -19,18 +16,12 @@ class Layout extends CaterLayout {
                 </head>
                 <body>
                     <h1>This is a Custom Layout</h1>
-                    <div id="root"><App/></div>
-                    <script src={bundlePath}></script>
+                    <Body />
+                    <Scripts />
                 </body>
             </html>
-        )
+        );
     }
-
-}
-
-Layout.propTypes = {
-   app: PropTypes.func.isRequired,
-   bundlePath: PropTypes.string.isRequired,
 }
 
 export default Layout;

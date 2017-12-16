@@ -5,7 +5,10 @@ const path = require('path');
 // Babel options common to client and server sides
 const UNIVERSAL_BABEL_OPTIONS = {
     presets: ["env", "react"],
-    plugins: [["add-module-exports"]],
+    plugins: [
+        ["add-module-exports"],
+        ["transform-class-properties"]
+    ],
 }
 
 const isDebug = function () {
@@ -90,7 +93,11 @@ class Context {
             const sideConfig = this[side] = new SideConfiguration(this, side);
             sideConfig.babelOptions = this.generateBabelOptions(sideConfig);
         }
-        this.babelOptions = this.server.babelOptions;
+        
+        // Babel Configurtion for the running node instance.
+        // Disables caching as it'll conflict if multiple cater applications
+        // are used.
+        this.babelOptions = Object.assign( { cache: false }, this.server.babelOptions);
 
         this.importPrefixResolvers = {
             app: (side) => side.resolve.bind(side),
