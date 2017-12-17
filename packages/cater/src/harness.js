@@ -17,7 +17,7 @@ export const testContext = function(appRootPath = null) {
  */
 export const testHandler  = function(context = null) {
     if(context === null) context = testContext();
-    const config = context.server;
+    const config = context.sides.server;
     
     const caterHandler = caterMiddleware(config.entryPath, config.bundlePath, context.options.publicPath);
     

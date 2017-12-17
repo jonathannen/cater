@@ -1,6 +1,7 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 const fs = require('fs');
 const path = require('path');
+const plugins = require('./plugins');
 
 // Babel options common to client and server sides
 const UNIVERSAL_BABEL_OPTIONS = {
@@ -10,8 +11,6 @@ const UNIVERSAL_BABEL_OPTIONS = {
         ["transform-class-properties"],
     ],
 }
-
-UNIVERSAL_BABEL_OPTIONS.plugins.unshift(['emotion']);
 
 const isDebug = function () {
     return process.env.NODE_ENV != 'production';
@@ -46,9 +45,9 @@ const options = {
     httpPort: 3000,
     hot: true,
     layoutComponentName: 'Layout.js',
+    plugins: ['emotion'],
     publicPath: '/static/',
-
-    sides: ['client', 'server'],
+    sideNames: ['client', 'server'],
     universal: ['app'],
     universalPrefix: 'app',
 }
@@ -87,6 +86,7 @@ class Context {
 
     constructor(options) {
         this.options = options;
+        this.plugins = plugins.configure(this);
 
         this.appRootPath = options.appRootPath || process.cwd();
         this.buildPath = path.join(this.appRootPath, options.buildDirectory);
@@ -96,21 +96,24 @@ class Context {
         this.rootPaths = [this.appRootPath, this.caterRootPath];
         this.universalPaths = this.generatePaths(options.universal);
 
-        for (let side of options.sides) {
-            const sideConfig = this[side] = new SideConfiguration(this, side);
+        this.sides = {}
+        for (let sideName of options.sideNames) {
+            const sideConfig = this.sides[sideName] = new SideConfiguration(this, sideName);
             sideConfig.babelOptions = this.generateBabelOptions(sideConfig);
         }
         
         // Babel Configurtion for the running node instance.
         // Disables caching as it'll conflict if multiple cater applications
         // are used.
-        this.babelOptions = Object.assign( { cache: false }, this.server.babelOptions);
+        this.babelOptions = Object.assign( { cache: false }, this.sides.server.babelOptions);
 
         this.importPrefixResolvers = {
             app: (side) => side.resolve.bind(side),
-            client: () => this.client.resolveSide.bind(this.client),
-            server: () => this.server.resolveSide.bind(this.server),
+            client: () => this.sides.client.resolveSide.bind(this.sides.client),
+            server: () => this.sides.server.resolveSide.bind(this.sides.server),
         }
+
+        plugins.postContext(this);
     }
 
     generateBabelOptions(sideConfig) {

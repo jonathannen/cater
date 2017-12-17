@@ -16,8 +16,8 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
  * the webpack client side development server.
  */
 const generateHandler = function (context, reloadCallback = null) {
-    const clientConfig = generator(context, context.client);
-    const serverConfig = generator(context, context.server);
+    const clientConfig = generator(context, context.sides.client);
+    const serverConfig = generator(context, context.sides.server);
 
     const compiler = webpack([clientConfig, serverConfig]);
 
@@ -38,7 +38,7 @@ const generateHandler = function (context, reloadCallback = null) {
 
     // Good to go. Start the server.
     const watchOptions = Object.assign({}, DEFAULT_WEBPACK_WATCH_OPTIONS);
-    watchOptions.publicPath = context.server.publicPath;
+    watchOptions.publicPath = context.sides.server.publicPath;
     const middleware = webpackDevMiddleware(compiler, watchOptions);
 
     // Returned promise waits for both the client and server compilations

@@ -7,7 +7,7 @@ const serverSideHotReloader = require.resolve('./server-side-hot-loader');
 
 /**
  * Generates a Webpack configuration object for the given context and 
- * context side (i.e. context.client or context.server).
+ * context side (i.e. context.sides.client or context.sides.server).
  */
 const generate = function (context, side) {
     // Component parts of the Webpack configuration

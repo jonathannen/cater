@@ -35,7 +35,7 @@ const notFoundHandler = function(req, res, handlers) {
  * are complete.
  */
 const generate = function (context) {
-    const config = context.server;
+    const config = context.sides.server;
     const caterHandler = caterMiddleware(config.entryPath, config.bundlePath, context.options.publicPath);
 
     // Non-debug (production) skips direct to the cater middleware

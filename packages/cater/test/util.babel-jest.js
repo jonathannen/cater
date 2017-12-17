@@ -15,8 +15,7 @@ module.exports.process = function(src, filename, config, transformOptions) {
     if(transformer == null) {
         var directory = path.dirname(filename);
         const context = createContext(directory);
-        transformer = babelJest.createTransformer(context.server.babelOptions);
-        require('babel-register')(context.server.babelOptions);
+        transformer = babelJest.createTransformer(context.sides.server.babelOptions);
     }
 
     return transformer.process(src, filename, config, transformOptions);
