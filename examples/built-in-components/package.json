@@ -1,11 +1,11 @@
 {
   "name": "built-in-components",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Demonstrates some build in components of the Cater Framework",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.1.2",
+    "cater": "^0.1.3",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
@@ -14,7 +14,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "cater-jest": "^0.1.2",
+    "cater-jest": "^0.1.3",
     "jest": "^21.2.1",
     "jest-babel": "^1.0.1",
     "react-test-renderer": "^16.2.0",
