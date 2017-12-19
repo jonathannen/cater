@@ -12,3 +12,6 @@ node_js:
 env:
   global:
     - PATH=$HOME/.yarn/bin:$PATH
+
+script:
+  - npm run test-linux
