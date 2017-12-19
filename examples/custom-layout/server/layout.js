@@ -1,7 +1,7 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import CaterLayout, { Body, Scripts } from 'app/cater/Layout';
+import CaterLayout, { Body, Scripts } from 'app/cater/layout';
 
 /**
  * Custom Layout that extends the CaterLayout.
