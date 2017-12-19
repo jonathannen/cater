@@ -1,4 +1,4 @@
-# Cater &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/facebook/react/blob/master/LICENSE)
+# Cater &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/facebook/react/blob/master/LICENSE) [![Build Status](https://travis-ci.org/jonathannen/cater.svg?branch=master)](https://travis-ci.org/jonathannen/cater)
 
 Cater is a convention-driven Framework for React and Friends.
 
