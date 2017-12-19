@@ -10,7 +10,7 @@ Generally for your own Cater application you won't need this package - as you're
 
 If you want to test in a Cater-like environment, these files detect "*index.test.js". For a file that matches this name, the tests will be executed as if that test was the root directory of a Cater application. You can see this with the examples, plus the basic test under cater/test/basic.
 
-The problem is that Jest uses workers, which interally maintain their own module state. This is to enable things like mocking. Unfortunately this conflicts with Cater imports like "app/App".
+The problem is that Jest uses workers, which interally maintain their own module state. This is to enable things like mocking. Unfortunately this conflicts with Cater imports like "app/app".
 
 So! We need to work around it all. The components are:
 

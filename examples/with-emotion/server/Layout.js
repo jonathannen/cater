@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import App from 'app/App';
+import App from 'app/app';
 import CaterLayout, { Body, Scripts } from 'app/cater/layout';
 import React from 'react';
 import { extractCritical } from 'emotion-server'

@@ -5,7 +5,7 @@ This document is for those spelunking in the Cater framework code. If you're loo
 ## Source Navigation
 
     cater/
-        app/App.js
+        app/app.js
         client/*
         server/*
         src/*

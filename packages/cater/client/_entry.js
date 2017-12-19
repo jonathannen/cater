@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import App from 'app/App';
+import App from 'app/app';
 import React from 'react';
 import { render } from "react-dom"
 
