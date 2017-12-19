@@ -15,8 +15,8 @@ export const testContext = function(appRootPath = null) {
 /**
  * Returns a http.Handler that can be used in tests.
  */
-export const testHandler  = function(context = null) {
-    if(context === null) context = testContext();
+export const testHandler = function(appRootPath = null) {
+    const context = testContext(appRootPath);
     const config = context.sides.server;
     
     const caterHandler = caterMiddleware(config.entryPath, config.bundlePath, context.options.publicPath);
