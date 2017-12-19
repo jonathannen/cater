@@ -14,10 +14,3 @@ server.get("/express", (req, res) => {
 });
 
 module.exports = server;
-
-// module.exports = function(handler) {
-//   return app.handler().then(handler => {
-//     server.get("*", handler);
-//     return server;
-//   });
-// };
