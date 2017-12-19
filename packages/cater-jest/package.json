@@ -1,0 +1,15 @@
+{
+  "name": "cater-jest",
+  "version": "0.1.2",
+  "description": "Utilities to help run Jest testing with Cater",
+  "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+  "license": "MIT",
+  "homepage": "https://github.com/jonathannen/cater",
+  "main": "index.js",
+  "dependencies": {
+    "babel-jest": "^22.0.1"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}

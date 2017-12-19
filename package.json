@@ -8,15 +8,13 @@
         "packages/*"
     ],
     "scripts": {
-        "test": "jest --no-cache"
+        "test": "jest"
     },
     "jest": {
+        "reporters": ["default", "<rootDir>/packages/cater-jest/reporter.js"],
         "projects": [
             "<rootDir>/examples/*",
             "<rootDir>/packages/*"
-        ],
-        "transform": {
-            "\\.js$": "<rootDir>/packages/cater/test/util.babel-jest.js"
-        }
-    }
+        ]
+   }
 }

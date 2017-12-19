@@ -12,6 +12,10 @@ const app = function(appRootPath = null) {
     return instance; 
 }
 
+app.createContext = function(appRootPath = null) {
+    return createContext(appRootPath);
+}
+
 app.harness = function() {
     return require('./src/harness.js');
 }

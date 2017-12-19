@@ -12,5 +12,5 @@ test('should throw an error if the default App is loaded', () => {
 
 test('is polite and says Hello to the World', () => {
     const output = renderToString(<HelloWorldApp />);
-    expect(output).toBe(`<h1 data-reactroot="">Hello World!</h1>`)
+    expect(output).toBe(`<h1 data-reactroot="">(Default) Hello World!</h1>`)
 });
