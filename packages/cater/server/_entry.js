@@ -1,6 +1,6 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import App from 'app/App';
-import Layout from 'app/Layout';
+import App from 'app/app';
+import Layout from 'app/layout';
 
 /**
  * The _entry.js files are the Webpack 'entry' point for compiling the bundle.
