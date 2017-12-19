@@ -11,6 +11,7 @@
         "test": "jest"
     },
     "jest": {
+        "resetModules": true,
         "reporters": ["default", "<rootDir>/packages/cater-jest/reporter.js"],
         "projects": [
             "<rootDir>/examples/*",
