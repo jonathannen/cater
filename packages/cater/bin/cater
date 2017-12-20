@@ -4,18 +4,29 @@
 const path = require('path')
 const cater = require(path.join(__dirname, '..', 'index.js'));
 
-COMMANDS = ['dev']
+// Available commands
+COMMANDS = ['build', 'dev', 'start']
+PRODUCTION_COMMANDS = ['build', 'start']
 
-const command = (process.argv[2] || "--help").toLowerCase();
+// The command line format is `cater [command] <options>` this grabs the
+// command.
+const command = (process.argv[2] || "--help").toLowerCase().trim();
+
+if(PRODUCTION_COMMANDS.includes(command)) {
+  process.env.NODE_ENV = "production";
+}
 
 if(COMMANDS.includes(command)) {
-    app = cater();
-    app.commands.dev();
+    const app = cater();
+    const commands = cater.readyCommandLine(app);
+    commands[command]();
 }
 else {
-    console.log(`Cater Framework.
+    console.log(
+`Cater Framework.
 
     Usage:
+        cater build
         cater dev
         cater --help
 

@@ -1,38 +1,46 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-const createContext = require('./context');
+const createContext = require("./context");
 
 const app = function(appRootPath = null) {
-    const context = createContext(appRootPath);
-    require('babel-register')(context.babelOptions);
+  const context = createContext(appRootPath);
+  require("babel-register")(context.babelOptions);
 
-    const cater = require('./src/index.js');
-    const instance = new cater(context);
+  const cater = require("./src/index.js");
+  const instance = new cater(context);
 
-    configureCli(instance);
-    return instance; 
-}
+  return instance;
+};
 
 app.createContext = function(appRootPath = null) {
-    return createContext(appRootPath);
-}
+  return createContext(appRootPath);
+};
 
 app.harness = function() {
-    return require('./src/harness.js');
-}
+  return require("./src/harness.js");
+};
 
 const catchFatal = function(err) {
-    console.error(err);
-    process.exit(-1);
-}
+  console.error(err);
+  process.exit(-1);
+};
 
 // Adds in some useful CLI-level commands to the app
-const configureCli = function(app) {
-    const commands = app.commands = {}
-    
-    commands.dev = function() {
-        app.runDevelopmentServer().catch(catchFatal);
-    }
-    return commands;
-}
+app.readyCommandLine = function(instance) {
+  const commands = (instance.commands = {});
+
+  commands.build = function() {
+    instance.build();
+  };
+
+  commands.dev = function() {
+    instance.runDevelopmentServer().catch(catchFatal);
+  };
+
+  commands.start = function() {
+    instance.runProductionServer().catch(catchFatal);
+  };
+
+  return commands;
+};
 
 module.exports = app;

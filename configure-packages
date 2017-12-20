@@ -1,70 +1,95 @@
 #!/usr/bin/env node
 
 // Copyright Jon Williams 2017. See LICENSE file.
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const readPackageFile = function (...args) {
-    const packageFile = path.join(...args);
-    if (!fs.existsSync(packageFile)) return null;
-    const content = fs.readFileSync(packageFile).toString();
-    return JSON.parse(content);
-}
+// Packages that are optionally installed in a example or package directory
+const WHITELIST_PACKAGES = ["express"];
 
-const updatePackageFile = function (...args) {
-    const fn = args.pop();
-    const packageFile = path.join(...args);
-    const package = readPackageFile(...args);
-    if(package === null) return null;
-    const updatedPackage = fn(package);
-    fs.writeFileSync(packageFile, JSON.stringify(updatedPackage, null, 2));
-    return updatedPackage;
-}
+const readPackageFile = function(...args) {
+  const packageFile = path.join(...args);
+  if (!fs.existsSync(packageFile)) return null;
+  const content = fs.readFileSync(packageFile).toString();
+  return JSON.parse(content);
+};
 
-const masterPackage = readPackageFile(__dirname, 'package.json');
+const updatePackageFile = function(...args) {
+  const fn = args.pop();
+  const packageFile = path.join(...args);
+  const package = readPackageFile(...args);
+  if (package === null) return null;
+
+  // Get whitelist dependencies
+  const deps = Object.assign({}, package.dependencies);
+  const add = WHITELIST_PACKAGES.filter(x =>
+    Object.keys(deps).includes(x)
+  );
+
+  const updatedPackage = fn(package);
+
+  // Add back in whitelisted dependencies
+  add.forEach(name => {
+    updatedPackage.dependencies[name] = deps[name];
+  });
+
+  fs.writeFileSync(packageFile, JSON.stringify(updatedPackage, null, 2));
+  return updatedPackage;
+};
+
+const masterPackage = readPackageFile(__dirname, "package.json");
 const version = masterPackage.version;
 
 const exampleTemplate = {
-    "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
-    "license": "MIT",
-    "version": version,
-    "dependencies": {
-        "cater": `^${version}`,
-        "react": "^16.0.0",
-        "react-dom": "^16.0.0"
-    },
-    "devDependencies": {
-        "cater-jest": `^${version}`,
-        "jest": "^21.2.1",
-        "jest-babel": "^1.0.1",
-        "react-test-renderer": "^16.2.0",
-        "supertest": "^3.0.0"
-    },
-}
+  author: "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+  license: "MIT",
+  version: version,
+  private: true,
+  dependencies: {
+    cater: `^${version}`
+  },
+  devDependencies: {
+    "cater-jest": `^${version}`,
+    jest: "^21.2.1",
+    "jest-babel": "^1.0.1",
+    "react-test-renderer": "^16.2.0",
+    supertest: "^3.0.0"
+  }
+};
 
 const packageTemplate = {
-    "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
-    "license": "MIT",
-    "version": masterPackage.version,
-    "scripts": {
-        "test": "jest"
-    },
-}
+  author: "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+  license: "MIT",
+  version: masterPackage.version,
+  scripts: {
+    test: "jest"
+  }
+};
 
 // Example Packages
-const exampleDirectory = path.join(__dirname, 'examples');
-fs.readdirSync(exampleDirectory).forEach((directory) => {
-    const result = updatePackageFile(exampleDirectory, directory, 'package.json', (pkg) => {
-        pkg.name = directory;
-        return Object.assign(pkg, exampleTemplate);
-    })
+const exampleDirectory = path.join(__dirname, "examples");
+fs.readdirSync(exampleDirectory).forEach(directory => {
+  const result = updatePackageFile(
+    exampleDirectory,
+    directory,
+    "package.json",
+    pkg => {
+      pkg.name = directory;
+      return Object.assign(pkg, exampleTemplate);
+    }
+  );
 });
 
 // Regular Packages
-const packageDirectory = path.join(__dirname, 'packages');
-fs.readdirSync(packageDirectory).forEach((directory) => {
-    const result = updatePackageFile(packageDirectory, directory, 'package.json', (pkg) => {
-        pkg.name = directory;
-        return Object.assign(pkg, packageTemplate);
-    })
+const packageDirectory = path.join(__dirname, "packages");
+fs.readdirSync(packageDirectory).forEach(directory => {
+  const result = updatePackageFile(
+    packageDirectory,
+    directory,
+    "package.json",
+    pkg => {
+      pkg.name = directory;
+      return Object.assign(pkg, packageTemplate);
+    }
+  );
 });

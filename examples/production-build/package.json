@@ -1,14 +1,17 @@
 {
-  "name": "built-in-components",
+  "name": "production-build",
   "version": "0.1.3",
-  "description": "Demonstrates some build in components of the Cater Framework",
+  "description": "Hello World example for the Cater Framework",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.1.3"
+    "cater": "^0.1.3",
+    "express": "^4.16.2"
   },
   "scripts": {
+    "build": "cater build",
     "dev": "cater dev",
+    "start": "cater start",
     "test": "jest"
   },
   "devDependencies": {
