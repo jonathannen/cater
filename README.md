@@ -33,5 +33,8 @@ A Cater application with it's own customized Layout.
 **/examples/express-server**<br/>
 By default, Cater in development will launch it's own http.Server. However, you use your own. In this example, we plug Cater in to the Express web framework. Express handles the incoming requests, delegating to the Cater handler.
 
+**/examples/production-build**<br/>
+Shows building and then running Cater in production-mode.
+
 **/examples/with-emotion**<br/>
 Shows Cater being used with the [emotion](https://github.com/emotion-js/emotion) CSS-in-JS framework.

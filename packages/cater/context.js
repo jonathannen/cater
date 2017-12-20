@@ -14,7 +14,7 @@ const isDebug = function() {
 };
 
 /**
- * Resolves the given partial filename source name "app/Blah" in the given
+ * Resolves the given partial filename source name "app/blah" in the given
  * paths ["/hello/world", "/hello/other"] with the given extensions [".js",
  * ".jsx"].
  */
