@@ -12,6 +12,9 @@ injectGlobal`
 const H1 = styled('h1')`
   color: linen;
   font-size: 48px;
+  font-family: "Helvetica Neue", san-serif;
+  font-weight: 200;
+  text-align: center;
   transform: scale(${props => props.scale});
 `
 /* A simple (but friendly (but stylish)) React Component */
