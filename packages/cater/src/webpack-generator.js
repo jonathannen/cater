@@ -4,7 +4,7 @@ import path from "path";
 import webpack from "webpack";
 
 import CompressionPlugin from "compression-webpack-plugin";
-import ManifestPlugin from 'webpack-manifest-plugin';
+import ManifestPlugin from "webpack-manifest-plugin";
 import UglifyJsPlugin from "uglifyjs-webpack-plugin";
 
 const serverSideHotReloader = require.resolve("./server-side-hot-loader");
@@ -18,7 +18,7 @@ const generate = function(context, side) {
   const entry = {};
   entry[side.bundleName] = [side.entryPath];
 
-  const options = side.babelOptions;
+  const options = side.babel;
   const module = {
     loaders: [
       {
@@ -38,9 +38,11 @@ const generate = function(context, side) {
 
   const output = {
     chunkFilename: "[name].[chunkhash].js",
-    path: path.join(context.buildPath, context.options.bundlePublicPath),
-    publicPath: context.options.bundlePublicPath
+    path: context.buildPath,
+    publicPath: context.publicPath
   };
+  if (side.typeClient)
+    output.path = path.join(context.buildPath, context.publicPath);
 
   // Assemble the final pieces in a single Webpack configuration
   const config = {
@@ -52,9 +54,9 @@ const generate = function(context, side) {
   };
 
   // Post-process for various environments
-  const debugOrProduction = context.debug ? forDebug : forProduction;
-  debugOrProduction(config, side, context);
-  if (side.isServer) forServer(config, side, context);
+  const forDebugOrProduction = context.debug ? forDebug : forProduction;
+  forDebugOrProduction(config, side, context);
+  if (side.typeServer) forServer(config, side, context);
 
   return config;
 };
@@ -84,7 +86,7 @@ const forServer = function(result, side, context) {
 // For PRODUCTION webpack builds.
 const forProduction = function(result, side, context) {
   result.devtool = "cheap-module-source-map";
-  result.output.filename = '[name].[chunkhash].js';
+  result.output.filename = "[name].[chunkhash].js";
 
   const uglify = new webpack.optimize.UglifyJsPlugin({
     compress: {

@@ -37,7 +37,8 @@ const loggingMiddleware = function(req, res, next) {
     const elapsed = process.hrtime(start);
     const elapsedMs = elapsed[0] * 1000 + elapsed[1] / 1000000;
     const color = statusCodeAsTerminalColor(res.statusCode);
-    const gzip = res.getHeaders()["content-encoding"] === "gzip" ? " gzipped" : "";
+    const gzip =
+      res.getHeaders()["content-encoding"] === "gzip" ? " gzipped" : "";
 
     console.log(
       `\x1b[0m${req.method} ${req.url} \x1b[${color}m${res.statusCode} ${

@@ -29,6 +29,43 @@ const notFoundHandler = function(req, res, handlers) {
   res.end();
 };
 
+const generateDebug = function(context) {
+  const client = context.sides.client;
+  const server = context.sides.server;
+
+  const bundlePath = client.bundlePath;
+  const entryPath = server.entryPath;
+  const cater = caterMiddleware(entryPath, bundlePath, context.publicPath);
+
+  const promise = webpackMiddleware(context, cater.reload).then(webpack => {
+    const handlers = [logging, cater, webpack, notFoundHandler];
+    return function(req, res, next = null) {
+      middlewareHandler(req, res, handlers);
+      if (next !== null) next();
+    };
+  });
+  return promise;
+};
+
+const generateProduction = function(context) {
+  const client = context.sides.client;
+  const server = context.sides.server;
+
+  const bundlePath = client.productionPublicBundlePath;
+  const entryPath = server.productionBundlePath;
+  const cater = caterMiddleware(entryPath, bundlePath, context.publicPath);
+
+  const statics = staticMiddleware(context.publicPath, context.staticPath);
+
+  // const handlers = [caterHandler, staticHandler, notFoundHandler];
+  const handlers = [cater, statics, notFoundHandler];
+  const handler = function(req, res, next = null) {
+    middlewareHandler(req, res, handlers);
+    if (next !== null) next();
+  };
+  return Promise.resolve(handler);
+};
+
 /**
  * Set up a chain of middleware based upon the current server-side
  * configuration. Always returns as a Promise. In debug this promise
@@ -36,45 +73,8 @@ const notFoundHandler = function(req, res, handlers) {
  * are complete.
  */
 const generate = function(context) {
-  const config = context.sides.server;
-
-  const entryPath = context.debug
-    ? config.entryPath
-    : context.productionEntryPath;
-
-  const cater = caterMiddleware(
-    entryPath,
-    context.bundlePath,
-    context.options.publicPath
-  );
-
-  // Non-debug (production) skips direct to the cater middleware
-  if (!context.debug) {
-    const statics = staticMiddleware(
-      context.options.publicPath,
-      context.staticPath
-    );
-
-    // const handlers = [caterHandler, staticHandler, notFoundHandler];
-    const handlers = [cater, statics, notFoundHandler];
-    const handler = function(req, res, next = null) {
-      middlewareHandler(req, res, handlers);
-      if (next !== null) next();
-    };
-    return Promise.resolve(handler);
-  }
-
-  // Otherwise enable request logging along with webpack middleware
-  const promise = webpackMiddleware(context, cater.reload).then(
-    webpack => {
-      const handlers = [logging, cater, webpack, notFoundHandler];
-      return function(req, res, next = null) {
-        middlewareHandler(req, res, handlers);
-        if (next !== null) next();
-      };
-    }
-  );
-  return promise;
+  const generator = context.debug ? generateDebug : generateProduction;
+  return generator(context);
 };
 
 export default generate;

@@ -5,12 +5,12 @@
 // emotion to be server-side here -- you could also abandon the use of JSDOM
 // for testing, but it's useful to have around and wil likely be used.
 
-var emotion = require('emotion');
+var emotion = require("emotion");
 
 emotion.resetForServerSideRendering = function() {
-    emotion.sheet.isBrowser = false;
-    emotion.flush();
-}
+  emotion.sheet.isBrowser = false;
+  emotion.flush();
+};
 emotion.resetForServerSideRendering();
 
 export default emotion;

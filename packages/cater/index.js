@@ -1,9 +1,11 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-const createContext = require("./src/context");
+const Context = require("./src/context");
 
-const app = function(appRootPath = null) {
-  const context = createContext(appRootPath);
-  require("babel-register")(context.babelOptions);
+const app = function(options = {}) {
+  const context = new Context(options);
+  const babelOptions = context.sides.server.babel;
+  babelOptions.cache = false;
+  require("babel-register")(babelOptions);
 
   const cater = require("./src/index.js");
   const instance = new cater(context);
@@ -11,9 +13,7 @@ const app = function(appRootPath = null) {
   return instance;
 };
 
-app.createContext = function(appRootPath = null) {
-  return createContext(appRootPath);
-};
+app.Context = Context;
 
 app.harness = function() {
   return require("./src/harness.js");

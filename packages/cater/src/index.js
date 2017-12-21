@@ -43,11 +43,10 @@ class CaterFramework {
 
   // Runs a generic server, given a http.Handler
   runGenericServer(handler) {
-    const options = this.context.options;
     const httpServer = http.createServer(handler);
-    httpServer.listen(options.httpPort, err => {
+    httpServer.listen(this.context.httpPort, err => {
       if (err) throw err;
-      console.log(`Listening on http://localhost:${options.httpPort}`);
+      console.log(`Listening on http://localhost:${this.context.httpPort}`);
     });
     return false;
   }

@@ -1,29 +1,28 @@
 #!/usr/bin/env node
 
 // Copyright Jon Williams 2017. See LICENSE file.
-const path = require('path')
-const cater = require(path.join(__dirname, '..', 'index.js'));
+const path = require("path");
+const cater = require(path.join(__dirname, "..", "index.js"));
 
 // Available commands
-COMMANDS = ['build', 'dev', 'start']
-PRODUCTION_COMMANDS = ['build', 'start']
+COMMANDS = ["build", "dev", "start"];
+PRODUCTION_COMMANDS = ["build", "start"];
 
 // The command line format is `cater [command] <options>` this grabs the
 // command.
 const command = (process.argv[2] || "--help").toLowerCase().trim();
 
-if(PRODUCTION_COMMANDS.includes(command)) {
+if (PRODUCTION_COMMANDS.includes(command)) {
   process.env.NODE_ENV = "production";
 }
 
-if(COMMANDS.includes(command)) {
-    const app = cater();
-    const commands = cater.readyCommandLine(app);
-    commands[command]();
-}
-else {
-    console.log(
-`Cater Framework.
+if (COMMANDS.includes(command)) {
+  const app = cater();
+  const commands = cater.readyCommandLine(app);
+  commands[command]();
+} else {
+  console.log(
+    `Cater Framework.
 
     Usage:
         cater build
@@ -32,5 +31,6 @@ else {
 
     Options:
         --help      Show this screen.
-`)
+`
+  );
 }

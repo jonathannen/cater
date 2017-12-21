@@ -8,12 +8,12 @@ class SkipServerSideRender extends React.Component {
     super(props);
     this.state = { visible: false };
   }
+
   componentDidMount() {
     this.setState({ visible: true });
   }
 
   render() {
-    // return this.props.children;
     return this.state.visible ? this.props.children : false;
   }
 }

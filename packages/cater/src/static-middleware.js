@@ -45,7 +45,7 @@ const generate = function(publicPath, staticPath) {
       files[publicFile] = {
         path: file,
         mime: mime.contentType(path.extname(file)),
-        size: stat.size, // This means the file can't change after starting...
+        size: stat.size // This means the file can't change after starting...
       };
     });
   }

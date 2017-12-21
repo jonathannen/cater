@@ -3,7 +3,6 @@ import App from 'app/app';
 import React from 'react';
 import { hydrate } from "react-dom"
 
-
 /**
  * The _entry.js files are the Webpack 'entry' point for compiling the bundle.
  * The tree of imports from here are used to determine what's in the bundle.

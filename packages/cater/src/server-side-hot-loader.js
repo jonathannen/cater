@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import path from 'path';
+import path from "path";
 
 /**
  * This Webpack loader will reload modules that have been generated in the
@@ -7,9 +7,9 @@ import path from 'path';
  * again.
  */
 module.exports = function(source, map) {
-	this.cacheable(false);
-	delete require.cache[this.resourcePath];
-	var result = this.exec(source, this.resourcePath);
-	this.callback(null, source, map)
-	return;
+  this.cacheable(false);
+  delete require.cache[this.resourcePath];
+  var result = this.exec(source, this.resourcePath);
+  this.callback(null, source, map);
+  return;
 };

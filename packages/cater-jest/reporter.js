@@ -2,16 +2,16 @@
 // See ./README.md for why these files exist and what they do.
 const path = require("path");
 
+const INDEX_TEST = "index.test.js";
+
 class CaterRootDirectoryReporter {
-  
   onTestStart(context, results) {
-    if (context.path.endsWith("index.test.js")) {
-      global.rootDir = path.dirname(context.path);
-    } else {
-      global.rootDir = null;
-    }
+    const testName = context.path;
+    const isIndexTest =
+      path.basename(testName) == INDEX_TEST ||
+      testName.endsWith("." + INDEX_TEST);
+    global.rootPath = isIndexTest ? path.dirname(testName) : null;
   }
-  
 }
 
 module.exports = CaterRootDirectoryReporter;

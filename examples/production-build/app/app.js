@@ -1,6 +1,6 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import React from "react";
-import SkipServerSideRender from 'app/cater/skipserversiderender';
+import SkipServerSideRender from "app/cater/skipserversiderender";
 
 export default () => (
   <div>

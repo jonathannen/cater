@@ -3,11 +3,9 @@
 const plugin = {};
 
 plugin.postContext = function(context) {
-
-    Object.entries(context.sides).forEach(([name, side]) => {
-        side.babelOptions.plugins.unshift(['emotion']);
-    });
-
-} 
+  Object.entries(context.sides).forEach(([name, side]) => {
+    side.babel.plugins.unshift(["emotion"]);
+  });
+};
 
 module.exports = plugin;
