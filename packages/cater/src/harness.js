@@ -8,7 +8,7 @@ const errorHandler = function(req, res, handlers) {
 }
 
 export const testContext = function(appRootPath = null) {
-    const createContext = require('../context');    
+    const createContext = require('./context');
     return createContext(appRootPath);
 }
 
@@ -18,13 +18,13 @@ export const testContext = function(appRootPath = null) {
 export const testHandler = function(appRootPath = null) {
     const context = testContext(appRootPath);
     const config = context.sides.server;
-    
+
     const caterHandler = caterMiddleware(config.entryPath, config.bundlePath, context.options.publicPath);
-    
+
     const handlers = [caterHandler, errorHandler];
     const handler = function(req, res, next = null) {
-        middlewareHandler(req, res, handlers);        
+        middlewareHandler(req, res, handlers);
         if(next !== null) next();
-    }    
+    }
     return handler;
-} 
+}

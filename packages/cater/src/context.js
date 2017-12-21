@@ -1,7 +1,7 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 const fs = require("fs");
 const path = require("path");
-const plugins = require("./plugins");
+const plugins = require("../plugins");
 
 // Babel options common to client and server sides
 const UNIVERSAL_BABEL_OPTIONS = {
@@ -112,7 +112,7 @@ class Context {
 
     this.appRootPath = options.appRootPath || process.cwd();
     this.buildPath = path.join(this.appRootPath, options.buildDirectory);
-    this.caterRootPath = __dirname;
+    this.caterRootPath = path.join(__dirname, '..');
     this.debug = isDebug(this);
 
     this.rootPaths = [this.appRootPath, this.caterRootPath];

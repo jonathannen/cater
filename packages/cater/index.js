@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-const createContext = require("./context");
+const createContext = require("./src/context");
 
 const app = function(appRootPath = null) {
   const context = createContext(appRootPath);
