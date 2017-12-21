@@ -11,9 +11,6 @@ class CaterFramework {
 
   constructor(context) {
     this.context = context;
-
-
-
   }
 
   // Produces a production build

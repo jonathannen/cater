@@ -6,7 +6,9 @@ export default () => {
         /your-project-name/app/app.js
 
     If you need an example, take a look at the examples under 'cater/examples'. The
-    'cater/examples/hello-world' example is the simplest implementation the App 
+    'cater/examples/hello-world' example is the simplest implementation the App
     instance.
+
+    For more information, head over to https://github.com/jonathannen/cater
     `;
 }
