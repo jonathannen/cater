@@ -8,9 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added in the SkipServerSideRender component that conditionally renders children only if it's client-side. Added in examples/built-in-components to demonstrate it in action. It also is a good example of differential client-server-side components.
 - Added in the Jest test framework and some basic tests.
+- Added ability to create production builds.
 
 ### Changed
 - Simplified the Webpack client and server side compilation by using MultiCompiler feature of Webpack.
+- Refactored the context piece. Now just a "Cater" object with the options and sides a child objects.
 
 ### Fixed
 - Wasn't able to supply a custom Layout component from the hosted App. Fixed this and added example/custom-layout to demonstrate.
