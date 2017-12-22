@@ -16,7 +16,9 @@ class Cater {
     // Assign derived options
     this.assignPaths();
     this.configureSides();
+
     this.plugins = plugins.configure(this);
+    this.plugins.postConfiguration(this); // EVENT: Post-Configuration
   }
 
   assignProgrammaticDefaults() {
@@ -30,7 +32,10 @@ class Cater {
     this.buildPath = path.join(this.appRootPath, this.buildDirectory);
     this.rootPaths = [this.appRootPath, this.caterRootPath];
     this.staticPath = path.join(this.buildPath, this.publicPath);
+    this.devStaticPath = path.join(this.appRootPath, this.staticDirectory);
     this.universalPaths = this.generatePaths(this.universalNames);
+
+    if (fs.existsSync(this.devStaticPath)) this.devStaticPathExists = true;
   }
 
   configureSides() {

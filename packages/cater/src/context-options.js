@@ -19,6 +19,7 @@ const DEFAULT_OPTIONS = {
   plugins: ["emotion"],
   publicPath: "/static/",
   sideNames: ["client", "server"],
+  staticDirectory: "static",
   universalNames: ["app"],
   universalPrefix: "app"
 };

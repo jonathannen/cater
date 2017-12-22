@@ -1,6 +1,6 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 
-const events = ["postContext"];
+const events = ["postConfiguration"];
 const builtInPlugins = ["emotion"];
 
 const plugins = {
@@ -15,6 +15,7 @@ plugins.configure = function(context) {
 
     plugins.entries.push(require(name));
   });
+  return plugins;
 };
 
 events.forEach(name => {

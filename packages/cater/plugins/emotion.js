@@ -2,7 +2,7 @@
 
 const plugin = {};
 
-plugin.postContext = function(context) {
+plugin.postConfiguration = function(context) {
   Object.entries(context.sides).forEach(([name, side]) => {
     side.babel.plugins.unshift(["emotion"]);
   });
