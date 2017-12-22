@@ -2,7 +2,7 @@
 
 // Copyright Jon Williams 2017. See LICENSE file.
 const path = require("path");
-const cater = require(path.join(__dirname, "..", "index.js"));
+const Cater = require(path.join(__dirname, "..", "index.js"));
 
 // Available commands
 COMMANDS = ["build", "dev", "start"];
@@ -16,10 +16,16 @@ if (PRODUCTION_COMMANDS.includes(command)) {
   process.env.NODE_ENV = "production";
 }
 
+const catchFatal = function(err) {
+  console.error(err);
+  process.exit(-1);
+};
+
 if (COMMANDS.includes(command)) {
-  const app = cater();
-  const commands = cater.readyCommandLine(app);
-  commands[command]();
+  const commandFunctionName = 'run' + command.charAt(0).toUpperCase() + command.slice(1);
+  const app = new Cater();
+  Cater.readyCommandLine();
+  app[commandFunctionName]().catch(catchFatal);
 } else {
   console.log(
     `Cater Framework.

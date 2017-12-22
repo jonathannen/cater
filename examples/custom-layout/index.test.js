@@ -2,7 +2,7 @@
 import request from "supertest";
 import { harness } from "cater";
 
-const hander = harness().testHandler();
+const hander = harness().testHandler(__dirname);
 
 describe("Custom Layout Integration Test", () => {
   test("should use the layout locally under server/layout.js", async () => {

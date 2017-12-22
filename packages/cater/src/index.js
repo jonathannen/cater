@@ -1,55 +1,67 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import del from "del";
-import http from "http";
-import middleware from "./middleware";
-import webpackBuild from "./webpack-build";
+const clone = require("clone");
+const defaultOptions = require("./context-options.js");
+const fs = require("fs");
+const path = require("path");
+const plugins = require("../plugins");
+const SideConfiguration = require("./context-side.js");
 
-/**
- * The class shared when cater is used API-level as a library.
- */
-class CaterFramework {
+class Cater {
+  constructor(options) {
+    this.assignProgrammaticDefaults();
 
-  constructor(context) {
-    this.context = context;
+    // Deep-clone the defaults in case we mutate arrays/etc in the options
+    Object.assign(this, clone(defaultOptions), clone(options));
+
+    // Assign derived options
+    this.assignPaths();
+    this.configureSides();
+    this.plugins = plugins.configure(this);
   }
 
-  // Produces a production build
-  build() {
-    // The build directory gets nuked, then kick off webpack
-    return del(this.context.buildPath)
-      .then(() => {
-        return webpackBuild(this.context);
-      })
+  assignProgrammaticDefaults() {
+    this.caterRootPath = path.join(__dirname, "..");
+    this.debug = process.env.NODE_ENV !== "production";
+    this.production = !this.debug; // better than having error-prone "!debug" everywhere
   }
 
-  // Returns a Promise to the HTTP.Handler for the application
+  assignPaths() {
+    this.appRootPath = this.appRootPath || process.cwd();
+    this.buildPath = path.join(this.appRootPath, this.buildDirectory);
+    this.rootPaths = [this.appRootPath, this.caterRootPath];
+    this.staticPath = path.join(this.buildPath, this.publicPath);
+    this.universalPaths = this.generatePaths(this.universalNames);
+  }
+
+  configureSides() {
+    this.sides = {};
+    for (let name of this.sideNames) {
+      const config = (this.sides[name] = new SideConfiguration(this, name));
+    }
+  }
+
+  generatePaths(directories) {
+    const result = [];
+    for (let root of this.rootPaths)
+      for (let dir of directories) {
+        const candidate = path.join(root, dir);
+        if (fs.existsSync(candidate)) result.push(candidate);
+      }
+    return result;
+  }
+
+  /**
+   * Returns a http.Handler for this application.
+   */
   handler() {
-    return middleware(this.context);
-  }
-
-  // Runs the development server - that's a server with webpack in-memory
-  // building (and reloading) the client and server code.
-  runDevelopmentServer() {
-    return this.handler().then(handler => this.runGenericServer(handler));
-  }
-
-  // Runs a production server - that's a server that expects the build
-  // of the client and server sides to already be sitting in the build
-  // directory, ready to be served.
-  runProductionServer() {
-    this.context.debug = false;
-    return this.handler().then(handler => this.runGenericServer(handler));
-  }
-
-  // Runs a generic server, given a http.Handler
-  runGenericServer(handler) {
-    const httpServer = http.createServer(handler);
-    httpServer.listen(this.context.httpPort, err => {
-      if (err) throw err;
-      console.log(`Listening on http://localhost:${this.context.httpPort}`);
-    });
-    return false;
+    const middleware = require("./middleware").default;
+    return middleware(this);
   }
 }
 
-export default CaterFramework;
+module.exports = Cater;
+
+Cater.prototype.prepareCommandLine = function() {
+  const commands = require('./commands.js');
+  Object.keys(commands).forEach((key) => Cater.prototype[key] = commands[key] );
+}

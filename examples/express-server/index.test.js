@@ -3,7 +3,7 @@ import request from "supertest";
 import { harness } from "cater";
 import server from "./server";
 
-const handler = harness().testHandler();
+const handler = harness().testHandler(__dirname);
 server.get("*", handler);
 
 describe("Testing Cater embedded with Express Server", () => {

@@ -2,7 +2,7 @@
 import request from "supertest";
 import { harness } from "cater";
 
-const hander = harness().testHandler();
+const hander = harness().testHandler(__dirname);
 
 describe("SkipServerSideRender Component", () => {
   test("should only render the server-side pieces", async () => {

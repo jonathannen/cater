@@ -8,8 +8,7 @@
         "packages/*"
     ],
     "scripts": {
-        "test": "jest",
-        "test-linux": "jest --runInBand"
+        "test": "jest --runInBand"
     },
     "jest": {
         "resetModules": true,

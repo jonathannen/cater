@@ -2,7 +2,7 @@
 import request from "supertest";
 import { harness } from "cater";
 
-const hander = harness().testHandler();
+const hander = harness().testHandler(__dirname);
 
 describe("Hello-World Integration Test", () => {
   test("should be polite and say Hello World", async () => {
