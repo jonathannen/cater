@@ -2,7 +2,7 @@
 import caterMiddleware from "./cater-middleware";
 import logging from "./logging-middleware";
 import staticMiddleware from "./static-middleware";
-import staticMiddlewareDev from './static-middleware-dev';
+import staticMiddlewareDev from "./static-middleware-dev";
 import webpackMiddleware from "./webpack-middleware";
 
 /**
@@ -37,13 +37,15 @@ const generateDebug = function(context) {
   const bundlePath = client.bundlePath;
   const entryPath = server.entryPath;
   const cater = caterMiddleware(entryPath, bundlePath, context.publicPath);
-  const staticHandler = staticMiddlewareDev(context.devStaticPath);
+  const staticHandler = staticMiddlewareDev(
+    context.publicPath,
+    context.devStaticPath
+  );
 
   const promise = webpackMiddleware(context, cater.reload).then(webpack => {
     let handlers = [logging];
-    if(context.devStaticPathExists) handlers.push(staticHandler);
+    if (context.devStaticPathExists) handlers.push(staticHandler);
     handlers = handlers.concat([cater, webpack, notFoundHandler]);
-    console.log(handlers);
 
     return function(req, res, next = null) {
       middlewareHandler(req, res, handlers);

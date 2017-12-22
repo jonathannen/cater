@@ -7,10 +7,13 @@ import path from "path";
  * The development version of static-middleware.js. This is less performant
  * and has less controls - but will reload files on changes.
  */
-const generate = function(staticPath) {
+const generate = function(publicPath, staticPath) {
 
   return function(req, res, next) {
-    const file = path.join(staticPath, req.url);
+    if(!req.url.startsWith(publicPath)) return next ? next() : false;
+
+    const trimmed = req.url.slice(publicPath.length);
+    const file = path.join(staticPath, trimmed);
     if(!fs.existsSync(file)) return next ? next() : false;
 
     const stat = fs.statSync(file);
