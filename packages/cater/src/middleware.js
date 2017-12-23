@@ -1,23 +1,23 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import caterMiddleware from "./cater-middleware";
-import logging from "./logging-middleware";
-import staticMiddleware from "./static-middleware";
-import staticMiddlewareDev from "./static-middleware-dev";
-import webpackMiddleware from "./webpack-middleware";
+import handlerCater from "./handler-cater";
+import handlerLogging from "./handler-logging";
+import handlerStatic from "./handler-static";
+import handlerWebpack from "./handler-webpack";
 
 /**
  * Simple HTTP handler that chains together other middleware-style
- * handlers. Used in non-production cases to enable things like
- * logging and webpack compilation.
+ * handlers.
  */
-export const middlewareHandler = function(req, res, handlers) {
-  const queue = handlers.slice(0); // Clone handler list
-  const next = () => {
-    var handler = queue.shift();
-    if (handler === undefined) return true;
-    handler.bind(this)(req, res, next);
+export const middlewareHandler = function(handlers) {
+  return function(req, res, outerNext) {
+    const queue = handlers.slice(0); // Clone handler list
+    const next = () => {
+      var handler = queue.shift();
+      if (!handler) return outerNext ? outerNext : false;
+      handler.bind(this)(req, res, next);
+    };
+    return next();
   };
-  return next();
 };
 
 /**
@@ -34,43 +34,28 @@ const generateDebug = function(context) {
   const client = context.sides.client;
   const server = context.sides.server;
 
-  const bundlePath = client.bundlePath;
-  const entryPath = server.entryPath;
-  const cater = caterMiddleware(entryPath, bundlePath, context.publicPath);
-  const staticHandler = staticMiddlewareDev(
-    context.publicPath,
-    context.devStaticPath
-  );
+  const cater = handlerCater(server.entryPath, client.bundlePath, context.publicPath);
+  const logging = handlerLogging();
 
-  const promise = webpackMiddleware(context, cater.reload).then(webpack => {
-    let handlers = [logging];
-    if (context.devStaticPathExists) handlers.push(staticHandler);
-    handlers = handlers.concat([cater, webpack, notFoundHandler]);
-
-    return function(req, res, next = null) {
-      middlewareHandler(req, res, handlers);
-      if (next !== null) next();
-    };
+  return handlerWebpack(context, cater.reload).then(webpack => {
+    let handlers = [logging, cater, webpack, notFoundHandler];
+    if (context.devStaticPathExists) {
+      const _static = handlerStatic(context.debug, context.publicPath, context.devStaticPath);
+      handlers.splice(1, 0, _static);
+    }
+    return middlewareHandler(handlers);
   });
-  return promise;
 };
 
 const generateProduction = function(context) {
   const client = context.sides.client;
   const server = context.sides.server;
 
-  const bundlePath = client.productionPublicBundlePath;
-  const entryPath = server.productionBundlePath;
-  const cater = caterMiddleware(entryPath, bundlePath, context.publicPath);
+  const cater = handlerCater(server.productionBundlePath, client.productionPublicBundlePath, context.publicPath);
 
-  const statics = staticMiddleware(context.publicPath, context.staticPath);
+  const _static = handlerStatic(context.debug, context.publicPath, context.staticPath);
 
-  // const handlers = [caterHandler, staticHandler, notFoundHandler];
-  const handlers = [cater, statics, notFoundHandler];
-  const handler = function(req, res, next = null) {
-    middlewareHandler(req, res, handlers);
-    if (next !== null) next();
-  };
+  const handler = middlewareHandler([cater, _static, notFoundHandler]);
   return Promise.resolve(handler);
 };
 

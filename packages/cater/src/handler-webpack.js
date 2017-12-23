@@ -6,7 +6,7 @@ import webpackDevMiddleware from "webpack-dev-middleware";
 
 const DEFAULT_WEBPACK_WATCH_OPTIONS = {
   inline: true,
-  logLevel: "info",
+  logLevel: "warn",
   stats: { colors: true }
 };
 
@@ -17,7 +17,6 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
  */
 const generateHandler = function(context, reloadCallback = null) {
   const clientConfig = generator(context, context.sides.client);
-  console.log(clientConfig);
   const compiler = webpack(clientConfig);
 
   const client = new Promise((resolve, reject) => {
@@ -46,15 +45,10 @@ const generateHandler = function(context, reloadCallback = null) {
   // Returned promise waits for both the client and server compilations
   // to complete. The promise will return the handler to the webpack
   // development server.
-  return client
-    .then(() => {
-      console.log(middleware);
-      return middleware;
-    })
-    .catch(err => {
-      console.error(err);
-      process.exit(-1);
-    });
+  return client.then(() => middleware).catch(err => {
+    console.error(err);
+    process.exit(-1);
+  });
 };
 
 export default generateHandler;

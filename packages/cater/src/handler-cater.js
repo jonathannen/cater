@@ -29,7 +29,7 @@ const unloadCaterBasedModules = function() {
  * Creates a handler with the given entry point (file that loads server
  * components). Plus the bundlePath.
  */
-const generateHandler = function(entryPath, bundlePath, publicPath) {
+const generate = function(entryPath, bundlePath, publicPath) {
   const handler = function(req, res, next = null) {
     if (!req.url.startsWith(publicPath)) {
       reactHandler(req, res, bundlePath, handler.App, handler.Layout);
@@ -58,4 +58,4 @@ const generateHandler = function(entryPath, bundlePath, publicPath) {
   return handler;
 };
 
-export default generateHandler;
+export default generate;

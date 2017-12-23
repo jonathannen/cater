@@ -17,14 +17,14 @@ const statusCodeAsTerminalColor = function(status) {
 };
 
 /**
- * Basic middleware that outputs to the console. Output looks like:
+ * Basic http.Handler that outputs to the console. Output looks like:
  *      GET /path 200 OK 1.209 ms 343 [343 B]
  *
  * Where the order of values is the HTTP Method, Path, Status Code,
  * Status Description, Render Time (server), Byte Size and [Byte Size Human
  * Readable].
  */
-const loggingMiddleware = function(req, res, next) {
+const loggingHandler = function(req, res, next) {
   const start = process.hrtime();
   const conn = req.connection;
   const bytesWritten =
@@ -51,4 +51,6 @@ const loggingMiddleware = function(req, res, next) {
   return next();
 };
 
-export default loggingMiddleware;
+export default function generate(app) {
+  return loggingHandler;
+}
