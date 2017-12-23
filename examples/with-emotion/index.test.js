@@ -6,11 +6,11 @@ import { harness } from "cater";
 import renderer from "react-test-renderer";
 import request from "supertest";
 
-const hander = harness().testHandler(__dirname);
+const handler = harness().testHandler();
 
 describe("Testing example with the Emotion CSS-in-JS library", () => {
   test("should render Hello World page with global and local styles included", async () => {
-    const res = await request(hander).get("/");
+    const res = await request(handler).get("/");
     expect(res.statusCode).toBe(200);
 
     // Test for the HTML output "Hello World", plus two colors - tomato

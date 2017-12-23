@@ -8,14 +8,14 @@
         "packages/*"
     ],
     "scripts": {
-        "test": "jest --runInBand"
+        "test": "jest"
     },
     "jest": {
         "resetModules": true,
-        "reporters": ["default", "<rootDir>/packages/cater-jest/reporter.js"],
         "projects": [
             "<rootDir>/examples/*",
-            "<rootDir>/packages/*"
+            "<rootDir>/packages/*",
+            "<rootDir>/packages/cater/integration/*"
         ]
    }
 }

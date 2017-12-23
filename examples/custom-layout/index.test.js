@@ -2,11 +2,11 @@
 import request from "supertest";
 import { harness } from "cater";
 
-const hander = harness().testHandler(__dirname);
+const handler = harness().testHandler();
 
 describe("Custom Layout Integration Test", () => {
   test("should use the layout locally under server/layout.js", async () => {
-    const res = await request(hander).get("/");
+    const res = await request(handler).get("/");
     expect(res.statusCode).toBe(200);
     expect(res.text).toEqual(
       expect.stringContaining("This is a Custom Layout")

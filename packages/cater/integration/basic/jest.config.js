@@ -4,7 +4,6 @@
 // module.exports = test.jestConfig();
 const config = require("cater-jest")();
 
-config["projects"] = ["<rootDir>", "<rootDir>/integration/*"];
-config["testPathIgnorePatterns"]  = ["/integration/", "/node_modules/"];
+config["projects"] = ["<rootDir>"] //, "./examples/*"]
 
 module.exports = config;

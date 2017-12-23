@@ -2,11 +2,11 @@
 import request from "supertest";
 import { harness } from "cater";
 
-const hander = harness().testHandler(__dirname);
+const handler = harness().testHandler();
 
 describe("Hello-World Integration Test", () => {
   test("should be polite and say Hello World", async () => {
-    const res = await request(hander).get("/");
+    const res = await request(handler).get("/");
     expect(res.statusCode).toBe(200);
     expect(res.text).toEqual(expect.stringContaining("Hello World"));
   });

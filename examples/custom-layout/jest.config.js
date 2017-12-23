@@ -1,8 +1,2 @@
-const test = require("cater-jest");
-
-module.exports = {
-  reporters: ["default", test.reporter],
-  resolver: test.resolver,
-  transform: { "\\.js$": test.transformer },
-  transformIgnorePatterns: ["node_modules/(?!(cater)/)"]
-};
+// Copyright Jon Williams 2017. See LICENSE file.
+module.exports = require("cater-jest")();

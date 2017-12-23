@@ -1,10 +1,15 @@
-const path = require('path');
+const clone = require('clone');
+const path = require("path");
 
-module.exports = {
+const resolver = path.join(__dirname, "resolver.js");
+const transformer = path.join(__dirname, "transformer.js");
 
-    help: 'See the examples directory at https://github.com/jonathannen/cater',
-    reporter: path.join(__dirname, 'reporter.js'),
-    resolver: path.join(__dirname, 'resolver.js'),
-    transformer: path.join(__dirname, 'transformer.js'),
-    
+const config = {
+  resolver: resolver,
+  transform: { "\\.js$": transformer },
+  transformIgnorePatterns: ["node_modules/(?!(cater)/)"]
+};
+
+module.exports = function() {
+  return clone(config);
 }
