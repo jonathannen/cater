@@ -7,8 +7,6 @@ import CompressionPlugin from "compression-webpack-plugin";
 import ManifestPlugin from "webpack-manifest-plugin";
 import UglifyJsPlugin from "uglifyjs-webpack-plugin";
 
-const serverSideHotReloader = require.resolve("./server-side-hot-loader");
-
 /**
  * Generates a Webpack configuration object for the given context and
  * context side (i.e. context.sides.client or context.sides.server).
@@ -75,11 +73,6 @@ const forDebug = function(result, side, context) {
 const forServer = function(result, side, context) {
   result.output.path = context.buildPath;
   result.output.libraryTarget = "commonjs2";
-  result.module.loaders.unshift({
-    test: /\.js$/,
-    loader: serverSideHotReloader,
-    exclude: /\/node_modules\//
-  });
   return result;
 };
 

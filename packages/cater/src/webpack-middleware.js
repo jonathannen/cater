@@ -1,12 +1,12 @@
 // Copyright Jon Williams 2017. See LICENSE file.
+import clone from "clone";
 import generator from "./webpack-generator";
-import MemoryFileSystem from "memory-fs";
 import webpack from "webpack";
 import webpackDevMiddleware from "webpack-dev-middleware";
 
 const DEFAULT_WEBPACK_WATCH_OPTIONS = {
   inline: true,
-  logLevel: "warn",
+  logLevel: "info",
   stats: { colors: true }
 };
 
@@ -17,28 +17,30 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
  */
 const generateHandler = function(context, reloadCallback = null) {
   const clientConfig = generator(context, context.sides.client);
-  const serverConfig = generator(context, context.sides.server);
-
-  const compiler = webpack([clientConfig, serverConfig]);
+  console.log(clientConfig);
+  const compiler = webpack(clientConfig);
 
   const client = new Promise((resolve, reject) => {
     compiler.plugin("done", result => {
-      console.log(`Webpack compilation complete.`);
-      const errors = result.stats.reduce((result, stat) => {
-        return result.concat(stat.compilation.errors);
-      }, []);
+      if (result.hasErrors()) {
+        console.log(`Webpack compilation failed.`);
+        return reject(result.compilation.errors);
+      }
 
-      const isError = errors.length > 0;
-      if (isError) return reject(errors);
+      const success = reloadCallback ? reloadCallback() : true;
+      if (!success) {
+        console.log(`Webpack compilation failed.`);
+        return reject(result.compilation.errors);
+      }
 
-      if (reloadCallback !== null) reloadCallback();
+      console.log(`Webpack compilation succeeded`);
       resolve(compiler);
     });
   });
 
   // Good to go. Start the server.
-  const watchOptions = Object.assign({}, DEFAULT_WEBPACK_WATCH_OPTIONS);
-  watchOptions.publicPath = context.sides.server.publicPath;
+  const watchOptions = clone(DEFAULT_WEBPACK_WATCH_OPTIONS);
+  watchOptions.publicPath = context.publicPath;
   const middleware = webpackDevMiddleware(compiler, watchOptions);
 
   // Returned promise waits for both the client and server compilations
@@ -46,6 +48,7 @@ const generateHandler = function(context, reloadCallback = null) {
   // development server.
   return client
     .then(() => {
+      console.log(middleware);
       return middleware;
     })
     .catch(err => {
