@@ -37,7 +37,7 @@ const updatePackageFile = function(...args) {
   return updatedPackage;
 };
 
-const masterPackage = readPackageFile(__dirname, "package.json");
+const masterPackage = readPackageFile(__dirname, "..", "package.json");
 const version = masterPackage.version;
 
 const exampleTemplate = {
@@ -67,7 +67,7 @@ const packageTemplate = {
 };
 
 // Example Packages
-const exampleDirectory = path.join(__dirname, "examples");
+const exampleDirectory = path.join(__dirname, "..", "examples");
 fs.readdirSync(exampleDirectory).forEach(directory => {
   const result = updatePackageFile(
     exampleDirectory,
@@ -81,7 +81,7 @@ fs.readdirSync(exampleDirectory).forEach(directory => {
 });
 
 // Regular Packages
-const packageDirectory = path.join(__dirname, "packages");
+const packageDirectory = path.join(__dirname, "..", "packages");
 fs.readdirSync(packageDirectory).forEach(directory => {
   const result = updatePackageFile(
     packageDirectory,
