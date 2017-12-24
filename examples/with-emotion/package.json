@@ -1,11 +1,11 @@
 {
   "name": "with-emotion",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Hello World example for the Cater Framework using Emotion CSS-in-JS library",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.1.3",
+    "cater": "^0.2.0",
     "express": "^4.16.2"
   },
   "scripts": {
@@ -13,7 +13,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "cater-jest": "^0.1.3",
+    "cater-jest": "^0.2.0",
     "jest": "^21.2.1",
     "jest-babel": "^1.0.1",
     "react-test-renderer": "^16.2.0",

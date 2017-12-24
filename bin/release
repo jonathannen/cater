@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+echo "Testing, prompting for new version, then publishing... "
+
+yarn test
+yarn version
+./bin/configure-packages
+
+npm publish packages/cater
+npm publish packages/cater-jest
+
+echo "Done"
