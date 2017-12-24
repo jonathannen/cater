@@ -7,6 +7,23 @@ import CompressionPlugin from "compression-webpack-plugin";
 import ManifestPlugin from "webpack-manifest-plugin";
 import UglifyJsPlugin from "uglifyjs-webpack-plugin";
 
+const saasLoader = [
+  {
+    test: /\.scss$/,
+    use: [
+      {
+        loader: "style-loader" // creates style nodes from JS strings
+      },
+      {
+        loader: "css-loader" // translates CSS into CommonJS
+      },
+      {
+        loader: "sass-loader" // compiles Sass to CSS
+      }
+    ]
+  }
+];
+
 /**
  * Generates a Webpack configuration object for the given context and
  * context side (i.e. context.sides.client or context.sides.server).
@@ -18,7 +35,7 @@ const generate = function(context, side) {
 
   const options = side.babel;
   const module = {
-    loaders: [
+    rules: [
       {
         options,
         test: /\.js$/,
@@ -28,19 +45,16 @@ const generate = function(context, side) {
       }
     ]
   };
+  // module.rules.push(saasLoader);
 
-  const plugins = [
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
-  ];
+  const plugins = [new webpack.optimize.OccurrenceOrderPlugin(), new webpack.NoEmitOnErrorsPlugin()];
 
   const output = {
     chunkFilename: "[name].[chunkhash].js",
     path: context.buildPath,
     publicPath: context.publicPath
   };
-  if (side.typeClient)
-    output.path = path.join(context.buildPath, context.publicPath);
+  if (side.typeClient) output.path = path.join(context.buildPath, context.publicPath);
 
   // Assemble the final pieces in a single Webpack configuration
   const config = {

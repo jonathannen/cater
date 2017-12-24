@@ -7,7 +7,7 @@ import path from "path";
  * The development version of static-middleware.js. This is less performant
  * and has less controls - but will reload files on changes.
  */
-const generateDevelopment = function(publicPath, staticPath) {
+const generateDebug = function(publicPath, staticPath) {
 
   return function(req, res, next) {
     if(!req.url.startsWith(publicPath)) return next ? next() : false;
