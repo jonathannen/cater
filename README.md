@@ -7,7 +7,7 @@ Out-of-the-box Cater is configured with the following components:
 - Babel 6
 - React 16
 - Webpack 3
-- Jest 21
+- Jest 22
 
 This library was somewhat inspired from using the [Next.js](https://github.com/zeit/next.js/) Framework. This is an attempt to learn from the ground up, plus take a modular (but convention-driven) approach.
 

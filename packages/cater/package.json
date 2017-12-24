@@ -24,7 +24,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "clone": "^2.1.1",
-    "compression-webpack-plugin": "^1.1.2",
+    "compression-webpack-plugin": "^1.1.3",
     "emotion": "^8.0.12",
     "emotion-server": "^8.0.12",
     "fs-extra": "^5.0.0",
@@ -34,12 +34,12 @@
     "react-dom": "^16.0.0",
     "react-emotion": "^8.0.12",
     "webpack": "^3.10.0",
-    "webpack-dev-middleware": "^2.0.1",
+    "webpack-dev-middleware": "^2.0.3",
     "webpack-manifest-plugin": "^1.3.2"
   },
   "devDependencies": {
     "cater-jest": "^0.2.0",
-    "jest": "^21.2.1",
+    "jest": "^22.0.4",
     "jest-babel": "^1.0.1",
     "react-test-renderer": "^16.2.0",
     "supertest": "^3.0.0"

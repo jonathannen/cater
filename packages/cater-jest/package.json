@@ -7,7 +7,7 @@
   "homepage": "https://github.com/jonathannen/cater",
   "main": "index.js",
   "dependencies": {
-    "babel-jest": "^22.0.1"
+    "babel-jest": "^22.0.4"
   },
   "scripts": {
     "test": "jest"

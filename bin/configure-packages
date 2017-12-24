@@ -7,6 +7,11 @@ const path = require("path");
 // Packages that are optionally installed in a example or package directory
 const WHITELIST_PACKAGES = ["express"];
 
+// Packages versioned together across all of cater
+const KEY_DEV_DEPENDENCIES = {
+  jest: "^22.0.4"
+};
+
 const readPackageFile = function(...args) {
   const packageFile = path.join(...args);
   if (!fs.existsSync(packageFile)) return null;
@@ -26,9 +31,7 @@ const updatePackageFile = function(...args) {
 
   // Get whitelist dependencies
   const deps = Object.assign({}, package.dependencies);
-  const add = WHITELIST_PACKAGES.filter(x =>
-    Object.keys(deps).includes(x)
-  );
+  const add = WHITELIST_PACKAGES.filter(x => Object.keys(deps).includes(x));
 
   const updatedPackage = fn(package);
 
@@ -38,18 +41,25 @@ const updatePackageFile = function(...args) {
   });
 
   // Jest package dependencies
-  if(updatedPackage.devDependencies) {
-    Object.keys(updatedPackage.devDependencies).forEach((k) => {
-      if(k.startsWith('cater-')) {
+  if (updatedPackage.devDependencies) {
+    // Update packages like jest
+    Object.keys(KEY_DEV_DEPENDENCIES)
+      .filter(k => !!updatedPackage.devDependencies[k])
+      .forEach(k => {
+        updatedPackage.devDependencies[k] = KEY_DEV_DEPENDENCIES[k];
+      });
+
+    // Update cater-* packages to be the same overall version
+    Object.keys(updatedPackage.devDependencies)
+      .filter(k => k.startsWith("cater-"))
+      .forEach(k => {
         updatedPackage.devDependencies[k] = `^${version}`;
-      }
-    });
+      });
   }
 
   fs.writeFileSync(packageFile, JSON.stringify(updatedPackage, null, 2));
   return updatedPackage;
 };
-
 
 const exampleTemplate = {
   author: "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
@@ -61,7 +71,7 @@ const exampleTemplate = {
   },
   devDependencies: {
     "cater-jest": `^${version}`,
-    jest: "^21.2.1",
+    jest: "^22.0.4",
     "jest-babel": "^1.0.1",
     "react-test-renderer": "^16.2.0",
     supertest: "^3.0.0"
@@ -80,27 +90,17 @@ const packageTemplate = {
 // Example Packages
 const exampleDirectory = path.join(__dirname, "..", "examples");
 fs.readdirSync(exampleDirectory).forEach(directory => {
-  const result = updatePackageFile(
-    exampleDirectory,
-    directory,
-    "package.json",
-    pkg => {
-      pkg.name = directory;
-      return Object.assign(pkg, exampleTemplate);
-    }
-  );
+  const result = updatePackageFile(exampleDirectory, directory, "package.json", pkg => {
+    pkg.name = directory;
+    return Object.assign(pkg, exampleTemplate);
+  });
 });
 
 // Regular Packages
 const packageDirectory = path.join(__dirname, "..", "packages");
 fs.readdirSync(packageDirectory).forEach(directory => {
-  const result = updatePackageFile(
-    packageDirectory,
-    directory,
-    "package.json",
-    pkg => {
-      pkg.name = directory;
-      return Object.assign(pkg, packageTemplate);
-    }
-  );
+  const result = updatePackageFile(packageDirectory, directory, "package.json", pkg => {
+    pkg.name = directory;
+    return Object.assign(pkg, packageTemplate);
+  });
 });
