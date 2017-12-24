@@ -2,8 +2,9 @@
 
 set -e
 
-echo "Testing, prompting for new version, then publishing... "
+echo "Checking for outdated packages, testing, versioning, then publishing... "
 
+yarn outdated
 yarn test
 yarn version
 ./bin/configure-packages
