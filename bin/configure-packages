@@ -14,6 +14,10 @@ const readPackageFile = function(...args) {
   return JSON.parse(content);
 };
 
+// Get the version from the top level package.json
+const masterPackage = readPackageFile(__dirname, "..", "package.json");
+const version = masterPackage.version;
+
 const updatePackageFile = function(...args) {
   const fn = args.pop();
   const packageFile = path.join(...args);
@@ -33,12 +37,19 @@ const updatePackageFile = function(...args) {
     updatedPackage.dependencies[name] = deps[name];
   });
 
+  // Jest package dependencies
+  if(updatedPackage.devDependencies) {
+    Object.keys(updatedPackage.devDependencies).forEach((k) => {
+      if(k.startsWith('cater-')) {
+        updatedPackage.devDependencies[k] = `^${version}`;
+      }
+    });
+  }
+
   fs.writeFileSync(packageFile, JSON.stringify(updatedPackage, null, 2));
   return updatedPackage;
 };
 
-const masterPackage = readPackageFile(__dirname, "..", "package.json");
-const version = masterPackage.version;
 
 const exampleTemplate = {
   author: "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
