@@ -9,13 +9,16 @@
  */
 const DEFAULT_OPTIONS = {
   // build: null,
+  // debug: null,
+  // hot: true,
   buildDirectory: "build",
   bundleFilename: "bundle.js",
-  // debug: null,
   entryScriptFilename: "_entry.js",
   extensions: [".js", ".jsx", ""],
   httpPort: 3000,
-  // hot: true,
+  assetExtensions: {
+    image: ['gif', 'jpeg', 'jpg', 'png', 'svg']
+  },
   plugins: ["emotion"],
   publicPath: "/static/",
   sideNames: ["client", "server"],
@@ -25,8 +28,11 @@ const DEFAULT_OPTIONS = {
 };
 
 DEFAULT_OPTIONS.babel = {
-    presets: ["env", "react"],
-    plugins: [["add-module-exports"], ["transform-class-properties"]]
+  presets: ["env", "react"],
+  plugins: [
+    ["add-module-exports"],
+    ["transform-class-properties"],
+  ]
 };
 
 module.exports = DEFAULT_OPTIONS; // CommonJS

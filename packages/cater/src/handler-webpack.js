@@ -16,8 +16,7 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
  * the webpack client side development server.
  */
 const generateHandler = function(context, reloadCallback = null) {
-  const clientConfig = generator(context, context.sides.client);
-  const compiler = webpack(clientConfig);
+  const compiler = webpack(context.sides.client.webpackConfig);
 
   const client = new Promise((resolve, reject) => {
     compiler.plugin("done", result => {

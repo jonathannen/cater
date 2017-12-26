@@ -5,13 +5,14 @@ import webpack from "webpack";
 /**
  * Returns a Promise to a Webpack build to the filesystem. Default
  * options will output the server bundle to
- * <project>/build/__serverside_bundle.js and the client to
+ * <project>/build/bundle.js and the client to
  * <project>/build/static/bundle.js.
  */
 const build = function(context) {
-  const clientConfig = generator(context, context.sides.client);
-  const serverConfig = generator(context, context.sides.server);
-  const compiler = webpack([clientConfig, serverConfig]);
+  const client = context.sides.client.webpackConfig;
+  const server = context.sides.server.webpackConfig;
+
+  const compiler = webpack([client, server]);
 
   return new Promise((resolve, reject) => {
     const callback = (err, result) => {

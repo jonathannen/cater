@@ -1,5 +1,6 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 const clone = require("clone");
+const configureImageLoaders = require('./context-images');
 const defaultOptions = require("./context-options.js");
 const fs = require("fs");
 const path = require("path");
@@ -16,6 +17,9 @@ class Cater {
     // Assign derived options
     this.assignPaths();
     this.configureSides();
+
+    // Built-In Plugins
+    configureImageLoaders(this);
 
     this.plugins = plugins.configure(this);
     this.plugins.postConfiguration(this); // EVENT: Post-Configuration
@@ -53,6 +57,14 @@ class Cater {
         if (fs.existsSync(candidate)) result.push(candidate);
       }
     return result;
+  }
+
+  clientSides() {
+    return Object.values(this.sides).filter(s => s.typeClient);
+  }
+
+  serverSides() {
+    return Object.values(this.sides).filter(s => s.typeServer);
   }
 
   /**

@@ -2,6 +2,9 @@
 const clone = require("clone");
 const fs = require("fs");
 const path = require("path");
+const webpackGenerator = require("./webpack-generator");
+
+const ASSET_PATH = "assets";
 
 /**
  * Resolves the given partial filename source name "app/blah" in the given
@@ -39,11 +42,18 @@ class SideConfiguration {
 
     this.bundleName = path.parse(context.bundleFilename).name; // bundle.js -> bundle
     this.bundlePath = `${context.publicPath}${context.bundleFilename}`;
+    if(this.typeServer) {
+      this.bundleName = `server-${this.bundleName}`;
+      this.bundlePath = `${context.publicPath}server-${context.bundleFilename}`;
+    }
 
     if(context.production) this.configureProduction(context);
+
+    this.webpackConfig = webpackGenerator(context, this);
   }
 
   assignPaths(context) {
+    this.assetPaths = [path.join(context.appRootPath, 'assets')];
     this.sidePaths = context.generatePaths([this.name]);
     this.paths = context.universalPaths.concat(this.sidePaths);
     this.entryPath = this.resolve(context.entryScriptFilename);
@@ -110,6 +120,19 @@ class SideConfiguration {
    * path rules of this side.
    */
   resolveBabel(source, filename) {
+
+    // Handle /asset/* imports
+    if(source.startsWith(ASSET_PATH)) {
+      let result = null;
+      this.assetPaths.forEach((assetPath) => {
+        const base = source.substring(ASSET_PATH.length + 1);
+        const candidate = path.join(assetPath, base);
+        if(fs.existsSync(candidate)) result = candidate;
+      });
+      if(result !== null) return result;
+    }
+
+    // Handle /app/* and similar imports
     for (let prefix of Object.keys(this.importPrefixResolvers)) {
       if (source.startsWith(`${prefix}/`)) {
         const base = source.substring(prefix.length + 1);

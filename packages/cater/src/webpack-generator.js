@@ -1,28 +1,19 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import fs from "fs";
-import path from "path";
-import webpack from "webpack";
+// import fs from "fs";
+// import path from "path";
+// import webpack from "webpack";
 
-import CompressionPlugin from "compression-webpack-plugin";
-import ManifestPlugin from "webpack-manifest-plugin";
-import UglifyJsPlugin from "uglifyjs-webpack-plugin";
+// import CompressionPlugin from "compression-webpack-plugin";
+// import ManifestPlugin from "webpack-manifest-plugin";
+// import UglifyJsPlugin from "uglifyjs-webpack-plugin";
 
-const saasLoader = [
-  {
-    test: /\.scss$/,
-    use: [
-      {
-        loader: "style-loader" // creates style nodes from JS strings
-      },
-      {
-        loader: "css-loader" // translates CSS into CommonJS
-      },
-      {
-        loader: "sass-loader" // compiles Sass to CSS
-      }
-    ]
-  }
-];
+const fs = require('fs');
+const path = require('path')
+const webpack = require('webpack');
+
+const CompressionPlugin = require('compression-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 /**
  * Generates a Webpack configuration object for the given context and
@@ -45,7 +36,6 @@ const generate = function(context, side) {
       }
     ]
   };
-  // module.rules.push(saasLoader);
 
   const plugins = [new webpack.optimize.OccurrenceOrderPlugin(), new webpack.NoEmitOnErrorsPlugin()];
 
@@ -148,4 +138,5 @@ const forProduction = function(result, side, context) {
   // );
 };
 
-export default generate;
+module.exports = generate;
+// export default generate;
