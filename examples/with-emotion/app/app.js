@@ -6,7 +6,6 @@ injectGlobal`
   body {
     background: tomato;
   }
-
 `;
 
 const H1 = styled("h1")`

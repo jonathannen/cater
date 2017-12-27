@@ -3,7 +3,6 @@ const Cater = require("./src");
 
 module.exports = function(options) {
   const app = new Cater(options);
-
   const babelOptions = app.sides.server.babel;
   babelOptions.cache = false;
   require("babel-register")(babelOptions);

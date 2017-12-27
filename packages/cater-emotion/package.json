@@ -1,0 +1,16 @@
+{
+  "name": "cater-emotion",
+  "version": "0.2.0",
+  "description": "Enables the emotion CSS library for cater",
+  "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+  "license": "MIT",
+  "homepage": "https://github.com/jonathannen/cater",
+  "main": "plugin.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "emotion": "^8.0.12",
+    "emotion-server": "^8.0.12"
+  }
+}

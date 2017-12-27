@@ -1,28 +1,41 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 const clone = require("clone");
-const configureImageLoaders = require('./context-images');
+const configureImageLoaders = require("./context-images");
 const defaultOptions = require("./context-options.js");
+const { autoDefinePlugins, configurePlugins } = require("./context-plugins.js");
+const EventEmitter = require("events");
 const fs = require("fs");
 const path = require("path");
-const plugins = require("../plugins");
 const SideConfiguration = require("./context-side.js");
 
-class Cater {
-  constructor(options) {
-    this.assignProgrammaticDefaults();
+const events = {
+  configured: "configured"
+};
 
-    // Deep-clone the defaults in case we mutate arrays/etc in the options
+class Cater extends EventEmitter {
+  constructor(options) {
+    super();
+
+    // Deep-clone the defaults in case we mutate arrays/etc in the options.
+    // Then set up the most criticial and widely used pieces.
     Object.assign(this, clone(defaultOptions), clone(options));
+    this.assignProgrammaticDefaults();
+    this.appRootPath = this.appRootPath || process.cwd();
+    this.loadPackage();
+
+    if(this.plugins == 'auto') autoDefinePlugins(this);
+    configurePlugins(this); // Get plugins ready
 
     // Assign derived options
     this.assignPaths();
     this.configureSides();
 
-    // Built-In Plugins
+    // Built-In and Configured Plugins
     configureImageLoaders(this);
 
-    this.plugins = plugins.configure(this);
-    this.plugins.postConfiguration(this); // EVENT: Post-Configuration
+    this.emit(events.configured, this); // EVENT
+    // this.plugins = plugins.configure(this);
+    // this.plugins.postConfiguration(this); // EVENT: Post-Configuration
   }
 
   assignProgrammaticDefaults() {
@@ -32,9 +45,14 @@ class Cater {
   }
 
   assignPaths() {
-    this.appRootPath = this.appRootPath || process.cwd();
     this.buildPath = path.join(this.appRootPath, this.buildDirectory);
-    this.rootPaths = [this.appRootPath, this.caterRootPath];
+
+    this.pluginPaths = Object.values(this.configuredPlugins)
+      .map(v => v.componentRootPath)
+      .filter(v => !!v);
+
+    this.rootPaths = [this.appRootPath, ...this.pluginPaths, this.caterRootPath].filter(v => fs.existsSync(v));
+
     this.staticPath = path.join(this.buildPath, this.publicPath);
     this.devStaticPath = path.join(this.appRootPath, this.staticDirectory);
     this.universalPaths = this.generatePaths(this.universalNames);
@@ -59,6 +77,16 @@ class Cater {
     return result;
   }
 
+  loadPackage() {
+    this.package = {};
+    const packageFile = path.join(this.appRootPath, 'package.json');
+    if(fs.existsSync(packageFile)) {
+      const content = fs.readFileSync(packageFile).toString();
+      this.package = JSON.parse(content);
+    }
+    return this.package;
+  }
+
   clientSides() {
     return Object.values(this.sides).filter(s => s.typeClient);
   }
@@ -79,6 +107,6 @@ class Cater {
 module.exports = Cater;
 
 Cater.prototype.prepareCommandLine = function() {
-  const commands = require('./commands.js');
-  Object.keys(commands).forEach((key) => Cater.prototype[key] = commands[key] );
-}
+  const commands = require("./commands.js");
+  Object.keys(commands).forEach(key => (Cater.prototype[key] = commands[key]));
+};

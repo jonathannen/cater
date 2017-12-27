@@ -6,7 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "cater": "^0.2.0",
-    "express": "^4.16.2"
+    "cater-emotion": "^0.2.0"
   },
   "scripts": {
     "dev": "cater dev",

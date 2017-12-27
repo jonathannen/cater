@@ -19,7 +19,7 @@ const DEFAULT_OPTIONS = {
   assetExtensions: {
     image: ['gif', 'jpeg', 'jpg', 'png', 'svg']
   },
-  plugins: ["emotion"],
+  plugins: 'auto',
   publicPath: "/static/",
   sideNames: ["client", "server"],
   staticDirectory: "static",

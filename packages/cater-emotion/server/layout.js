@@ -1,6 +1,6 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import App from "app/app";
-import CaterLayout, { Body, Scripts } from "app/cater/layout";
+import ParentLayout, { Body, Scripts } from "server/^";
 import React from "react";
 import { extractCritical } from "emotion-server";
 import { renderToString } from "react-dom/server";
@@ -8,7 +8,7 @@ import { renderToString } from "react-dom/server";
 /**
  * Your regular Layout component, but with the emotion styles added in.
  */
-class Layout extends CaterLayout {
+class Layout extends ParentLayout {
   render() {
     const appBody = renderToString(<App />);
     const { html, ids, css } = extractCritical(appBody);

@@ -56,8 +56,8 @@ const generate = function(context, side) {
   };
 
   // Post-process for various environments
-  const forDebugOrProduction = context.debug ? forDebug : forProduction;
-  forDebugOrProduction(config, side, context);
+  const forDebugOrBuild = context.build ? forBuild : forDebug;
+  forDebugOrBuild(config, side, context);
   if (side.typeServer) forServer(config, side, context);
 
   return config;
@@ -80,8 +80,8 @@ const forServer = function(result, side, context) {
   return result;
 };
 
-// For PRODUCTION webpack builds.
-const forProduction = function(result, side, context) {
+// For BUILD webpack builds.
+const forBuild = function(result, side, context) {
   result.devtool = "cheap-module-source-map";
   result.output.filename = "[name].[chunkhash].js";
 
