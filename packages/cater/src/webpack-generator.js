@@ -1,19 +1,11 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-// import fs from "fs";
-// import path from "path";
-// import webpack from "webpack";
+const fs = require("fs");
+const path = require("path");
+const webpack = require("webpack");
 
-// import CompressionPlugin from "compression-webpack-plugin";
-// import ManifestPlugin from "webpack-manifest-plugin";
-// import UglifyJsPlugin from "uglifyjs-webpack-plugin";
-
-const fs = require('fs');
-const path = require('path')
-const webpack = require('webpack');
-
-const CompressionPlugin = require('compression-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CompressionPlugin = require("compression-webpack-plugin");
+const ManifestPlugin = require("webpack-manifest-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 /**
  * Generates a Webpack configuration object for the given context and
@@ -37,7 +29,7 @@ const generate = function(context, side) {
     ]
   };
 
-  const plugins = [new webpack.optimize.OccurrenceOrderPlugin(), new webpack.NoEmitOnErrorsPlugin()];
+  const plugins = [new webpack.optimize.OccurrenceOrderPlugin(), new webpack.NoEmitOnErrorsPlugin(), new ManifestPlugin()];
 
   const output = {
     chunkFilename: "[name].[chunkhash].js",
@@ -56,7 +48,7 @@ const generate = function(context, side) {
   };
 
   // Post-process for various environments
-  const forDebugOrBuild = context.build ? forBuild : forDebug;
+  const forDebugOrBuild = context.debug ? forDebug : forBuild;
   forDebugOrBuild(config, side, context);
   if (side.typeServer) forServer(config, side, context);
 
@@ -124,8 +116,6 @@ const forBuild = function(result, side, context) {
 
   result.plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
 
-  result.plugins.push(new ManifestPlugin());
-
   // Chunk out the vendor pieces -- TODO: not implemented yet
   // result.plugins.push(
   //   new webpack.optimize.CommonsChunkPlugin({
@@ -139,4 +129,3 @@ const forBuild = function(result, side, context) {
 };
 
 module.exports = generate;
-// export default generate;

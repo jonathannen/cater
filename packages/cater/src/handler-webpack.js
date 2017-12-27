@@ -18,12 +18,15 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
 const generateHandler = function(context, reloadCallback = null) {
   const compiler = webpack(context.sides.client.webpackConfig);
 
+  context.callbackWebpackCompiling(compiler);
+
   const client = new Promise((resolve, reject) => {
     compiler.plugin("done", result => {
       if (result.hasErrors()) {
         console.log(`Webpack compilation failed.`);
         return reject(result.compilation.errors);
       }
+      context.callbackWebpackCompiled(result);
 
       const success = reloadCallback ? reloadCallback() : true;
       if (!success) {

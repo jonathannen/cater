@@ -9,7 +9,10 @@ yarn test
 yarn version
 ./bin/configure-packages
 
+# Using npm here as it allows silent publish. Yarn has a prompt.
 npm publish packages/cater
+npm publish packages/cater-assets
+npm publish packages/cater-emotion
 npm publish packages/cater-jest
 
 echo "Done"

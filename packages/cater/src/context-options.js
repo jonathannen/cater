@@ -13,11 +13,13 @@ const DEFAULT_OPTIONS = {
   // hot: true,
   buildDirectory: "build",
   bundleFilename: "bundle.js",
+  defaultPlugins: ['cater-assets'],
   entryScriptFilename: "_entry.js",
   extensions: [".js", ".jsx", ""],
   httpPort: 3000,
   assetExtensions: {
-    image: ['gif', 'jpeg', 'jpg', 'png', 'svg']
+    image: ['gif', 'jpeg', 'jpg', 'png', 'svg'],
+    stylesheet: ['css', 'scss'],
   },
   plugins: 'auto',
   publicPath: "/static/",

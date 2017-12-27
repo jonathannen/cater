@@ -1,6 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 const clone = require("clone");
-const configureImageLoaders = require("./context-images");
 const defaultOptions = require("./context-options.js");
 const { autoDefinePlugins, configurePlugins } = require("./context-plugins.js");
 const EventEmitter = require("events");
@@ -9,7 +8,9 @@ const path = require("path");
 const SideConfiguration = require("./context-side.js");
 
 const events = {
-  configured: "configured"
+  configured: "configured",
+  webpackCompiled: "webpack-compiled",
+  webpackCompiling: "webpack-compiling",
 };
 
 class Cater extends EventEmitter {
@@ -19,8 +20,8 @@ class Cater extends EventEmitter {
     // Deep-clone the defaults in case we mutate arrays/etc in the options.
     // Then set up the most criticial and widely used pieces.
     Object.assign(this, clone(defaultOptions), clone(options));
-    this.assignProgrammaticDefaults();
     this.appRootPath = this.appRootPath || process.cwd();
+    this.assignProgrammaticDefaults();
     this.loadPackage();
 
     if(this.plugins == 'auto') autoDefinePlugins(this);
@@ -31,17 +32,15 @@ class Cater extends EventEmitter {
     this.configureSides();
 
     // Built-In and Configured Plugins
-    configureImageLoaders(this);
+    // configureImageLoaders(this);
+    // configureCssLoaders(this);
 
     this.emit(events.configured, this); // EVENT
-    // this.plugins = plugins.configure(this);
-    // this.plugins.postConfiguration(this); // EVENT: Post-Configuration
   }
 
   assignProgrammaticDefaults() {
     this.caterRootPath = path.join(__dirname, "..");
     this.debug = process.env.NODE_ENV !== "production";
-    this.production = !this.debug; // better than having error-prone "!debug" everywhere
   }
 
   assignPaths() {
@@ -87,14 +86,6 @@ class Cater extends EventEmitter {
     return this.package;
   }
 
-  clientSides() {
-    return Object.values(this.sides).filter(s => s.typeClient);
-  }
-
-  serverSides() {
-    return Object.values(this.sides).filter(s => s.typeServer);
-  }
-
   /**
    * Returns a http.Handler for this application.
    */
@@ -102,6 +93,19 @@ class Cater extends EventEmitter {
     const middleware = require("./middleware").default;
     return middleware(this);
   }
+
+  /*
+   * Inversion that is triggered when a client-side webpack is successfully
+   * compiled. Can be used by plugins to take post-compilation actions.
+   */
+  callbackWebpackCompiled(stats) {
+    this.emit(events.webpackCompiled, this, stats);
+  }
+
+  callbackWebpackCompiling(compiler) {
+    this.emit(events.webpackCompiling, this, compiler);
+  }
+
 }
 
 module.exports = Cater;

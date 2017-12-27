@@ -131,15 +131,17 @@ class SideConfiguration {
       filename = split[1];
     }
 
-    // Handle /asset/* imports
-    if (source.startsWith(ASSET_PATH)) {
-      let result = null;
-      this.assetPaths.forEach(assetPath => {
-        const base = source.substring(ASSET_PATH.length + 1);
-        const candidate = path.join(assetPath, base);
-        if (fs.existsSync(candidate)) result = candidate;
-      });
-      if (result !== null) return result;
+    // Handle /asset/* imports for Webpack
+    if(this.typeClient) {
+      if (source.startsWith(ASSET_PATH)) {
+        let result = null;
+        this.assetPaths.forEach(assetPath => {
+          const base = source.substring(ASSET_PATH.length + 1);
+          const candidate = path.join(assetPath, base);
+          if (fs.existsSync(candidate)) result = candidate;
+        });
+        if (result !== null) return result;
+      }
     }
 
     // Handle /app/* and similar imports

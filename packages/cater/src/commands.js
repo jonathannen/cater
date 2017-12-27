@@ -6,8 +6,7 @@ import webpackBuild from "./webpack-build";
 
 // Returns a promise to a production build of the application.
 module.exports.runBuild = function() {
-  this.build = true;
-  this.production = true;
+  this.debug = false;
 
   return fs
     .remove(this.buildPath)
