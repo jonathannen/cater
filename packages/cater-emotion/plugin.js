@@ -1,10 +1,6 @@
-// const cater = require('cater');
+// Copyright Jon Williams 2017. See LICENSE file.
 
 module.exports = function(cater, options) {
-
-  cater.on('configured', () => {
-    console.log("configured");
-  });
-
+  // Nothing to do yet
   return true;
 }

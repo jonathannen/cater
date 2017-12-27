@@ -1,5 +1,4 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import App from "app/app";
 import ParentLayout, { Body, Scripts } from "server/^";
 import React from "react";
 import { extractCritical } from "emotion-server";
@@ -10,6 +9,7 @@ import { renderToString } from "react-dom/server";
  */
 class Layout extends ParentLayout {
   render() {
+    const App = this.props.app;
     const appBody = renderToString(<App />);
     const { html, ids, css } = extractCritical(appBody);
     return (
