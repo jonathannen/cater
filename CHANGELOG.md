@@ -5,9 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added in the caret import. This will import from a component that overrides another component. For example if you had project/server/layout import '^' it would return the cater/server/layout component. Useful for wrappering.
+
 ### Changed
 - Updated dependent packages, including Jest from v21 to v22.
-- Added in the caret import. This will import from a component that overrides another component. For example if you had project/server/layout import '^' it would return the cater/server/layout component. Useful for wrappering.
 
 ## [0.2.0] - 2017-12-23
 ### Added
