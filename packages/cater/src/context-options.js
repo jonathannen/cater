@@ -37,4 +37,4 @@ DEFAULT_OPTIONS.babel = {
   ]
 };
 
-module.exports = DEFAULT_OPTIONS; // CommonJS
+module.exports = DEFAULT_OPTIONS;

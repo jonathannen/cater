@@ -50,7 +50,7 @@ class SideConfiguration {
       this.bundlePath = `${context.publicPath}server-${context.bundleFilename}`;
     }
 
-    if (context.production) this.configureProduction(context);
+    if (!context.debug) this.configureProduction(context);
 
     this.webpackConfig = webpackGenerator(context, this);
   }

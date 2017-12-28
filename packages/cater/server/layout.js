@@ -1,11 +1,8 @@
 // Copyright Jon Williams 2017. See LICENSE file.
+import { caterContextTypes } from "./cater-provider"; // Note: Relative import
 import PropTypes from "prop-types";
 import React from "react";
-
-// Context shared by Layout to it's child components
-const layoutContextTypes = {
-  __cater: PropTypes.any
-};
+import Scripts from 'app/scripts';
 
 /**
  * Layout is used on the Server Side to render the HTML surrounding the
@@ -14,51 +11,23 @@ const layoutContextTypes = {
  * more.
  */
 class Layout extends React.Component {
-  static childContextTypes = layoutContextTypes;
-
-  static propTypes = {
-    app: PropTypes.func.isRequired,
-    bundlePath: PropTypes.string.isRequired
-  };
-
-  getChildContext() {
-    return { __cater: this.props };
-  }
+  static contextTypes = caterContextTypes;
 
   render() {
-    const App = this.props.app;
+    const context = this.context.__caterContext;
     return (
       <html>
         <head>
           <meta charSet="utf-8" />
           <title />
+          {context.globalStyles.map(href => <link href={href} key={href} rel="stylesheet" type="text/css" />)}
         </head>
         <body>
-          <Body />
+          {this.props.children}
           <Scripts />
         </body>
       </html>
     );
-  }
-}
-
-export class Body extends React.Component {
-  static contextTypes = layoutContextTypes;
-  render() {
-    const App = this.context.__cater.app;
-    return (
-      <div id="root">
-        <App />
-      </div>
-    );
-  }
-}
-
-export class Scripts extends React.Component {
-  static contextTypes = layoutContextTypes;
-  render() {
-    const bundlePath = this.context.__cater.bundlePath;
-    return <script src={bundlePath} />;
   }
 }
 

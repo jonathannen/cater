@@ -1,7 +1,8 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import ParentLayout, { Body, Scripts } from "server/^";
+import PropTypes from 'prop-types';
+import React from 'react';
+import ParentLayout from 'server/^'; // Note: Inheritance import
+import Scripts from 'app/scripts';
 
 /**
  * Custom Layout that extends the CaterLayout.
@@ -16,7 +17,7 @@ class Layout extends ParentLayout {
         </head>
         <body>
           <h1>This is a Custom Layout</h1>
-          <Body />
+          {this.props.children}
           <Scripts />
         </body>
       </html>

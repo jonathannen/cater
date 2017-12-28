@@ -4,6 +4,11 @@ import http from "http";
 import path from "path";
 import webpackBuild from "./webpack-build";
 
+const catchFatal = function(err) {
+  console.error(err);
+  process.exit(-1);
+};
+
 // Returns a promise to a production build of the application.
 module.exports.runBuild = function() {
   this.debug = false;
@@ -17,10 +22,8 @@ module.exports.runBuild = function() {
       }
       return Promise.resolve(true);
     })
-    .then(() => {
-      return webpackBuild(this);
-    });
-
+    .then(() => webpackBuild(this))
+    .catch(catchFatal);
 };
 
 // Runs the development server - that's a server with webpack in-memory
