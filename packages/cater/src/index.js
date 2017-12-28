@@ -40,6 +40,7 @@ class Cater extends EventEmitter {
 
   assignProgrammaticDefaults() {
     this.caterRootPath = path.join(__dirname, "..");
+    this.caterRuntimePath = path.dirname(require.resolve('cater-runtime'));
     this.debug = process.env.NODE_ENV !== "production";
   }
 
@@ -50,7 +51,7 @@ class Cater extends EventEmitter {
       .map(v => v.componentRootPath)
       .filter(v => !!v);
 
-    this.rootPaths = [this.appRootPath, ...this.pluginPaths, this.caterRootPath].filter(v => fs.existsSync(v));
+    this.rootPaths = [this.appRootPath, ...this.pluginPaths, this.caterRootPath, this.caterRuntimePath].filter(v => fs.existsSync(v));
 
     this.staticPath = path.join(this.buildPath, this.publicPath);
     this.devStaticPath = path.join(this.appRootPath, this.staticDirectory);

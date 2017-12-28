@@ -6,7 +6,8 @@
  */
 class CaterContext {
 
-  constructor() {
+  constructor(bundlePath) {
+    this.bundlePath = bundlePath;
     this.globalStyles = [];
   }
 

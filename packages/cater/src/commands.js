@@ -2,6 +2,7 @@
 import fs from "fs-extra";
 import http from "http";
 import path from "path";
+import Runtime from 'cater-runtime';
 import webpackBuild from "./webpack-build";
 
 const catchFatal = function(err) {
@@ -33,8 +34,7 @@ module.exports.runDev = function() {
 };
 
 module.exports.runStart = function() {
-  this.debug = false;
-  return this.handler().then(h => this.runGenericServer(h));
+  return Promise.resolve(Runtime());
 };
 
 // Runs a generic server, given a http.Handler

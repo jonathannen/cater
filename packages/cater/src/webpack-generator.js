@@ -29,7 +29,11 @@ const generate = function(context, side) {
     ]
   };
 
-  const plugins = [new webpack.optimize.OccurrenceOrderPlugin(), new webpack.NoEmitOnErrorsPlugin(), new ManifestPlugin()];
+  const plugins = [
+    new webpack.optimize.OccurrenceOrderPlugin(), //
+    new webpack.NoEmitOnErrorsPlugin(),
+    new ManifestPlugin(),
+  ];
 
   const output = {
     chunkFilename: "[name].[chunkhash].js",

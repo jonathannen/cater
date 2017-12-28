@@ -1,16 +1,11 @@
 {
-  "name": "cater-jest",
+  "name": "cater-build",
   "version": "0.2.0",
-  "description": "Utilities to help run Jest testing with Cater",
+  "description": "The build portion of the Cater Framework",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "homepage": "https://github.com/jonathannen/cater",
   "main": "index.js",
-  "dependencies": {
-    "babel-jest": "^22.0.4",
-    "jest": "^22.0.4",
-    "react-test-renderer": "^16.2.0"
-  },
   "scripts": {
     "test": "jest"
   }

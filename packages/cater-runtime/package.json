@@ -1,17 +1,17 @@
 {
-  "name": "cater-emotion",
+  "name": "cater-runtime",
   "version": "0.2.0",
-  "description": "Enables the emotion CSS library for cater",
+  "description": "The runtime portion of the Cater Framework",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "homepage": "https://github.com/jonathannen/cater",
-  "main": "plugin.js",
+  "main": "index.js",
   "scripts": {
     "test": "jest"
   },
   "dependencies": {
-    "emotion": "^8.0.12",
-    "emotion-server": "^8.0.12",
-    "react-emotion": "^8.0.12"
+    "mime-types": "^2.1.17",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   }
 }

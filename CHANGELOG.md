@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Updated dependent packages, including Jest from v21 to v22.
+- Moved production components to a cater-runtime package.
 
 ## [0.2.0] - 2017-12-23
 ### Added

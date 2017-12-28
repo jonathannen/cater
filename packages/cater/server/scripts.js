@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import { caterContextTypes } from "./cater-provider"; // Note: Relative import
+import { caterContextTypes } from "server/cater-provider";
 import PropTypes from "prop-types";
 import React from "react";
 

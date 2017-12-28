@@ -9,7 +9,9 @@
     "cater-emotion": "^0.2.0"
   },
   "scripts": {
+    "build": "cater build",
     "dev": "cater dev",
+    "start": "cater start",
     "test": "jest"
   },
   "devDependencies": {
