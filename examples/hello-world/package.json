@@ -10,13 +10,13 @@
   },
   "scripts": {
     "dev": "cater dev",
-    "test": "jest"
+    "test": "jest",
+    "build": "cater build",
+    "start": "cater start"
   },
   "devDependencies": {
+    "cater-build": "^0.2.0",
     "cater-jest": "^0.2.0",
-    "jest": "^22.0.4",
-    "jest-babel": "^1.0.1",
-    "react-test-renderer": "^16.2.0",
     "supertest": "^3.0.0"
   },
   "private": true

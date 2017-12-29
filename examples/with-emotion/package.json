@@ -6,7 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "cater": "^0.2.0",
-    "cater-emotion": "^0.2.0"
+    "express": "^4.16.2"
   },
   "scripts": {
     "build": "cater build",
@@ -15,10 +15,9 @@
     "test": "jest"
   },
   "devDependencies": {
+    "cater-build": "^0.2.0",
     "cater-jest": "^0.2.0",
-    "jest": "^22.0.4",
-    "jest-babel": "^1.0.1",
-    "react-test-renderer": "^16.2.0",
+    "cater-emotion": "^0.2.0",
     "supertest": "^3.0.0"
   },
   "private": true

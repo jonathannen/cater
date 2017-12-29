@@ -27,14 +27,17 @@ const commandFunctionName = "run" + command.charAt(0).toUpperCase() + command.sl
 if (COMMANDS.includes(command)) {
   // The cater package does this too, but we want to be explicit here as
   // it's not necessarily determined by production versus dev.
-  const caterModule = BUILD_COMMANDS.includes(command) ? "cater-build" : "cater-runtime";
-  const Cater = require(caterModule);
+  const isRuntime = RUNTIME_COMMANDS.includes(command);
+
+  process.env.CATER_MODE = process.env.CATER_MODE || isRuntime ? 'runtime' : 'build';
+
+  const Cater = require('cater');
   const app = new Cater();
   Cater.readyCommandLine();
   app[commandFunctionName]().catch(catchFatal);
 } else {
   console.log(
-`Cater Framework.
+    `Cater Framework.
 
     Usage:
         cater build

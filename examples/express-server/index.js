@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-const cater = require("cater");
+const cater = require('cater');
 const server = require("./server");
 
 const port = parseInt(process.env.PORT, 10) || 3000;

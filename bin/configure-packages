@@ -67,13 +67,11 @@ const exampleTemplate = {
   version: version,
   private: true,
   dependencies: {
-    cater: `^${version}`
+    "cater": `^${version}`
   },
   devDependencies: {
+    "cater-build": `^${version}`,
     "cater-jest": `^${version}`,
-    jest: "^22.0.4",
-    "jest-babel": "^1.0.1",
-    "react-test-renderer": "^16.2.0",
     supertest: "^3.0.0"
   }
 };
@@ -87,12 +85,26 @@ const packageTemplate = {
   }
 };
 
+const scripts = {
+  "build": "cater build",
+  "dev": "cater dev",
+  "start": "cater start",
+  "test": "jest"
+}
+
 // Example Packages
 const exampleDirectory = path.join(__dirname, "..", "examples");
 fs.readdirSync(exampleDirectory).forEach(directory => {
   const result = updatePackageFile(exampleDirectory, directory, "package.json", pkg => {
     pkg.name = directory;
-    return Object.assign(pkg, exampleTemplate);
+    pkg = Object.assign(pkg, exampleTemplate);
+
+    Object.keys(scripts).forEach((k) => {
+      if(!!pkg.scripts[k]) return;
+      pkg.scripts[k] = scripts[k];
+    });
+
+    return pkg;
   });
 });
 
