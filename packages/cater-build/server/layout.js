@@ -14,13 +14,15 @@ class Layout extends React.Component {
   static contextTypes = caterContextTypes;
 
   render() {
-    const context = this.context.__caterContext;
+    const ctx = this.context.__caterContext;
+    const bundlePath = ctx.bundlePath;
     return (
       <html>
         <head>
+          <link rel="preload" href={bundlePath} as="script"/>
           <meta charSet="utf-8" />
           <title />
-          {context.globalStyles.map(href => <link href={href} key={href} rel="stylesheet" type="text/css" />)}
+          {ctx.globalStyles.map(href => <link href={href} key={href} rel="stylesheet" type="text/css" />)}
         </head>
         <body>
           {this.props.children}

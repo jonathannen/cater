@@ -10,7 +10,7 @@ export class Scripts extends React.Component {
   static contextTypes = caterContextTypes;
   render() {
     const bundlePath = this.context.__caterContext.bundlePath;
-    return <script src={bundlePath} />;
+    return <script async src={bundlePath} />;
   }
 }
 
