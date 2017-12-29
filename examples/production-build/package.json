@@ -1,11 +1,11 @@
 {
   "name": "production-build",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Hello World example for the Cater Framework",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.3.1",
+    "cater": "^0.3.2",
     "express": "^4.16.2"
   },
   "scripts": {
@@ -15,8 +15,8 @@
     "test": "jest"
   },
   "devDependencies": {
-    "cater-build": "^0.3.1",
-    "cater-jest": "^0.3.1",
+    "cater-build": "^0.3.2",
+    "cater-jest": "^0.3.2",
     "jest": "^22.0.4",
     "supertest": "^3.0.0"
   },
