@@ -2,7 +2,7 @@
 module.exports = {
   env: {
     production: {
-      httpPort: 8080,
+      httpPort: process.env.PORT, // App Engine supplies via an ENV variable.
     }
   }
 }

@@ -13,7 +13,8 @@
     "test": "jest",
     "build": "cater build",
     "start": "cater start",
-    "deploy": "exit -1"
+    "deploy": "cater build && gcloud app deploy",
+    "browse": "gcloud app browse -s hello-from-cater"
   },
   "devDependencies": {
     "cater-build": "^0.3.4",

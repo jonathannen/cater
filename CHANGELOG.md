@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.4] - 2017-12-29
 ### Added
-- Added in a Google Cloud Appengine example. This also necessitated adding in a rudimentary config system to change the HTTP port.
+- Added in a Google Cloud App Engine example. This also necessitated adding in a rudimentary config system to change the HTTP port.
 
 ## [0.3.2] - 2017-12-28
 ### Fixed
