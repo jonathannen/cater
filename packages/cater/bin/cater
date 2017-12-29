@@ -2,13 +2,12 @@
 
 // Copyright Jon Williams 2017. See LICENSE file.
 const path = require("path");
-const Cater = require(path.join(__dirname, "..", "index.js"));
-const Runtime = require('cater-runtime');
 
 // Available commands
-BUILD_COMMANDS = ["build", "dev"];
-RUNTIME_COMMANDS = ["start"];
-PRODUCTION_COMMANDS = ["build", "start"];
+const BUILD_COMMANDS = ["build", "dev"];
+const RUNTIME_COMMANDS = ["start"];
+const PRODUCTION_COMMANDS = ["build", "start"];
+const COMMANDS = BUILD_COMMANDS.concat(RUNTIME_COMMANDS);
 
 // The command line format is `cater [command] <options>` this grabs the
 // command.
@@ -25,17 +24,17 @@ const catchFatal = function(err) {
 
 const commandFunctionName = "run" + command.charAt(0).toUpperCase() + command.slice(1);
 
-if (BUILD_COMMANDS.includes(command)) {
+if (COMMANDS.includes(command)) {
+  // The cater package does this too, but we want to be explicit here as
+  // it's not necessarily determined by production versus dev.
+  const caterModule = BUILD_COMMANDS.includes(command) ? "cater-build" : "cater-runtime";
+  const Cater = require(caterModule);
   const app = new Cater();
   Cater.readyCommandLine();
   app[commandFunctionName]().catch(catchFatal);
-} else if (RUNTIME_COMMANDS.includes(command)) {
-  const app = new Runtime();
-  Runtime.readyCommandLine();
-  app[commandFunctionName]().catch(catchFatal);
 } else {
   console.log(
-    `Cater Framework.
+`Cater Framework.
 
     Usage:
         cater build

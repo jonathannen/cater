@@ -15,7 +15,7 @@
         "projects": [
             "<rootDir>/examples/*",
             "<rootDir>/packages/*",
-            "<rootDir>/packages/cater/integration/*"
+            "<rootDir>/packages/cater-build/integration/*"
         ]
     }
 }

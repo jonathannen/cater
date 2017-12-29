@@ -1,6 +1,2 @@
-const config = require("cater-jest")();
-
-config["projects"] = ["<rootDir>", "<rootDir>/integration/*"];
-config["testPathIgnorePatterns"]  = ["/integration/", "/node_modules/"];
-
-module.exports = config;
+// Copyright Jon Williams 2017. See LICENSE file.
+module.exports = require("cater-jest")();
