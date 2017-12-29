@@ -1,11 +1,11 @@
 {
   "name": "built-in-components",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Demonstrates some build in components of the Cater Framework",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.3.0"
+    "cater": "^0.3.1"
   },
   "scripts": {
     "dev": "cater dev",
@@ -14,8 +14,8 @@
     "start": "cater start"
   },
   "devDependencies": {
-    "cater-build": "^0.3.0",
-    "cater-jest": "^0.3.0",
+    "cater-build": "^0.3.1",
+    "cater-jest": "^0.3.1",
     "supertest": "^3.0.0"
   },
   "private": true

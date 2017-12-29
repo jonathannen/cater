@@ -31,14 +31,23 @@ const updatePackageFile = function(...args) {
 
   // Get whitelist dependencies
   const deps = Object.assign({}, package.dependencies);
-  const add = WHITELIST_PACKAGES.filter(x => Object.keys(deps).includes(x));
+  const devs = Object.assign({}, package.devDependencies);
+  const addDeps = WHITELIST_PACKAGES.filter(x => Object.keys(deps).includes(x));
+  const addDevs = Object.keys(package.devDependencies || {}).filter(k => k.startsWith("cater-"));
 
   const updatedPackage = fn(package);
 
   // Add back in whitelisted dependencies
-  add.forEach(name => {
-    updatedPackage.dependencies[name] = deps[name];
-  });
+  addDeps.forEach(name => (updatedPackage.dependencies[name] = deps[name]));
+  addDevs.forEach(name => (updatedPackage.devDependencies[name] = devs[name]));
+
+  if (updatedPackage.dependencies) {
+    Object.keys(updatedPackage.dependencies)
+      .filter(k => k.startsWith("cater-"))
+      .forEach(k => {
+        updatedPackage.dependencies[k] = `^${version}`;
+      });
+  }
 
   // Jest package dependencies
   if (updatedPackage.devDependencies) {
@@ -67,7 +76,7 @@ const exampleTemplate = {
   version: version,
   private: true,
   dependencies: {
-    "cater": `^${version}`
+    cater: `^${version}`
   },
   devDependencies: {
     "cater-build": `^${version}`,
@@ -86,11 +95,11 @@ const packageTemplate = {
 };
 
 const scripts = {
-  "build": "cater build",
-  "dev": "cater dev",
-  "start": "cater start",
-  "test": "jest"
-}
+  build: "cater build",
+  dev: "cater dev",
+  start: "cater start",
+  test: "jest"
+};
 
 // Example Packages
 const exampleDirectory = path.join(__dirname, "..", "examples");
@@ -99,8 +108,8 @@ fs.readdirSync(exampleDirectory).forEach(directory => {
     pkg.name = directory;
     pkg = Object.assign(pkg, exampleTemplate);
 
-    Object.keys(scripts).forEach((k) => {
-      if(!!pkg.scripts[k]) return;
+    Object.keys(scripts).forEach(k => {
+      if (!!pkg.scripts[k]) return;
       pkg.scripts[k] = scripts[k];
     });
 
