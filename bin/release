@@ -9,10 +9,12 @@ yarn test
 yarn version
 ./bin/configure-packages
 
-# Using npm here as it allows silent publish. Yarn has a prompt.
+# Using npm here as it allows silent publish -- yarn has a prompt for a
+# version on publish which prevents it being used in automated cases.
 npm publish packages/cater
 npm publish packages/cater-assets
 npm publish packages/cater-emotion
 npm publish packages/cater-jest
+npm publish packages/cater-runtime
 
 echo "Done"

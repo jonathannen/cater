@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "clone": "^2.1.1",
     "mime-types": "^2.1.17",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"

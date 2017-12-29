@@ -3,9 +3,11 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 const path = require("path");
 const Cater = require(path.join(__dirname, "..", "index.js"));
+const Runtime = require('cater-runtime');
 
 // Available commands
-COMMANDS = ["build", "dev", "start"];
+BUILD_COMMANDS = ["build", "dev"];
+RUNTIME_COMMANDS = ["start"];
 PRODUCTION_COMMANDS = ["build", "start"];
 
 // The command line format is `cater [command] <options>` this grabs the
@@ -21,10 +23,15 @@ const catchFatal = function(err) {
   process.exit(-1);
 };
 
-if (COMMANDS.includes(command)) {
-  const commandFunctionName = 'run' + command.charAt(0).toUpperCase() + command.slice(1);
+const commandFunctionName = "run" + command.charAt(0).toUpperCase() + command.slice(1);
+
+if (BUILD_COMMANDS.includes(command)) {
   const app = new Cater();
   Cater.readyCommandLine();
+  app[commandFunctionName]().catch(catchFatal);
+} else if (RUNTIME_COMMANDS.includes(command)) {
+  const app = new Runtime();
+  Runtime.readyCommandLine();
   app[commandFunctionName]().catch(catchFatal);
 } else {
   console.log(

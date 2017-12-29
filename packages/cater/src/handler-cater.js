@@ -1,6 +1,7 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 const runtime = require("cater-runtime");
-const HandlerCater = runtime.HandlerCater;
+
+const HandlerCater = runtime.HandlerCater();
 
 const CATER_MODULE_NAME_REGEX = /(\/client\/|\/server\/|\/app\/)/;
 

@@ -1,12 +1,21 @@
 // Copyright Jon Williams 2017. See LICENSE file.
+const BabelOptions = require('./src/options-babel.js');
+const RuntimeCater = require('./src');
 
-const HandlerCater = require('./src/handler-cater');
-const start = require('./src');
+module.exports = function() {
+  const babelOptions = BabelOptions();
+  babelOptions.cache = false;
+  babelOptions.ignore = /(\/node_modules\/|build\/)/
+  require("babel-register")(babelOptions);
 
-const runtime = function() {
-  return start();
+  return new RuntimeCater();
 }
 
-runtime.HandlerCater = HandlerCater;
+module.exports.HandlerCater = function() {
+  return require("./src/handler-cater");
+}
 
-module.exports = runtime;
+module.exports.readyCommandLine = function() {
+  const commands = require("./src/commands");
+  Object.keys(commands).forEach(key => (RuntimeCater.prototype[key] = commands[key]));
+};

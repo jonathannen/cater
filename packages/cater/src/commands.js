@@ -12,8 +12,6 @@ const catchFatal = function(err) {
 
 // Returns a promise to a production build of the application.
 module.exports.runBuild = function() {
-  this.debug = false;
-
   return fs
     .remove(this.buildPath)
     .then(() => {
@@ -33,9 +31,6 @@ module.exports.runDev = function() {
   return this.handler().then(h => this.runGenericServer(h));
 };
 
-module.exports.runStart = function() {
-  return Promise.resolve(Runtime());
-};
 
 // Runs a generic server, given a http.Handler
 module.exports.runGenericServer = function(handler) {

@@ -9,7 +9,9 @@
     "express": "^4.16.2"
   },
   "scripts": {
+    "build": "cater build",
     "dev": "node ./index.js",
+    "start": "NODE_ENV=production node ./index.js",
     "test": "jest"
   },
   "devDependencies": {
