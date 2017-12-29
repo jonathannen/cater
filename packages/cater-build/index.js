@@ -6,7 +6,7 @@ module.exports = function(options) {
   const app = new BuildCater(options);
   const babelOptions = app.sides.server.babel;
   babelOptions.cache = false;
-  babelOptions.ignore = /\/node_modules\/(?!(cater))/;
+  babelOptions.ignore = /\/node_modules\/(?!(cater$|cater-))/;
   require("babel-register")(babelOptions);
   return app;
 };
