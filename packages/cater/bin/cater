@@ -13,8 +13,10 @@ const COMMANDS = BUILD_COMMANDS.concat(RUNTIME_COMMANDS);
 // command.
 const command = (process.argv[2] || "--help").toLowerCase().trim();
 
+// Production commands run in the production NODE_ENV by default. However,
+// if NODE_ENV is alreedy set we don't change it.
 if (PRODUCTION_COMMANDS.includes(command)) {
-  process.env.NODE_ENV = "production";
+  process.env.NODE_ENV = process.env.NODE_ENV || "production";
 }
 
 const catchFatal = function(err) {

@@ -5,11 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- A config.cater.js file in the application root directory now is used as options. This can include an "env" section that has options specific for a NODE_ENV.
 
 ## [0.3.4] - 2017-12-29
+### Added
 - Added in a Google Cloud Appengine example. This also necessitated adding in a rudimentary config system to change the HTTP port.
 
 ## [0.3.2] - 2017-12-28
+### Fixed
 - Fixing up cross versioning between cater packages and ensuring they're all on the same version.
 
 ## [0.3.0] - 2017-12-28

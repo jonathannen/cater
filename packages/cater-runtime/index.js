@@ -15,10 +15,17 @@ module.exports = function(options = null) {
 
 module.exports.BabelOptions = BabelOptions;
 
-const loadConfig = module.exports.loadConfig = function() {
-  const file = path.join(process.cwd(), 'cater.config.js');
+const loadConfig = module.exports.loadConfig = function(file = null) {
+  file = file || path.join(process.cwd(), 'cater.config.js');
   if(!fs.existsSync(file)) return {};
-  return require(file);
+  const options = require(file);
+
+  if(!!options.env) {
+    const env = options.env[process.env.NODE_ENV];
+    if(!!env) Object.assign(options, env);
+  }
+
+  return options;
 }
 
 module.exports.HandlerCater = function() {

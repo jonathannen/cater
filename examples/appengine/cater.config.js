@@ -1,4 +1,8 @@
 
 module.exports = {
-  httpPort: 8080,
+  env: {
+    production: {
+      httpPort: 8080,
+    }
+  }
 }
