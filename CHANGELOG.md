@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.3.5] - 2017-12-29
 ### Added
 - A config.cater.js file in the application root directory now is used as options. This can include an "env" section that has options specific for a NODE_ENV.
 
