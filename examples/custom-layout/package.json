@@ -1,11 +1,11 @@
 {
   "name": "custom-layout",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Demonstrates a Custom Layout for the Cater Framework",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.2.0"
+    "cater": "^0.3.0"
   },
   "scripts": {
     "dev": "cater dev",
@@ -14,8 +14,8 @@
     "start": "cater start"
   },
   "devDependencies": {
-    "cater-build": "^0.2.0",
-    "cater-jest": "^0.2.0",
+    "cater-build": "^0.3.0",
+    "cater-jest": "^0.3.0",
     "supertest": "^3.0.0"
   },
   "private": true

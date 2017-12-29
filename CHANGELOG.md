@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.3.0] - 2017-12-28
 ### Added
 - The caret import. This will import from a component that overrides another component. For example if you had project/server/layout import '^' it would return the cater/server/layout component. Useful for wrappering.
 - Asset processing from the project/asset directory. Supports images, scss and css files. Uses Babel transforms on the server-side and Webpack on the client side.

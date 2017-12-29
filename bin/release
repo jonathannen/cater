@@ -4,6 +4,7 @@ set -e
 
 echo "Checking for outdated packages, testing, versioning, then publishing... "
 
+yarn upgrade
 yarn outdated
 yarn test
 yarn version
