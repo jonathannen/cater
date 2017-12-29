@@ -14,8 +14,9 @@ const loadManifest = function(file) {
 };
 
 class Cater {
-  constructor() {
-    const options = {
+  constructor(options) {
+
+    const defaultOptions = {
       appRootPath: process.cwd(),
       buildDirectory: "build", // TODO
       bundlePath: "",
@@ -26,7 +27,8 @@ class Cater {
       serverBundleFile: "server-bundle.js", // TODO
       serveStaticAssets: true
     };
-    this.options = options;
+
+    this.options = options = Object.assign(defaultOptions, options);
 
     const buildPath = path.join(options.appRootPath, options.buildDirectory);
     const staticPath = path.join(buildPath, options.publicPath);

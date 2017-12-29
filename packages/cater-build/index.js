@@ -1,8 +1,10 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 const BuildCater = require("./src");
-// const RuntimeCater = require("cater-runtime");
+const RuntimeCater = require("cater-runtime");
 
 module.exports = function(options) {
+  options = options || RuntimeCater.loadConfig();
+
   const app = new BuildCater(options);
   const babelOptions = app.sides.server.babel;
   babelOptions.cache = false;

@@ -2,6 +2,5 @@
 const RuntimeCater = require('./index');
 
 module.exports.runStart = function() {
-  const app = new RuntimeCater();
-  return Promise.resolve(app.start());
+  return Promise.resolve(this.start());
 };
