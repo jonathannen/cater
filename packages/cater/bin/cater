@@ -29,10 +29,10 @@ if (COMMANDS.includes(command)) {
   // it's not necessarily determined by production versus dev.
   const isRuntime = RUNTIME_COMMANDS.includes(command);
 
-  process.env.CATER_MODE = process.env.CATER_MODE || isRuntime ? 'runtime' : 'build';
+  process.env.CATER_MODE = process.env.CATER_MODE || (isRuntime ? 'runtime' : 'build');
 
   const Cater = require('cater');
-  const app = new Cater();
+  const app = Cater();
   Cater.readyCommandLine();
   app[commandFunctionName]().catch(catchFatal);
 } else {

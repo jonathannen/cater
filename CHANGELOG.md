@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.2] - 2017-12-28
+- Fixing up cross versioning between cater packages and ensuring they're all on the same version.
+
 ## [0.3.0] - 2017-12-28
 ### Added
 - The caret import. This will import from a component that overrides another component. For example if you had project/server/layout import '^' it would return the cater/server/layout component. Useful for wrappering.

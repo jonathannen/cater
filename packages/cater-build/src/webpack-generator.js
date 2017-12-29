@@ -24,7 +24,7 @@ const generate = function(context, side) {
         test: /\.js$/,
         loader: "babel-loader",
         include: side.modulePaths,
-        exclude: /\/node_modules\//
+        exclude: /\/node_modules\/(?!(cater))/
       }
     ]
   };

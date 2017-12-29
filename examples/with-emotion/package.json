@@ -17,6 +17,7 @@
   "devDependencies": {
     "cater-build": "^0.3.1",
     "cater-jest": "^0.3.1",
+    "jest": "^22.0.4",
     "supertest": "^3.0.0",
     "cater-emotion": "^0.3.1"
   },

@@ -3,7 +3,7 @@ const clone = require('clone');
 
 const BABEL_OPTIONS = {
   cache: false,
-  ignore: /(\/node_modules\/|build\/)/,
+  ignore: /(\/node_modules\/(?!(cater))|build\/)/,
   presets: ["env", "react"],
   plugins: [
     ["add-module-exports"],
