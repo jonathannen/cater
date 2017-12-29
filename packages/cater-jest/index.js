@@ -13,7 +13,7 @@ const config = {
   moduleNameMapper: {},
   resolver: resolver,
   transform: { "\\.js$": transformer },
-  transformIgnorePatterns: ["node_modules/(?!(cater))"]
+  transformIgnorePatterns: ["\/node_modules\/(?!(cater$|cater-))"]
 };
 
 config.transform[assetMatch] = assetTransformer;

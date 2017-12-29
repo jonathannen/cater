@@ -4,7 +4,7 @@ const RuntimeCater = require('./src');
 
 module.exports = function(options) {
   const babelOptions = BabelOptions();
-  babelOptions.ignore = /\/node_modules\/(?!(cater))/;
+  babelOptions.ignore = /\/node_modules\/(?!(cater$|cater-))/;
   require("babel-register")(babelOptions);
   return new RuntimeCater(options);
 }
