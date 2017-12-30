@@ -1,6 +1,6 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 
-import emotion from "./test/emotion-harness"; // This *must* be imported first
+// import emotion from "./test/emotion-harness"; // This *must* be imported first
 
 import { harness } from "cater";
 import renderer from "react-test-renderer";
