@@ -4,15 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-## [0.3.5] - 2017-12-29
+## [0.3.6] - 2017-12-29
 ### Added
 - A config.cater.js file in the application root directory now is used as options. This can include an "env" section that has options specific for a NODE_ENV.
-
-## [0.3.4] - 2017-12-29
-### Added
 - Added in a Google Cloud App Engine example. This also necessitated adding in a rudimentary config system to change the HTTP port.
+- Static asset server now will set cache headers and check ETags for digested static assets.
 
 ## [0.3.2] - 2017-12-28
 ### Fixed
