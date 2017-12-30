@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.3.7] - 2017-12-30
 ### Added
 - app/title Title component will set the server and client side title tag in the head of the document.
 - The dev server is wrapped in a handler that will ETag development assets invalidating whenever a new compile is triggered. This improves dev-time performance between page loads.
@@ -12,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Changed
 - Tidied up the emotion test approach in the examples/with-emotion - plus added in hydration for the emotion ids.
+- Major refactor of the cater "src" directories to avoid using Babel in runtime. Ongoing, but major improvement.
 
 ## [0.3.6] - 2017-12-29
 ### Added
