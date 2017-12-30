@@ -1,9 +1,9 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import request from "supertest";
-import { harness } from "cater";
+import { testHarness } from "cater";
 import server from "./server";
 
-const handler = harness().testHandler();
+const handler = testHarness().testHandler();
 server.get("*", handler);
 
 describe("Testing Cater embedded with Express Server", () => {

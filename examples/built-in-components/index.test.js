@@ -1,8 +1,8 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import request from "supertest";
-import Cater, { harness } from "cater";
+import Cater, { testHarness } from "cater";
 
-const handler = harness().testHandler();
+const handler = testHarness().testHandler();
 
 describe("SkipServerSideRender Component", () => {
   test("should only render the server-side pieces", async () => {

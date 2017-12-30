@@ -2,9 +2,11 @@
 const BabelOptions = require('./src/options-babel.js');
 const fs = require('fs');
 const path = require('path');
+const HandlerCater = require("./src/handler-cater");
+const Middleware = require('./src/middleware');
 const RuntimeCater = require('./src');
 
-module.exports = function(options = null) {
+const index = function(options = null) {
   options = options || loadConfig();
 
   if(options.babelRegister) {
@@ -15,9 +17,7 @@ module.exports = function(options = null) {
   return new RuntimeCater(options);
 }
 
-module.exports.BabelOptions = BabelOptions;
-
-const loadConfig = module.exports.loadConfig = function(file = null) {
+const loadConfig = function(file = null) {
   file = file || path.join(process.cwd(), 'cater.config.js');
   if(!fs.existsSync(file)) return {};
   const options = require(file);
@@ -30,11 +30,11 @@ const loadConfig = module.exports.loadConfig = function(file = null) {
   return options;
 }
 
-module.exports.HandlerCater = function() {
-  return require("./src/handler-cater");
-}
-
-module.exports.readyCommandLine = function() {
+const readyCommandLine = function() {
   const commands = require("./src/commands");
   Object.keys(commands).forEach(key => (RuntimeCater.prototype[key] = commands[key]));
 };
+
+const exporting = { BabelOptions, HandlerCater, loadConfig, Middleware, readyCommandLine };
+module.exports = index;
+Object.assign(module.exports, exporting);

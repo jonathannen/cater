@@ -1,8 +1,8 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import request from "supertest";
-import { harness } from "cater";
+import { testHarness } from "cater";
 
-const handler = harness().testHandler();
+const handler = testHarness().testHandler();
 
 describe("Custom Layout Integration Test", () => {
   test("should use the layout locally under server/layout.js", async () => {

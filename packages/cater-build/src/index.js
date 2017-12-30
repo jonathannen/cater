@@ -31,10 +31,6 @@ class Cater extends EventEmitter {
     this.assignPaths();
     this.configureSides();
 
-    // Built-In and Configured Plugins
-    // configureImageLoaders(this);
-    // configureCssLoaders(this);
-
     this.emit(events.configured, this); // EVENT
   }
 
@@ -91,8 +87,8 @@ class Cater extends EventEmitter {
    * Returns a http.Handler for this application.
    */
   handler() {
-    const middleware = require("./middleware").default;
-    return middleware(this);
+    const Middleware = require("./middleware");
+    return Middleware(this);
   }
 
   /*
@@ -107,11 +103,19 @@ class Cater extends EventEmitter {
     this.emit(events.webpackCompiling, this, compiler);
   }
 
-}
+  start() {
+    // TODO
+    const Middleware = require('cater-runtime').Middleware;
+    return this.handler().then(handler => {
+      Middleware.httpServer(handler, this.httpPort);
+    });
+  }
 
-module.exports = Cater;
+}
 
 Cater.prototype.prepareCommandLine = function() {
   const commands = require("./commands.js");
   Object.keys(commands).forEach(key => (Cater.prototype[key] = commands[key]));
 };
+
+module.exports = Cater;

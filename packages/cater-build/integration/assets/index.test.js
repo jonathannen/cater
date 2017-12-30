@@ -1,7 +1,7 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 // import del from 'del';
 import fs from "fs-extra";
-import { harness } from "cater";
+import { testHarness } from "cater";
 import path from "path";
 import request from "supertest";
 
@@ -9,7 +9,7 @@ require.requireActual.ROOT = __dirname;
 
 // We're running webpack, so be generous with timeouts
 const TIMEOUT_INTERVAL = 20000;
-const handler = harness().testHandler();
+const handler = testHarness().testHandler();
 
 const loadFile = function(name) {
   const filePath = path.join(__dirname, "build", name);
@@ -35,7 +35,7 @@ describe("Production Builds", () => {
   test(
     "should generate a production build with static and transformed assets",
     done => {
-      const app = harness().testCater({ appRootPath: __dirname, build: true, debug: false });
+      const app = testHarness().testCater({ appRootPath: __dirname, build: true, debug: false });
       app.prepareCommandLine();
 
       app.runBuild().then(() => {

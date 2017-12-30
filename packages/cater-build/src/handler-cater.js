@@ -1,7 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-const runtime = require("cater-runtime");
-
-const HandlerCater = runtime.HandlerCater();
+const HandlerCater = require("cater-runtime").HandlerCater;
 
 const CATER_MODULE_NAME_REGEX = /(\/client\/|\/server\/|\/app\/)/;
 
@@ -30,6 +28,8 @@ const generate = function(entryPath, bundlePath, publicPath) {
       handler.load();
       return true;
     } catch (e) {
+      // If this is the first run through, don't start cater - throw an
+      // error. Otherwise display the error and let the dev fix it up.
       if (firstRun) throw e;
       console.error(e);
       return false;
@@ -40,4 +40,4 @@ const generate = function(entryPath, bundlePath, publicPath) {
   return handler;
 };
 
-export default generate;
+module.exports = generate;

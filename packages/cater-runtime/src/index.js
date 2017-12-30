@@ -1,10 +1,7 @@
 // A stripped down version of the Cater object.
 const fs = require("fs");
-const http = require("http");
-require("http-shutdown").extend();
 const Middleware = require("./middleware");
 const path = require("path");
-const readline = require("readline");
 
 const MANIFEST_FILENAME = "manifest.json";
 
@@ -60,33 +57,7 @@ class Cater {
 
   start() {
     return this.handler().then(handler => {
-      const httpServer = http.createServer(handler).withShutdown();
-      httpServer.listen(this.httpPort, err => {
-        if (err) throw err;
-        console.log(`Listening on http://localhost:${this.httpPort}`);
-
-        // Allow a graceful quit. Requires hitting space twice
-        readline.emitKeypressEvents(process.stdin);
-        process.stdin.setRawMode(true);
-        let lastKey = null;
-        process.stdin.on("keypress", (str, key) => {
-          if(lastKey == true) return; // Shutting down
-          if (key.ctrl && key.name === "c") {
-            process.exit(-1); // Awkward...
-          }
-
-          if (key.name === "space") {
-            if (lastKey === "space") {
-              httpServer.shutdown(() => process.exit(0));
-              return lastKey = true;
-            }
-            console.log("Press space again to exit.");
-          }
-          lastKey = key.name;
-        });
-
-      });
-      return false;
+      Middleware.httpServer(handler, this.httpPort);
     });
   }
 }

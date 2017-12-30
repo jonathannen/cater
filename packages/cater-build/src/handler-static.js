@@ -1,7 +1,7 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import fs from "fs";
-import mime from "mime-types";
-import path from "path";
+const fs = require('fs');
+const mime = require('mime-types');
+const path = require('path');
 
 /**
  * The development version of static-middleware.js. This is less performant
@@ -105,4 +105,4 @@ const generate = function(debug, publicPath, staticPath) {
   return generator(publicPath, staticPath);
 };
 
-export default generate;
+module.exports = generate;

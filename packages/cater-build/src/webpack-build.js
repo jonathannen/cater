@@ -1,6 +1,6 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import generator from "./webpack-generator";
-import webpack from "webpack";
+const generator = require("./webpack-generator");
+const webpack = require("webpack");
 
 const builder = function(config, context) {
   return new Promise((resolve, reject) => {
@@ -30,4 +30,4 @@ const build = function(context) {
   return builder(client, context).then(() => builder(server));
 };
 
-export default build;
+module.exports = build;

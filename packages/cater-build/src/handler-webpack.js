@@ -1,8 +1,8 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import clone from "clone";
-import generator from "./webpack-generator";
-import webpack from "webpack";
-import webpackDevMiddleware from "webpack-dev-middleware";
+const clone = require('clone');
+const generator = require('./webpack-generator');
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
 
 const DEFAULT_WEBPACK_WATCH_OPTIONS = {
   inline: true,
@@ -70,4 +70,4 @@ const generateHandler = function(context, reloadCallback = null) {
   });
 };
 
-export default generateHandler;
+module.exports = generateHandler;

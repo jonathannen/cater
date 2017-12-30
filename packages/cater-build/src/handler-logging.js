@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import prettyBytes from "pretty-bytes";
+const prettyBytes =require('pretty-bytes');
 
 const statusCodeAsTerminalColor = function(status) {
   // Referenced from https://github.com/expressjs/morgan/blob/master/index.js#L189
@@ -51,6 +51,5 @@ const loggingHandler = function(req, res, next) {
   return next();
 };
 
-export default function generate(app) {
-  return loggingHandler;
-}
+// Returns as a function to stay consistent with the other handler-* modules.
+module.exports = () => loggingHandler;

@@ -12,6 +12,9 @@ const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
  * context side (i.e. context.sides.client or context.sides.server).
  */
 const generate = function(context, side) {
+  // console.log(side.name); >>
+  // console.log(side); >>
+
   // Component parts of the Webpack configuration
   const entry = {};
   entry[side.bundleName] = [side.entryPath];
@@ -23,7 +26,7 @@ const generate = function(context, side) {
         options,
         test: /\.js$/,
         loader: "babel-loader",
-        include: side.modulePaths,
+        include: side.paths,
         exclude: /\/node_modules\/(?!(cater$|cater-))/
       }
     ]

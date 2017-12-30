@@ -2,22 +2,26 @@
 const BuildCater = require("./src");
 const RuntimeCater = require("cater-runtime");
 
-module.exports = function(options) {
+const index = function(options) {
   options = options || RuntimeCater.loadConfig();
 
   const app = new BuildCater(options);
   const babelOptions = app.sides.server.babel;
-  babelOptions.cache = false;
-  babelOptions.ignore = /\/node_modules\/(?!(cater$|cater-))/;
+  // babelOptions.cache = false;
+  babelOptions.only = app.sides.server.paths;
   require("babel-register")(babelOptions);
   return app;
 };
 
-module.exports.readyCommandLine = function() {
+const readyCommandLine = function() {
   const commands = require("./src/commands");
-  Object.keys(commands).forEach(key => (BuildCater.prototype[key] = commands[key]));
+  return Object.assign(BuildCater.prototype, commands);
 };
 
-module.exports.harness = function() {
+const testHarness = function() {
   return require("./src/harness.js");
 };
+
+const exporting = { readyCommandLine, testHarness };
+module.exports = index;
+Object.assign(module.exports, exporting);

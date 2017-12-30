@@ -1,14 +1,23 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import fs from "fs-extra";
-import http from "http";
-import path from "path";
-import Runtime from 'cater-runtime';
-import webpackBuild from "./webpack-build";
+const fs = require("fs-extra");
+const http = require("http");
+const path = require("path");
+const Runtime = require("cater-runtime");
+const webpackBuild = require("./webpack-build");
 
-const catchFatal = function(err) {
-  console.error(err);
-  process.exit(-1);
-};
+/**
+ * Mixin that enables CLI-commands directly in the Cater App. Enabled
+ * via the readyCommandLine function from the cater-build package.
+ *
+ * All methods return a promise.
+ *
+ * Example Usage - Assumes cater-build is installed.
+ *
+ *     const cater = require('cater');
+ *     cater.readyCommandLine();
+ *     const app = cater();
+ *     app.runBuild();
+ */
 
 // Returns a promise to a production build of the application.
 module.exports.runBuild = function() {
@@ -22,22 +31,10 @@ module.exports.runBuild = function() {
       return Promise.resolve(true);
     })
     .then(() => webpackBuild(this))
-    .catch(catchFatal);
 };
 
 // Runs the development server - that's a server with webpack in-memory
 // building (and reloading) the client and server code.
 module.exports.runDev = function() {
-  return this.handler().then(h => this.runGenericServer(h));
-};
-
-
-// Runs a generic server, given a http.Handler
-module.exports.runGenericServer = function(handler) {
-  const httpServer = http.createServer(handler);
-  httpServer.listen(this.httpPort, err => {
-    if (err) throw err;
-    console.log(`Listening on http://localhost:${this.httpPort}`);
-  });
-  return false;
+  return this.handler().then(h => Runtime.Middleware.httpServer(h, this.httpPort));
 };
