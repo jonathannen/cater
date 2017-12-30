@@ -12,9 +12,6 @@ const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
  * context side (i.e. context.sides.client or context.sides.server).
  */
 const generate = function(context, side) {
-  // console.log(side.name); >>
-  // console.log(side); >>
-
   // Component parts of the Webpack configuration
   const entry = {};
   entry[side.bundleName] = [side.entryPath];

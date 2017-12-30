@@ -1,5 +1,6 @@
 // A stripped down version of the Cater object.
 const fs = require("fs");
+const HttpServer = require('./http-server');
 const Middleware = require("./middleware");
 const path = require("path");
 
@@ -57,7 +58,7 @@ class Cater {
 
   start() {
     return this.handler().then(handler => {
-      Middleware.httpServer(handler, this.httpPort);
+      HttpServer(handler, this.httpPort);
     });
   }
 }

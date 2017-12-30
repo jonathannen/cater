@@ -36,5 +36,5 @@ module.exports.runBuild = function() {
 // Runs the development server - that's a server with webpack in-memory
 // building (and reloading) the client and server code.
 module.exports.runDev = function() {
-  return this.handler().then(h => Runtime.Middleware.httpServer(h, this.httpPort));
+  return this.handler().then(h => Runtime.HttpServer(h, this.httpPort));
 };
