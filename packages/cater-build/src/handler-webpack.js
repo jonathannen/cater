@@ -17,11 +17,12 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
  */
 const generateHandler = function(context, reloadCallback = null) {
   const compiler = webpack(context.sides.client.webpackConfig);
-
   context.callbackWebpackCompiling(compiler);
+  let etag = null;
 
   const client = new Promise((resolve, reject) => {
     compiler.plugin("done", result => {
+      etag = null;
       if (result.hasErrors()) {
         console.log(`Webpack compilation failed.`);
         return reject(result.compilation.errors);
@@ -34,6 +35,7 @@ const generateHandler = function(context, reloadCallback = null) {
         return reject(result.compilation.errors);
       }
 
+      etag = `W/"${result.hash}-${new Date().getTime()}"`;
       console.log(`Webpack compilation succeeded`);
       resolve(compiler);
     });
@@ -44,10 +46,25 @@ const generateHandler = function(context, reloadCallback = null) {
   watchOptions.publicPath = context.publicPath;
   const middleware = webpackDevMiddleware(compiler, watchOptions);
 
+  // Webpack development bundles tend to be large. We can ETag them
+  // in development.
+  const cachingHandler = function(req, res, next) {
+    if(etag !== null) {
+      res.setHeader('ETag', etag);
+      const ifNoneMatch = req.headers["if-none-match"];
+      if (!!ifNoneMatch && ifNoneMatch !== "*" && ifNoneMatch === etag) {
+        res.statusCode = 304; // File still matches
+        return res.end();
+      }
+    }
+
+    return middleware(req, res, next);
+  }
+
   // Returned promise waits for both the client and server compilations
   // to complete. The promise will return the handler to the webpack
   // development server.
-  return client.then(() => middleware).catch(err => {
+  return client.then(() => cachingHandler).catch(err => {
     console.error(err);
     process.exit(-1);
   });

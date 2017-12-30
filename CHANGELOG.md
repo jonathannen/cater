@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - app/title Title component will set the server and client side title tag in the head of the document.
+- The dev server is wrapped in a handler that will ETag development assets invalidating whenever a new compile is triggered. This improves dev-time performance between page loads.
 
 ## [0.3.6] - 2017-12-29
 ### Added
