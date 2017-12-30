@@ -10,9 +10,9 @@ const RuntimeCater = require("./src");
 const index = function(options = null) {
   options = options || loadConfig();
 
-  if (options.babelRegister) {
+  if (!!options.disableBabel) {
     const babelOptions = BabelOptions();
-    babelOptions.ignore = /\/node_modules\/(?!(cater$|cater-))/;
+    babelOptions.ignore = /\/node_modules\//;
     require("babel-register")(babelOptions);
   }
   return new RuntimeCater(options);

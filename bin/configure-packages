@@ -7,12 +7,10 @@ const path = require("path");
 // Packages that are optionally installed in a example or package directory
 const WHITELIST_PACKAGES = ["express"];
 
-//    "babel-core": "^6.26.0",
-// "webpack": "^3.10.0"
-
-// Packages versioned together across all of cater
-const KEY_DEV_DEPENDENCIES = {
-  jest: "^22.0.4"
+KEY_VERSIONS = {
+  "babel-core": "^6.26.0",
+  jest: "^22.0.4",
+  webpack: "^3.10.0"
 };
 
 const readPackageFile = function(...args) {
@@ -44,30 +42,20 @@ const updatePackageFile = function(...args) {
   addDeps.forEach(name => (updatedPackage.dependencies[name] = deps[name]));
   addDevs.forEach(name => (updatedPackage.devDependencies[name] = devs[name]));
 
-  if (updatedPackage.dependencies) {
-    Object.keys(updatedPackage.dependencies)
-      .filter(k => k.startsWith("cater-"))
-      .forEach(k => {
-        updatedPackage.dependencies[k] = `^${version}`;
-      });
-  }
+  // Update deps and devDeps
+  [updatedPackage.dependencies, pdatedPackage.devDependencies].forEach(d => {
+    if (!d) return; // // Not specified in this package
 
-  // Jest package dependencies
-  if (updatedPackage.devDependencies) {
-    // Update packages like jest
-    Object.keys(KEY_DEV_DEPENDENCIES)
-      .filter(k => !!updatedPackage.devDependencies[k])
-      .forEach(k => {
-        updatedPackage.devDependencies[k] = KEY_DEV_DEPENDENCIES[k];
-      });
+    // Update packages like babel, jest to the master version number
+    Object.keys(KEY_VERSIONS)
+      .filter(k => !!d[k])
+      .forEach(k => (d[k] = KEY_VERSIONS[k]));
 
-    // Update cater-* packages to be the same overall version
-    Object.keys(updatedPackage.devDependencies)
+    // Lock all cater-* packages to the same version
+    Object.keys(d)
       .filter(k => k.startsWith("cater-"))
-      .forEach(k => {
-        updatedPackage.devDependencies[k] = `^${version}`;
-      });
-  }
+      .forEach(k => (d[k] = `^${version}`));
+  });
 
   fs.writeFileSync(packageFile, JSON.stringify(updatedPackage, null, 2));
   return updatedPackage;
@@ -84,7 +72,7 @@ const exampleTemplate = {
   devDependencies: {
     "cater-build": `^${version}`,
     "cater-jest": `^${version}`,
-    "jest": "^22.0.4",
+    jest: "^22.0.4",
     supertest: "^3.0.0"
   }
 };
