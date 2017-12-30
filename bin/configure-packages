@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 // Copyright Jon Williams 2017. See LICENSE file.
+const clone = require("clone");
 const fs = require("fs");
 const path = require("path");
 
@@ -43,7 +44,7 @@ const updatePackageFile = function(...args) {
   addDevs.forEach(name => (updatedPackage.devDependencies[name] = devs[name]));
 
   // Update deps and devDeps
-  [updatedPackage.dependencies, pdatedPackage.devDependencies].forEach(d => {
+  [updatedPackage.dependencies, updatedPackage.devDependencies].forEach(d => {
     if (!d) return; // // Not specified in this package
 
     // Update packages like babel, jest to the master version number
@@ -61,6 +62,7 @@ const updatePackageFile = function(...args) {
   return updatedPackage;
 };
 
+// Package template used for examples/*/package.json
 const exampleTemplate = {
   author: "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   license: "MIT",
@@ -77,6 +79,7 @@ const exampleTemplate = {
   }
 };
 
+// Package template used for packages/*/package.json
 const packageTemplate = {
   author: "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   license: "MIT",
@@ -86,6 +89,7 @@ const packageTemplate = {
   }
 };
 
+// Scripts added to examples/*/package.json - if not present already
 const scripts = {
   build: "cater build",
   dev: "cater dev",
@@ -98,7 +102,7 @@ const exampleDirectory = path.join(__dirname, "..", "examples");
 fs.readdirSync(exampleDirectory).forEach(directory => {
   const result = updatePackageFile(exampleDirectory, directory, "package.json", pkg => {
     pkg.name = directory;
-    pkg = Object.assign(pkg, exampleTemplate);
+    pkg = Object.assign(pkg, clone(exampleTemplate));
 
     Object.keys(scripts).forEach(k => {
       if (!!pkg.scripts[k]) return;
@@ -114,6 +118,6 @@ const packageDirectory = path.join(__dirname, "..", "packages");
 fs.readdirSync(packageDirectory).forEach(directory => {
   const result = updatePackageFile(packageDirectory, directory, "package.json", pkg => {
     pkg.name = directory;
-    return Object.assign(pkg, packageTemplate);
+    return Object.assign(pkg, clone(packageTemplate));
   });
 });
