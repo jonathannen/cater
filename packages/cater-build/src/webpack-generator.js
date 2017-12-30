@@ -78,7 +78,6 @@ const forServer = function(result, side, context) {
 
 // For BUILD webpack builds.
 const forBuild = function(result, side, context) {
-  result.devtool = "cheap-module-source-map";
   result.output.filename = "[name].[chunkhash].js";
 
   const uglify = new webpack.optimize.UglifyJsPlugin({

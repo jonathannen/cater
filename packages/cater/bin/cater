@@ -15,8 +15,10 @@ const command = (process.argv[2] || "--help").toLowerCase().trim();
 
 // Production commands run in the production NODE_ENV by default. However,
 // if NODE_ENV is alreedy set we don't change it.
+let options = {};
 if (PRODUCTION_COMMANDS.includes(command)) {
   process.env.NODE_ENV = process.env.NODE_ENV || "production";
+  options = { debug: false, build: true }
 }
 
 const catchFatal = function(err) {

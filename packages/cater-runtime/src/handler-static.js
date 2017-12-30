@@ -1,12 +1,12 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-const fs = require('fs');
-const mime = require('mime-types')
-const path = require('path')
+const fs = require("fs");
+const mime = require("mime-types");
+const path = require("path");
 
-const MANIFEST_FILENAME = 'manifest.json';
+const MANIFEST_FILENAME = "manifest.json";
 
 /**
- * Very basic, but reasonable node-based static file server. In production
+ * Basic node-based static file server. In production
  * we'd expect a server like NGINX would be used to deliver static files.
  * However, this can be useful for production-like and situations where
  * a separate http server doesn't make sense.
@@ -22,10 +22,12 @@ const MANIFEST_FILENAME = 'manifest.json';
  * Doesn't currently handle headers like caching - that's on the list.
  */
 
-const generate = function(publicPath, staticPath) {
-  // We build a whitelist of files to serve - this will be an object with
-  // keys like the request url `/static/bundle.js` pointing to a small
-  // object with the full path, mime-type and file size.
+// We build a whitelist of files to serve - this will be an object with
+// keys like the request url `/static/bundle.js` pointing to a small
+// object with the full path, mime-type and file size.
+const generateFileList = function(publicPath, staticPath, manifest) {
+  const manifestEntries = Object.values(manifest).map(v => path.join(publicPath, v));
+
   const files = {};
   const directories = ["."];
   while (directories.length > 0) {
@@ -41,30 +43,59 @@ const generate = function(publicPath, staticPath) {
       if (fs.realpathSync(file) !== file) return;
 
       // Directories get added to the queue to process
-      if (stat.isDirectory())
-        return directories.push(path.join(currentDirectory, name));
+      if (stat.isDirectory()) return directories.push(path.join(currentDirectory, name));
 
       // Don't serve the manifest file
-      if(name === MANIFEST_FILENAME) return;
+      if (name === MANIFEST_FILENAME) return;
 
-      files[publicFile] = {
-        path: file,
+      // Is it in the manifest?
+      const manifestEntry = Object.entries(manifest).find(([k, v]) => path.join(publicPath, v) == publicFile);
+
+      const entry = (files[publicFile] = {
+        lastModified: stat.mtime,
+        manifest: manifestEntry || false,
         mime: mime.contentType(path.extname(file)),
-        size: stat.size // This means the file can't change after starting...
-      };
+        size: stat.size, // This means the file can't change after starting...
+        path: file
+      });
+
+      // Is this a digested file?
+      if (entry.manifest) {
+        entry.digest = entry.manifest[1].match(/\.([a-f0-9]+)\.[^\.]+/)[1];
+      }
     });
   }
+  return files;
+};
+
+// Create a http.Handler that serves static assets.
+const generate = function(publicPath, staticPath, manifest) {
+  const files = generateFileList(publicPath, staticPath, manifest);
 
   return function(req, res, next) {
     // Explict match - we don't traverse the filesystem. Nor do we serve
     // directories.
     let match = files[req.url];
 
-    if (!match || path.extname(match.path) == ".gz")
-      return next === null ? false : next();
+    // No match or an attempt to get the gzip version directly
+    if (!match || path.extname(match.path) == ".gz") return next === null ? false : next();
 
-    res.statusCode = 200;
+    // Long term caching for digested assets
+    if (!!match.digest) {
+      res.setHeader("Cache-Control", "max-age=31536000, immutable");
+      res.setHeader("ETag", match.digest);
+    }
     res.setHeader("Content-Type", match.mime);
+
+    // Check for an ETag match
+    const etag = req.headers["if-none-match"];
+    if (!!etag && etag !== "*" && etag === match.digest) {
+      res.statusCode = 304; // File still matches
+      return res.end();
+    }
+
+    // Otherwise return the file (or gzip version)
+    res.statusCode = 200;
 
     // Check for statically gzipped versions
     var acceptGzip = (req.headers["accept-encoding"] || "").includes("gzip");
@@ -72,6 +103,8 @@ const generate = function(publicPath, staticPath) {
       match = files[req.url + ".gz"];
       res.setHeader("Content-Encoding", "gzip");
     }
+    // If the gzip match was found match now points at the gzip version,
+    // not the original. That's why we set headers like mime, prior.
 
     // Stream either the raw file or the matched gzip version
     res.setHeader("Content-Length", match.size);

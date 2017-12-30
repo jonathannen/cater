@@ -5,7 +5,7 @@ import webpack from "webpack";
 const builder = function(config, context) {
   return new Promise((resolve, reject) => {
     webpack(config).run((err, stats) => {
-      if (stats.hasErrors()) reject(stats.compilation.errors);
+      if (stats.hasErrors()) return reject(stats.compilation.errors);
       if (context) context.callbackWebpackCompiled(stats);
       resolve(stats);
     });

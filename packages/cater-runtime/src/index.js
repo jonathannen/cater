@@ -33,12 +33,12 @@ class Cater {
     const buildPath = path.join(options.appRootPath, options.buildDirectory);
     const staticPath = path.join(buildPath, options.publicPath);
 
-    const clientManifest = loadManifest(path.join(staticPath, MANIFEST_FILENAME));
+    this.clientManifest = loadManifest(path.join(staticPath, MANIFEST_FILENAME));
     const serverManifest = loadManifest(path.join(buildPath, MANIFEST_FILENAME));
 
     this.publicPath = options.publicPath;
     this.staticPath = staticPath;
-    this.bundlePath = path.join(options.publicPath, clientManifest[options.clientBundleFile]);
+    this.bundlePath = path.join(options.publicPath, this.clientManifest[options.clientBundleFile]);
     this.serverBundlePath = path.join(buildPath, serverManifest[options.serverBundleFile]);
     this.httpPort = options.httpPort;
   }
@@ -50,7 +50,7 @@ class Cater {
 
     if(this.options.serveStaticAssets) {
       const HandlerStatic = require("./handler-static");
-      const _static = HandlerStatic(this.publicPath, this.staticPath);
+      const _static = HandlerStatic(this.publicPath, this.staticPath, this.clientManifest);
       handlers = [_static, cater, Middleware.handlerNotFound];
     }
 

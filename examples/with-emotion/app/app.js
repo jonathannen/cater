@@ -15,7 +15,11 @@ const H1 = styled("h1")`
   font-weight: 200;
   text-align: center;
   transform: scale(${props => props.scale});
+  a {
+    color: linen;
+    font-weight: 800;
+  }
 `;
 
 /* A simple (but friendly (but stylish)) React Component */
-export default () => <H1>Stylish Hello World!</H1>;
+export default () => <H1>Stylish Hello World!<a href="/">...</a></H1>;
