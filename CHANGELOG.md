@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - app/title Title component will set the server and client side title tag in the head of the document.
 - The dev server is wrapped in a handler that will ETag development assets invalidating whenever a new compile is triggered. This improves dev-time performance between page loads.
+- Production server will now shut down gracefully if two consecutive space keystrokes are received.
 
 ## Changed
 - Tidied up the emotion test approach in the examples/with-emotion - plus added in hydration for the emotion ids.
