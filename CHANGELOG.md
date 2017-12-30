@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - app/title Title component will set the server and client side title tag in the head of the document.
 - The dev server is wrapped in a handler that will ETag development assets invalidating whenever a new compile is triggered. This improves dev-time performance between page loads.
 
+## Changed
+- Tidied up the emotion test approach in the examples/with-emotion - plus added in hydration for the emotion ids.
+
 ## [0.3.6] - 2017-12-29
 ### Added
 - A config.cater.js file in the application root directory now is used as options. This can include an "env" section that has options specific for a NODE_ENV.
