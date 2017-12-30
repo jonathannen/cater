@@ -1,9 +1,11 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import React from "react";
 import SkipServerSideRender from "app/cater/skipserversiderender";
+import Title from 'app/title';
 
 export default () => (
   <div>
+    <Title>Demonstration Example App for Cater</Title>
     <h1>Demonstration of some Built-In Cater components:</h1>
     <hr />
     <h2>SkipServerSideRender Component:</h2>

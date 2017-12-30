@@ -19,9 +19,9 @@ class Layout extends React.Component {
     return (
       <html>
         <head>
-          <link rel="preload" href={bundlePath} as="script"/>
           <meta charSet="utf-8" />
-          <title />
+          <link rel="preload" href={bundlePath} as="script"/>
+          <title>{ctx.title}</title>
           {ctx.globalStyles.map(href => <link href={href} key={href} rel="stylesheet" type="text/css" />)}
         </head>
         <body>
