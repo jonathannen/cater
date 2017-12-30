@@ -4,11 +4,21 @@ set -e
 
 echo "Checking for outdated packages, testing, versioning, then publishing... "
 
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [[ "$BRANCH" != "master" ]]; then
+  echo 'Aborting script. You must be on the merged, release-ready master branch to release'
+  exit 1
+fi
+
 yarn upgrade
 yarn outdated
 yarn test
 yarn version
 ./bin/configure-packages
+
+# It's bad, bad, bad to have a release out but not have it on the central
+# repo.
+git push origin master
 
 # Using npm here as it allows silent publish -- yarn has a prompt for a
 # version on publish which prevents it being used in automated cases.
