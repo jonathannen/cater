@@ -1,4 +1,3 @@
-
 // Copyright Jon Williams 2017. See LICENSE file.
 
 /**
@@ -30,4 +29,4 @@ class CaterContext {
 
 }
 
-export default CaterContext;
+module.exports = CaterContext; // CommonJS

@@ -15,8 +15,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "cater-runtime": "^0.3.6",
-    "cater-jest": "^0.3.6"
+    "cater-runtime": "^0.3.6"
   },
   "devDependencies": {
     "cater-jest": "^0.3.6",

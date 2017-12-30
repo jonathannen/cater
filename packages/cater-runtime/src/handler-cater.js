@@ -1,8 +1,8 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import CaterContext from "./cater-context";
-import CaterProvider from "../server/cater-provider";
-import React from "react";
-import { renderToString } from "react-dom/server";
+const CaterContext  = require('./cater-context');
+const CaterProvider = require('../server/cater-provider');
+const { createElement } = require('React');
+const { renderToString } = require('react-dom/server');
 
 /**
  * http.Handler that renders the App via React.
@@ -20,19 +20,21 @@ const reactHandler = function(req, res, bundlePath, App, Layout) {
   res.write("<!DOCTYPE html>");
 
   const caterContext = new CaterContext(bundlePath);
-  const appBody = renderToString(
-    <CaterProvider caterContext={caterContext}>
-      <App />
-    </CaterProvider>
-  );
 
-  const reactBody = renderToString(
-    <CaterProvider caterContext={caterContext}>
-      <Layout>
-        <div id="__CATER_ROOT" dangerouslySetInnerHTML={{ __html: appBody }} />
-      </Layout>
-    </CaterProvider>
-  );
+  // Equivalent of:
+  // <CaterProvider caterContext={}><App/></CaterProvider>
+  const app = createElement(App, null, null);
+  const wrappedApp = createElement(CaterProvider, {caterContext: caterContext}, app);
+  const appBody = renderToString(wrappedApp);
+
+  // Equivalent of:
+  // <CaterProvider caterContext={}>
+  // <Layout><div id="__CATER_ROOT">{app}</div></Layout>
+  // </CaterProvider>
+  const rootDiv = createElement('div', { id: '__CATER_ROOT', dangerouslySetInnerHTML: { __html: appBody }}, null);
+  const layout = createElement(Layout, null, rootDiv);
+  const wrappedLayout = createElement(CaterProvider, {caterContext: caterContext}, layout);
+  const reactBody = renderToString(wrappedLayout);
 
   res.write(reactBody);
   res.end();

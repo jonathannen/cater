@@ -1,10 +1,10 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import PropTypes from "prop-types";
-import React from "react";
+const PropTypes = require("prop-types");
+const React = require("react");
 
 // Context shared by Layout to it's child components
-export const caterContextTypes = {
-  __caterContext: PropTypes.object,
+const caterContextTypes = {
+  __caterContext: PropTypes.object
 };
 
 /**
@@ -13,15 +13,9 @@ export const caterContextTypes = {
  * Global stylesheets and the document title are two common examples.
  */
 class CaterProvider extends React.Component {
-  static childContextTypes = caterContextTypes;
-
-  static propTypes = {
-    caterContext: PropTypes.object.isRequired,
-  };
-
   getChildContext() {
     return {
-      __caterContext: this.props.caterContext,
+      __caterContext: this.props.caterContext
     };
   }
 
@@ -30,4 +24,8 @@ class CaterProvider extends React.Component {
   }
 }
 
-export default CaterProvider;
+// CommonJS
+CaterProvider.childContextTypes = caterContextTypes;
+CaterProvider.propTypes = { caterContext: PropTypes.object.isRequired };
+module.exports = CaterProvider;
+module.exports.caterContextTypes = caterContextTypes;

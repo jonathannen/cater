@@ -7,9 +7,11 @@ const RuntimeCater = require('./src');
 module.exports = function(options = null) {
   options = options || loadConfig();
 
-  const babelOptions = BabelOptions();
-  babelOptions.ignore = /\/node_modules\/(?!(cater$|cater-))/;
-  require("babel-register")(babelOptions);
+  if(options.babelRegister) {
+    const babelOptions = BabelOptions();
+    babelOptions.ignore = /\/node_modules\/(?!(cater$|cater-))/;
+    require("babel-register")(babelOptions);
+  }
   return new RuntimeCater(options);
 }
 
