@@ -1,7 +1,7 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 const CaterContext  = require('./cater-context');
 const CaterProvider = require('../server/cater-provider');
-const { createElement } = require('React');
+const { createElement } = require('react');
 const { renderToString } = require('react-dom/server');
 
 /**
