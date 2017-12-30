@@ -7,6 +7,9 @@ const path = require("path");
 // Packages that are optionally installed in a example or package directory
 const WHITELIST_PACKAGES = ["express"];
 
+//    "babel-core": "^6.26.0",
+// "webpack": "^3.10.0"
+
 // Packages versioned together across all of cater
 const KEY_DEV_DEPENDENCIES = {
   jest: "^22.0.4"

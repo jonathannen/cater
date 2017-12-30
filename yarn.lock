@@ -2865,10 +2865,6 @@ istanbul-reports@^1.1.3:
   dependencies:
     handlebars "^4.0.3"
 
-jest-babel@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/jest-babel/-/jest-babel-1.0.1.tgz#ef659df0e9397b083c0f6aebd4cb8cfaa77df8bf"
-
 jest-changed-files@^22.0.3:
   version "22.0.3"
   resolved "https://registry.yarnpkg.com/jest-changed-files/-/jest-changed-files-22.0.3.tgz#3771315acfa24a0ed7e6c545de620db6f1b2d164"

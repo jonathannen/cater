@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "cater-assets": "^0.3.7",
     "cater-jest": "^0.3.7",

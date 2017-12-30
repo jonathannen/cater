@@ -20,7 +20,6 @@
   "devDependencies": {
     "cater-jest": "^0.3.7",
     "jest": "^22.0.4",
-    "jest-babel": "^1.0.1",
     "react-test-renderer": "^16.2.0",
     "supertest": "^3.0.0"
   }
