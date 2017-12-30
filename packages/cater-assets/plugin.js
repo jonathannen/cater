@@ -66,7 +66,7 @@ const generateWebpackStylesheetRule = function(state) {
     test: new RegExp(`\.(${state.stylesheetExtensions.join("|")})$`),
     use: state.extractCssPlugin.extract({
       use: [
-        { loader: "css-loader" }, //
+        { loader: "css-loader", options: { minimize: !state.debug }, }, //
         { loader: "sass-loader" }
       ]
     })
@@ -79,6 +79,7 @@ const generateWebpackStylesheetRule = function(state) {
 module.exports = function(cater, options) {
   // Work out the extensions for different asset classes
   const state = {
+    debug: !!cater.debug,
     imageExtensions: cater.assetExtensions.image || [],
     publicPath: cater.publicPath,
     manifest: {},
