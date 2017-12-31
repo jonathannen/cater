@@ -26,6 +26,13 @@ const generate = function(entryPath, bundlePath, publicPath) {
     unloadCaterBasedModules();
     try {
       handler.load();
+
+      if (!handler.App || (typeof handler.App !== "function"))
+        throw `Didn't find an App component. Make sure you have a React component in app/app.js.`;
+
+      if (!handler.Layout || (typeof handler.Layout !== "function"))
+        throw `Hmm. Found a empty Layout component. Have you got a blank component in app/layout.js?`;
+
       return true;
     } catch (e) {
       // If this is the first run through, don't start cater - throw an

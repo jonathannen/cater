@@ -10,7 +10,7 @@ const SideConfiguration = require("./context-side.js");
 const events = {
   configured: "configured",
   webpackCompiled: "webpack-compiled",
-  webpackCompiling: "webpack-compiling",
+  webpackCompiling: "webpack-compiling"
 };
 
 class Cater extends EventEmitter {
@@ -24,7 +24,7 @@ class Cater extends EventEmitter {
     this.assignProgrammaticDefaults();
     this.loadPackage();
 
-    if(this.plugins == 'auto') autoDefinePlugins(this);
+    if (this.plugins == "auto") autoDefinePlugins(this);
     configurePlugins(this); // Get plugins ready
 
     // Assign derived options
@@ -36,7 +36,7 @@ class Cater extends EventEmitter {
 
   assignProgrammaticDefaults() {
     this.caterRootPath = path.join(__dirname, "..");
-    this.caterRuntimePath = path.dirname(require.resolve('cater-runtime'));
+    this.caterRuntimePath = path.dirname(require.resolve("cater-runtime"));
     this.debug = process.env.NODE_ENV !== "production";
   }
 
@@ -47,7 +47,9 @@ class Cater extends EventEmitter {
       .map(v => v.componentRootPath)
       .filter(v => !!v);
 
-    this.rootPaths = [this.appRootPath, ...this.pluginPaths, this.caterRootPath, this.caterRuntimePath].filter(v => fs.existsSync(v));
+    this.rootPaths = [this.appRootPath, ...this.pluginPaths, this.caterRootPath, this.caterRuntimePath].filter(v =>
+      fs.existsSync(v)
+    );
 
     this.staticPath = path.join(this.buildPath, this.publicPath);
     this.devStaticPath = path.join(this.appRootPath, this.staticDirectory);
@@ -65,18 +67,19 @@ class Cater extends EventEmitter {
 
   generatePaths(directories) {
     const result = [];
-    for (let root of this.rootPaths)
+    for (let root of this.rootPaths) {
       for (let dir of directories) {
         const candidate = path.join(root, dir);
         if (fs.existsSync(candidate)) result.push(candidate);
       }
+    }
     return result;
   }
 
   loadPackage() {
     this.package = {};
-    const packageFile = path.join(this.appRootPath, 'package.json');
-    if(fs.existsSync(packageFile)) {
+    const packageFile = path.join(this.appRootPath, "package.json");
+    if (fs.existsSync(packageFile)) {
       const content = fs.readFileSync(packageFile).toString();
       this.package = JSON.parse(content);
     }
@@ -105,12 +108,11 @@ class Cater extends EventEmitter {
 
   start() {
     // TODO
-    const Middleware = require('cater-runtime').Middleware;
+    const Middleware = require("cater-runtime").Middleware;
     return this.handler().then(handler => {
       Middleware.httpServer(handler, this.httpPort);
     });
   }
-
 }
 
 Cater.prototype.prepareCommandLine = function() {

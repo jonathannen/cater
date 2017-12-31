@@ -1,5 +1,6 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import App from 'app/app';
+import Provider from 'app/provider';
 import React from 'react';
 import { hydrate } from "react-dom"
 
@@ -9,4 +10,5 @@ import { hydrate } from "react-dom"
  * In this default case, the project-supplied App component is rendered to
  * the #root <div id='__CATER_ROOT></div> on the page.
  */
-hydrate(<App/>, document.getElementById("__CATER_ROOT"));
+const rootElement = document.getElementById("__CATER_ROOT");
+hydrate(<Provider><App/></Provider>, rootElement);

@@ -1,7 +1,7 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 
 export default () => {
-  throw `The default App.js has loaded. You should create your own App under
+  throw new Error(`The default App.js has loaded. You should create your own App under
 
         /your-project-name/app/app.js
 
@@ -10,5 +10,5 @@ export default () => {
     instance.
 
     For more information, head over to https://github.com/jonathannen/cater
-    `;
+    `);
 };

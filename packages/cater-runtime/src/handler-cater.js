@@ -15,17 +15,18 @@ const { renderToString } = require('react-dom/server');
  * use the same CaterContext. In this way, App components can set higher-level
  * options such as <head> elements.
  */
-const reactHandler = function(req, res, bundlePath, App, Layout) {
+const reactHandler = function(req, res, bundlePath, App, Layout, Provider) {
   res.writeHead(200, { "Content-Type": "text/html" });
   res.write("<!DOCTYPE html>");
 
   const caterContext = new CaterContext(bundlePath);
 
   // Equivalent of:
-  // <CaterProvider caterContext={}><App/></CaterProvider>
+  // <CaterProvider caterContext={}><Provider><App/><Provider></CaterProvider>
   const app = createElement(App, null, null);
-  const wrappedApp = createElement(CaterProvider, {caterContext: caterContext}, app);
-  const appBody = renderToString(wrappedApp);
+  const caterWrap = createElement(CaterProvider, {caterContext: caterContext}, app);
+  const providerWrap = createElement(Provider, null, caterWrap);
+  const appBody = renderToString(providerWrap);
 
   // Equivalent of:
   // <CaterProvider caterContext={}>
@@ -48,7 +49,7 @@ const generate = function(entryPath, bundlePath, publicPath) {
 
   const handler = function(req, res, next = null) {
     if (!req.url.startsWith(publicPath)) {
-      reactHandler(req, res, bundlePath, handler.App, handler.Layout);
+      reactHandler(req, res, bundlePath, handler.App, handler.Layout, handler.Provider);
     } else if (next !== null) {
       next();
     }

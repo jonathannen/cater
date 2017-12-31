@@ -1,6 +1,7 @@
 // Copyright Jon Williams 2017. See LICENSE file.
 import App from "app/app";
 import Layout from "server/layout";
+import Provider from "app/provider";
 
 /**
  * The _entry.js files are the Webpack 'entry' point for compiling the bundle.
@@ -12,5 +13,5 @@ import Layout from "server/layout";
  * useful as a hot-reloading point for the UI-specific server components.
  */
 export default function() {
-  return { App, Layout };
+  return { App, Layout, Provider };
 }

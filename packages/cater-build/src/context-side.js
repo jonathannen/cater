@@ -5,7 +5,7 @@ const path = require("path");
 const webpackGenerator = require("./webpack-generator");
 
 const ASSET_PATH = "assets";
-const CARET_PATH_SEPARATOR = '?filename=';
+const CARET_PATH_SEPARATOR = "?filename=";
 
 /**
  * Resolves the given partial filename source name "app/blah" in the given
@@ -15,14 +15,22 @@ const CARET_PATH_SEPARATOR = '?filename=';
 const resolveWithPaths = function(source, paths, extensions, startFromPath = null) {
   const ext = path.extname(source).toLowerCase();
   const exts = ext.length > 0 ? [""] : extensions;
+  let startMatching = startFromPath === null;
 
   for (let modulePath of paths) {
     for (let extension of exts) {
       const potential = path.join(modulePath, source + extension);
-      if (!startFromPath && fs.existsSync(potential)) return potential;
-      if(potential === startFromPath) startFromPath = null;
+      if (startMatching && fs.existsSync(potential)) return potential;
+      if (potential === startFromPath) startMatching = true;
     }
   }
+
+  // With the app and ^ caret style imports there is a chance of a cycle
+  // in the import/require. Throw an error if we detect a loop
+  if (!!startFromPath && startFromPath === source) {
+    throw `Resolving ${source} imported itself. Aborting to prevent an infinite loop.`;
+  }
+
   return source;
 };
 
@@ -53,12 +61,19 @@ class SideConfiguration {
     if (!context.debug) this.configureProduction(context);
 
     this.webpackConfig = webpackGenerator(context, this);
+
+    // Used to split caret ^ type imports
+    const prefixes = Object.keys(this.importPrefixResolvers);
+    this.caretPathSplitRegex = new RegExp(`/(${prefixes.join("|")})/`);
   }
 
   assignPaths(context) {
     this.assetPaths = [path.join(context.appRootPath, "assets")];
     this.sidePaths = context.generatePaths([this.name]);
-    this.paths = context.universalPaths.concat(this.sidePaths);
+
+    this.paths = context.generatePaths(context.universalNames.concat([this.name]));
+
+    // this.paths = context.universalPaths.concat(this.sidePaths);
     this.entryPath = this.resolve(context.entryScriptFilename);
   }
 
@@ -77,25 +92,6 @@ class SideConfiguration {
     } else {
       this.productionPath = context.buildPath;
     }
-
-    this.loadManifest();
-
-    if (this.hasManifest()) {
-      this.productionBundleFile = this.resolveAsset(path.basename(this.bundlePath));
-      this.productionPublicBundlePath = path.join(context.publicPath, this.productionBundleFile);
-      this.productionBundlePath = path.join(this.productionPath, this.productionBundleFile);
-    }
-  }
-
-  hasManifest() {
-    return this.manifest || false;
-  }
-
-  loadManifest() {
-    this.manifestPath = path.join(this.productionPath, "manifest.json");
-    if (!fs.existsSync(this.manifestPath)) return null;
-    const content = fs.readFileSync(this.manifestPath).toString();
-    this.manifest = JSON.parse(content);
   }
 
   /**
@@ -106,18 +102,6 @@ class SideConfiguration {
   }
 
   /**
-   * Resolve an asset (by default under /build) using the manifest. This will
-   * convert a name like bundle.js to bundle.12dd5bb6a286dd70134b.js where
-   * the extra value is the hash value from the Webpack generation.
-   */
-  resolveAsset(source) {
-    if (this.manifest === null) return source;
-    const result = this.manifest[source];
-    if (result === undefined) return source;
-    return result;
-  }
-
-  /**
    * Resolves a file using babel rules. Most resolutions will pass straight
    * through. However, examples like app/app will resolve according to the
    * path rules of this side.
@@ -125,14 +109,14 @@ class SideConfiguration {
   resolveBabel(source, filename) {
     // Hackery from jest to get the filename context. We could use a
     // querystring approach, but no need just yet.
-    if(!filename && source.includes(CARET_PATH_SEPARATOR)) {
+    if (!filename && source.includes(CARET_PATH_SEPARATOR)) {
       const split = source.split(CARET_PATH_SEPARATOR);
       source = split[0];
       filename = split[1];
     }
 
     // Handle /asset/* imports for Webpack
-    if(this.typeClient) {
+    if (this.typeClient) {
       if (source.startsWith(ASSET_PATH)) {
         let result = null;
         this.assetPaths.forEach(assetPath => {
@@ -154,9 +138,9 @@ class SideConfiguration {
         // prior priority component. So if you were in custom/server/layout.js
         // this would return the original cater/server/layouts.js. Useful
         // for wrappering.
-        if(base === "^") {
+        if (base === "^") {
           startFromPath = filename;
-          base = filename.split(`/${prefix}/`).pop();
+          base = filename.split(this.caretPathSplitRegex).pop();
         }
 
         const resolve = this.importPrefixResolvers[prefix];
