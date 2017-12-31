@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## Added
+- Redux is now supported via the cater-redux package.
+
+## Fixed
+- The caret "^ cascade import was traversing component1/app, component2/app, componen1/side, component2/side, ... -- whereas it's now c1/app, c1/side, c2/app, c2/side. This was necessary to get the provider cascade working.
 
 ## [0.3.7] - 2017-12-30
 ### Added
@@ -15,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Changed
 - Tidied up the emotion test approach in the examples/with-emotion - plus added in hydration for the emotion ids.
 - Major refactor of the cater "src" directories to avoid using Babel in runtime. Ongoing, but major improvement.
+
 
 ## [0.3.6] - 2017-12-29
 ### Added
