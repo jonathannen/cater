@@ -4,11 +4,17 @@ const path = require("path");
 const Cater = require("cater");
 const Resolver = require("jest-resolve");
 
+// Cache of Cater applications.
 const _cache = {};
 
+/**
+ * Used for integration and workspace-style Cater testing. This resolves files
+ * relative to the test configuration in use.
+ */
 module.exports = function(moduleName, opts) {
   let result = Resolver.findNodeModule(moduleName, opts);
 
+  // Find the root directory of this test, if available.
   if (result === null) {
     const rootPath = opts.rootDir || global.rootPath || process.cwd();
     global.rootPath = rootPath;
