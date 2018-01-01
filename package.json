@@ -8,7 +8,7 @@
         "packages/*"
     ],
     "scripts": {
-        "lint": "eslint ./examples/hello-world --cache --ext js",
+        "lint": "eslint ./examples --cache --ext js",
         "test": "jest"
     },
     "jest": {
