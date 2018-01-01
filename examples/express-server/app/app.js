@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import React from "react";
+import React from 'react';
 
 /* A simple (but friendly) React Component */
 export default () => (
@@ -11,13 +11,11 @@ export default () => (
     </p>
 
     <p>
-      In debug mode, Cater also provides the client-side bundle at{" "}
-      <a href="/static/bundle.js">/static/bundle.js</a>.
+      In debug mode, Cater also provides the client-side bundle at <a href="/static/bundle.js">/static/bundle.js</a>.
     </p>
 
     <p>
-      For reference we've also provided a route{" "}
-      <a href="/express">served by Express</a> and outside Cater.
+      For reference we&apos;ve also provided a route <a href="/express">served by Express</a> and outside Cater.
     </p>
   </div>
 );

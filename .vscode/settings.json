@@ -1,4 +1,5 @@
 {
   "prettier.printWidth": 130,
-  "prettier.singleQuote": true
+  "prettier.singleQuote": true,
+  "prettier.arrowParens": "always"
 }

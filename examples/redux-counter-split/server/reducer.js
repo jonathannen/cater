@@ -1,5 +1,5 @@
 // Adapted from https://github.com/reactjs/redux/tree/master/examples
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux';
 
 // Sets the initial state as a random number between 0 and 9.
 const counter = (state, action) => {

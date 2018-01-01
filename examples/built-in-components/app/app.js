@@ -1,6 +1,6 @@
 // Copyright Jon Williams 2017. See LICENSE file.
-import React from "react";
-import SkipServerSideRender from "app/cater/skipserversiderender";
+import React from 'react';
+import SkipServerSideRender from 'app/cater/skipserversiderender';
 import Title from 'app/title';
 
 export default () => (
@@ -9,16 +9,10 @@ export default () => (
     <h1>Demonstration of some Built-In Cater components:</h1>
     <hr />
     <h2>SkipServerSideRender Component:</h2>
-    <p>
-      SkipServerSideRender/server -- This only shows when rendering on the
-      server-side.
-    </p>
+    <p>SkipServerSideRender/server -- This only shows when rendering on the server-side.</p>
 
     <SkipServerSideRender>
-      <p>
-        SkipServerSideRender/client -- This only shows when rendering on the
-        client-side.
-      </p>
+      <p>SkipServerSideRender/client -- This only shows when rendering on the client-side.</p>
     </SkipServerSideRender>
   </div>
 );

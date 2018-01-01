@@ -4,6 +4,7 @@
   "rules": {
     "import/extensions": 0,
     "import/no-extraneous-dependencies": 0,
+    "no-unused-expressions": [2, { "allowTaggedTemplates": true } ],
     "import/no-unresolved": [ 2, { "ignore": ["^(app|client|server)\/.*"]}],
     "react/jsx-filename-extension": 0
   },
