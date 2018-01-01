@@ -41,18 +41,14 @@ class Counter extends React.Component {
   }
 }
 
-const actions = (Counter.ACTIONS = {});
+const actions = {};
 actions.decrement = () => ({ type: DECREMENT_COUNTER });
 actions.increment = () => ({ type: INCREMENT_COUNTER });
 
 // Map Props and Actions to Redux
-const mapStateToProps = state => ({
-  counter: state.counter
-});
+const mapStateToProps = state => ({ counter: state.counter });
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actions, dispatch);
-};
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 const ConnectedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter);
 
