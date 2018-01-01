@@ -24,9 +24,9 @@ const reactHandler = function(req, res, bundlePath, App, Layout, Provider) {
   // Equivalent of:
   // <CaterProvider caterContext={}><Provider><App/><Provider></CaterProvider>
   const app = createElement(App, null, null);
-  const caterWrap = createElement(CaterProvider, {caterContext: caterContext}, app);
-  const providerWrap = createElement(Provider, null, caterWrap);
-  const appBody = renderToString(providerWrap);
+  const providerWrap = createElement(Provider, null, app);
+  const caterWrap = createElement(CaterProvider, {caterContext: caterContext}, providerWrap);
+  const appBody = renderToString(caterWrap);
 
   // Equivalent of:
   // <CaterProvider caterContext={}>

@@ -8,7 +8,7 @@ import request from "supertest";
 require.requireActual.ROOT = __dirname;
 
 // We're running webpack, so be generous with timeouts
-const TIMEOUT_INTERVAL = 20000;
+const TIMEOUT_INTERVAL = 200000;
 const handler = testHarness().testHandler();
 
 const loadFile = function(name) {

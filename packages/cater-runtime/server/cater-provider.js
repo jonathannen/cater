@@ -14,9 +14,12 @@ const caterContextTypes = {
  */
 class CaterProvider extends React.Component {
   getChildContext() {
-    return {
-      __caterContext: this.props.caterContext
-    };
+    if(!this.childContext) {
+      this.childContext = {
+        __caterContext: this.props.caterContext
+      };
+    }
+    return this.childContext;
   }
 
   render() {

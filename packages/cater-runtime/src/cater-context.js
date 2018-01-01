@@ -7,6 +7,7 @@ class CaterContext {
 
   constructor(bundlePath) {
     this.bundlePath = bundlePath;
+    this.globalJSON = {};
     this.globalStyles = [];
     this.title = "";
   }
@@ -17,6 +18,13 @@ class CaterContext {
    */
   addGlobalStyle(href) {
     this.globalStyles.push(href);
+  }
+
+  /**
+   * Adds a piece of global JSON data.
+   */
+  addGlobalJSON(name, data) {
+    this.globalJSON[name] = data;
   }
 
   /**
