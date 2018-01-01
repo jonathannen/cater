@@ -1,22 +1,19 @@
 {
-    "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
-    "description": "Workspace for: Modular convention-driven framework for React and Friends.",
-    "private": true,
-    "version": "0.3.7",
-    "workspaces": [
-        "examples/*",
-        "packages/*"
-    ],
-    "scripts": {
-        "lint": "eslint ./examples --cache --ext js",
-        "test": "jest"
-    },
-    "jest": {
-        "resetModules": true,
-        "projects": [
-            "<rootDir>/examples/*",
-            "<rootDir>/packages/*",
-            "<rootDir>/packages/cater-build/integration/*"
-        ]
-    }
+  "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+  "description": "Workspace for: Modular convention-driven framework for React and Friends.",
+  "private": true,
+  "version": "0.3.7",
+  "workspaces": ["examples/*", "packages/*"],
+  "scripts": {
+    "lint": "eslint . --cache --ext js",
+    "test": "jest"
+  },
+  "jest": {
+    "resetModules": true,
+    "projects": [
+      "<rootDir>/examples/*",
+      "<rootDir>/packages/*",
+      "<rootDir>/packages/cater-build/integration/*"
+    ]
+  }
 }

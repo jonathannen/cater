@@ -1,9 +1,9 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 import CustomProvider from 'server/custom-provider';
-import { createStore } from "redux";
-import ParentProvider from "app/^"; // Note: Inheritance import
-import { Provider } from "react-redux";
-import React from "react";
+import { createStore } from 'redux';
+import ParentProvider from 'app/^'; // Note: Inheritance import
+import { Provider } from 'react-redux';
+import React from 'react';
 
 import Reducer from 'app/reducer';
 const store = createStore(Reducer);
@@ -14,7 +14,6 @@ const store = createStore(Reducer);
  * from this data.
  */
 class ReduxProvider extends CustomProvider {
-
   render() {
     const initialState = store.getState();
     this.caterContext().addGlobalJSON('__cater_redux', initialState);

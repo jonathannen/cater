@@ -1,4 +1,4 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 
 export default () => {
   throw new Error(`The default App.js has loaded. You should create your own App under

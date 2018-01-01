@@ -1,6 +1,6 @@
-// Copyright Jon Williams 2017. See LICENSE file.
-const PropTypes = require("prop-types");
-const React = require("react");
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+const PropTypes = require('prop-types');
+const React = require('react');
 
 // Context shared by Layout to it's child components
 const caterContextTypes = {
@@ -14,7 +14,7 @@ const caterContextTypes = {
  */
 class CaterProvider extends React.Component {
   getChildContext() {
-    if(!this.childContext) {
+    if (!this.childContext) {
       this.childContext = {
         __caterContext: this.props.caterContext
       };

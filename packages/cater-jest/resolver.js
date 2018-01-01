@@ -1,8 +1,8 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 // See ./README.md for why these files exist and what they do.
-const path = require("path");
-const Cater = require("cater");
-const Resolver = require("jest-resolve");
+const path = require('path');
+const Cater = require('cater');
+const Resolver = require('jest-resolve');
 
 // Cache of Cater applications.
 const _cache = {};
@@ -20,7 +20,7 @@ module.exports = function(moduleName, opts) {
     global.rootPath = rootPath;
 
     let cater = _cache[rootPath];
-    if(!cater) cater = _cache[rootPath] = new Cater({ appRootPath: rootPath });
+    if (!cater) cater = _cache[rootPath] = new Cater({ appRootPath: rootPath });
 
     result = cater.sides.server.babel.resolveModuleSource(moduleName);
   }

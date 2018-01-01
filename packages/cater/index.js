@@ -1,8 +1,9 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 
-const mode = process.env.CATER_MODE || (process.env.NODE_ENV === "production" ? "runtime" : "build");
-const runtime = mode === "runtime";
-const moduleName = runtime ? "cater-runtime" : "cater-build";
+const mode =
+  process.env.CATER_MODE || (process.env.NODE_ENV === 'production' ? 'runtime' : 'build');
+const runtime = mode === 'runtime';
+const moduleName = runtime ? 'cater-runtime' : 'cater-build';
 
 try {
   if (!runtime) require.resolve(moduleName);

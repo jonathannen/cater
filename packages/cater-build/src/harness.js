@@ -1,11 +1,11 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 // Note ES2015 imports:
-import handlerCater from "./handler-cater";
-import cater from "../index.js";
-import { Middleware } from "cater-runtime";
+import handlerCater from './handler-cater';
+import cater from '../index.js';
+import { Middleware } from 'cater-runtime';
 
 if (!global.__POLYFILL__) {
-  global.__POLYFILL__ = !!require("babel-polyfill");
+  global.__POLYFILL__ = !!require('babel-polyfill');
 }
 
 export const testCater = function(options = {}) {
@@ -22,7 +22,7 @@ export const testHandler = function(appRootPath = null) {
 
   const _cater = handlerCater(server.entryPath, server.bundlePath, cater.publicPath);
   const errorHandler = (req, res, handlers) => {
-    throw "Request not handled.";
+    throw 'Request not handled.';
   };
 
   return Middleware([_cater, errorHandler]);

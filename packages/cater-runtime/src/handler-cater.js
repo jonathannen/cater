@@ -1,5 +1,5 @@
-// Copyright Jon Williams 2017. See LICENSE file.
-const CaterContext  = require('./cater-context');
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+const CaterContext = require('./cater-context');
 const CaterProvider = require('../server/cater-provider');
 const { createElement } = require('react');
 const { renderToString } = require('react-dom/server');
@@ -16,8 +16,8 @@ const { renderToString } = require('react-dom/server');
  * options such as <head> elements.
  */
 const reactHandler = function(req, res, bundlePath, App, Layout, Provider) {
-  res.writeHead(200, { "Content-Type": "text/html" });
-  res.write("<!DOCTYPE html>");
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.write('<!DOCTYPE html>');
 
   const caterContext = new CaterContext(bundlePath);
 
@@ -25,16 +25,20 @@ const reactHandler = function(req, res, bundlePath, App, Layout, Provider) {
   // <CaterProvider caterContext={}><Provider><App/><Provider></CaterProvider>
   const app = createElement(App, null, null);
   const providerWrap = createElement(Provider, null, app);
-  const caterWrap = createElement(CaterProvider, {caterContext: caterContext}, providerWrap);
+  const caterWrap = createElement(CaterProvider, { caterContext: caterContext }, providerWrap);
   const appBody = renderToString(caterWrap);
 
   // Equivalent of:
   // <CaterProvider caterContext={}>
   // <Layout><div id="__CATER_ROOT">{app}</div></Layout>
   // </CaterProvider>
-  const rootDiv = createElement('div', { id: '__CATER_ROOT', dangerouslySetInnerHTML: { __html: appBody }}, null);
+  const rootDiv = createElement(
+    'div',
+    { id: '__CATER_ROOT', dangerouslySetInnerHTML: { __html: appBody } },
+    null
+  );
   const layout = createElement(Layout, null, rootDiv);
-  const wrappedLayout = createElement(CaterProvider, {caterContext: caterContext}, layout);
+  const wrappedLayout = createElement(CaterProvider, { caterContext: caterContext }, layout);
   const reactBody = renderToString(wrappedLayout);
 
   res.write(reactBody);
@@ -46,7 +50,6 @@ const reactHandler = function(req, res, bundlePath, App, Layout, Provider) {
  * components). Plus the bundlePath.
  */
 const generate = function(entryPath, bundlePath, publicPath) {
-
   const handler = function(req, res, next = null) {
     if (!req.url.startsWith(publicPath)) {
       reactHandler(req, res, bundlePath, handler.App, handler.Layout, handler.Provider);
@@ -61,7 +64,7 @@ const generate = function(entryPath, bundlePath, publicPath) {
   handler.load = function() {
     const components = require(entryPath)();
     Object.assign(handler, components);
-  }
+  };
   handler.load();
 
   return handler;

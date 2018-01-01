@@ -1,6 +1,6 @@
-// Copyright Jon Williams 2017. See LICENSE file.
-const generator = require("./webpack-generator");
-const webpack = require("webpack");
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+const generator = require('./webpack-generator');
+const webpack = require('webpack');
 
 const builder = function(config, context) {
   return new Promise((resolve, reject) => {
@@ -9,8 +9,8 @@ const builder = function(config, context) {
       if (context) context.callbackWebpackCompiled(stats);
       resolve(stats);
     });
-  })
-}
+  });
+};
 
 /**
  * Returns a Promise to a Webpack build to the filesystem. Default

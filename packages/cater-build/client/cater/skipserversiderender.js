@@ -1,5 +1,5 @@
-// Copyright Jon Williams 2017. See LICENSE file.
-import React from "react";
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+import React from 'react';
 
 // Since this is the client implementation of this component, it renders
 // all the children.
@@ -10,11 +10,11 @@ class SkipServerSideRender extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ visible: true });
+    this.setState({ visible: true }); // eslint-disable-line react/no-did-mount-set-state
   }
 
   render() {
-    return this.state.visible ? this.props.children : false;
+    return this.state.visible ? this.props.children : false; // eslint-disable-line react/prop-types
   }
 }
 

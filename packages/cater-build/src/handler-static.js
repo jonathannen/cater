@@ -1,4 +1,4 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 const fs = require('fs');
 const mime = require('mime-types');
 const path = require('path');
@@ -8,21 +8,20 @@ const path = require('path');
  * and has less controls - but will reload files on changes.
  */
 const generateDebug = function(publicPath, staticPath) {
-
   return function(req, res, next) {
-    if(!req.url.startsWith(publicPath)) return next ? next() : false;
+    if (!req.url.startsWith(publicPath)) return next ? next() : false;
 
     const trimmed = req.url.slice(publicPath.length);
     const file = path.join(staticPath, trimmed);
-    if(!fs.existsSync(file)) return next ? next() : false;
+    if (!fs.existsSync(file)) return next ? next() : false;
 
     const stat = fs.statSync(file);
     if (stat.isDirectory()) return next ? next() : false;
 
     const contentType = mime.contentType(path.extname(file));
     res.statusCode = 200;
-    res.setHeader("Content-Type", contentType);
-    res.setHeader("Content-Length", stat.size);
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Content-Length', stat.size);
     const stream = fs.createReadStream(file);
     stream.pipe(res);
   };
@@ -50,12 +49,12 @@ const generateProduction = function(publicPath, staticPath) {
   // keys like the request url `/static/bundle.js` pointing to a small
   // object with the full path, mime-type and file size.
   const files = {};
-  const directories = ["."];
+  const directories = ['.'];
   while (directories.length > 0) {
     const currentDirectory = directories.shift();
     const currentPath = path.join(staticPath, currentDirectory);
 
-    fs.readdirSync(currentPath).forEach(name => {
+    fs.readdirSync(currentPath).forEach((name) => {
       const file = path.join(currentPath, name);
       const publicFile = path.join(publicPath, currentDirectory, name);
       const stat = fs.statSync(file);
@@ -64,8 +63,7 @@ const generateProduction = function(publicPath, staticPath) {
       if (fs.realpathSync(file) !== file) return;
 
       // Directories get added to the queue to process
-      if (stat.isDirectory())
-        return directories.push(path.join(currentDirectory, name));
+      if (stat.isDirectory()) return directories.push(path.join(currentDirectory, name));
 
       files[publicFile] = {
         path: file,
@@ -80,21 +78,20 @@ const generateProduction = function(publicPath, staticPath) {
     // directories.
     let match = files[req.url];
 
-    if (!match || path.extname(match.path) == ".gz")
-      return next === null ? false : next();
+    if (!match || path.extname(match.path) == '.gz') return next === null ? false : next();
 
     res.statusCode = 200;
-    res.setHeader("Content-Type", match.mime);
+    res.setHeader('Content-Type', match.mime);
 
     // Check for statically gzipped versions
-    var acceptGzip = (req.headers["accept-encoding"] || "").includes("gzip");
-    if (acceptGzip && files[req.url + ".gz"]) {
-      match = files[req.url + ".gz"];
-      res.setHeader("Content-Encoding", "gzip");
+    var acceptGzip = (req.headers['accept-encoding'] || '').includes('gzip');
+    if (acceptGzip && files[req.url + '.gz']) {
+      match = files[req.url + '.gz'];
+      res.setHeader('Content-Encoding', 'gzip');
     }
 
     // Stream either the raw file or the matched gzip version
-    res.setHeader("Content-Length", match.size);
+    res.setHeader('Content-Length', match.size);
     const stream = fs.createReadStream(match.path);
     stream.pipe(res);
   };

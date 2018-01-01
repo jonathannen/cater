@@ -1,4 +1,4 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 import React from 'react';
 import SkipServerSideRender from 'app/cater/skipserversiderender';
 import Title from 'app/title';

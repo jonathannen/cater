@@ -1,5 +1,5 @@
-// Copyright Jon Williams 2017. See LICENSE file.
-const prettyBytes =require('pretty-bytes');
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+const prettyBytes = require('pretty-bytes');
 
 const statusCodeAsTerminalColor = function(status) {
   // Referenced from https://github.com/expressjs/morgan/blob/master/index.js#L189
@@ -27,25 +27,21 @@ const statusCodeAsTerminalColor = function(status) {
 const loggingHandler = function(req, res, next) {
   const start = process.hrtime();
   const conn = req.connection;
-  const bytesWritten =
-    conn._bytesWritten === undefined ? 0 : conn._bytesWritten;
+  const bytesWritten = conn._bytesWritten === undefined ? 0 : conn._bytesWritten;
 
-  res.on("finish", () => {
+  res.on('finish', () => {
     const bytes = conn.bytesWritten - bytesWritten;
     conn._bytesWritten = conn.bytesWritten;
 
     const elapsed = process.hrtime(start);
     const elapsedMs = elapsed[0] * 1000 + elapsed[1] / 1000000;
     const color = statusCodeAsTerminalColor(res.statusCode);
-    const gzip =
-      res.getHeaders()["content-encoding"] === "gzip" ? " gzipped" : "";
+    const gzip = res.getHeaders()['content-encoding'] === 'gzip' ? ' gzipped' : '';
 
     console.log(
       `\x1b[0m${req.method} ${req.url} \x1b[${color}m${res.statusCode} ${
         res.statusMessage
-      }\x1b[0m ${elapsedMs.toLocaleString()} ms ${bytes} [${prettyBytes(
-        bytes
-      )}${gzip}]`
+      }\x1b[0m ${elapsedMs.toLocaleString()} ms ${bytes} [${prettyBytes(bytes)}${gzip}]`
     );
   });
   return next();

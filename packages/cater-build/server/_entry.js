@@ -1,7 +1,7 @@
-// Copyright Jon Williams 2017. See LICENSE file.
-import App from "app/app";
-import Layout from "server/layout";
-import Provider from "app/provider";
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+import App from 'app/app';
+import Layout from 'server/layout';
+import Provider from 'app/provider';
 
 /**
  * The _entry.js files are the Webpack 'entry' point for compiling the bundle.
@@ -12,6 +12,6 @@ import Provider from "app/provider";
  * We keep here as a separate file to be the top of the bundle. It's also
  * useful as a hot-reloading point for the UI-specific server components.
  */
-export default function() {
+export default function entry() {
   return { App, Layout, Provider };
 }

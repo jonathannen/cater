@@ -1,9 +1,2 @@
-// const test = require("cater-jest");
-
-// // throw "!";
-// module.exports = test.jestConfig();
-const config = require("cater-jest")();
-
-config["projects"] = ["<rootDir>"] //, "./examples/*"]
-
-module.exports = config;
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+module.exports = require('cater-jest')();

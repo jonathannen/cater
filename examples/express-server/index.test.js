@@ -1,4 +1,4 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 import request from 'supertest';
 import { testHarness } from 'cater';
 import server from './server';

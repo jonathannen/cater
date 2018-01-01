@@ -1,4 +1,4 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 const path = require('path');
 
 /*
@@ -14,7 +14,7 @@ const configurePlugin = function(cater, name, options) {
   const result = plugin(cater, options); // Plugin should export a function to configure itself
   plugin.componentRootPath = path.dirname(resolve);
   return plugin;
-}
+};
 
 module.exports.autoDefinePlugins = function(cater) {
   const deps = Object.keys(cater.package.dependencies || {});
@@ -23,9 +23,9 @@ module.exports.autoDefinePlugins = function(cater) {
 
   deps
     .concat(dev)
-    .filter(k => k.startsWith("cater-"))
-    .filter(k => require.resolve(k).endsWith("plugin.js"))
-    .forEach(k => (cater.plugins[k] = null));
+    .filter((k) => k.startsWith('cater-'))
+    .filter((k) => require.resolve(k).endsWith('plugin.js'))
+    .forEach((k) => (cater.plugins[k] = null));
 
   return cater.plugins;
 };

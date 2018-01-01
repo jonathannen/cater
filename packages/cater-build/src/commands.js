@@ -1,9 +1,8 @@
-// Copyright Jon Williams 2017. See LICENSE file.
-const fs = require("fs-extra");
-const http = require("http");
-const path = require("path");
-const Runtime = require("cater-runtime");
-const webpackBuild = require("./webpack-build");
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+const fs = require('fs-extra');
+const path = require('path');
+const Runtime = require('cater-runtime');
+const webpackBuild = require('./webpack-build');
 
 /**
  * Mixin that enables CLI-commands directly in the Cater App. Enabled
@@ -20,7 +19,7 @@ const webpackBuild = require("./webpack-build");
  */
 
 // Returns a promise to a production build of the application.
-module.exports.runBuild = function() {
+function runBuild() {
   return fs
     .remove(this.buildPath)
     .then(() => {
@@ -30,11 +29,13 @@ module.exports.runBuild = function() {
       }
       return Promise.resolve(true);
     })
-    .then(() => webpackBuild(this))
-};
+    .then(() => webpackBuild(this));
+}
 
 // Runs the development server - that's a server with webpack in-memory
 // building (and reloading) the client and server code.
-module.exports.runDev = function() {
-  return this.handler().then(h => Runtime.HttpServer(h, this.httpPort));
-};
+function runDev() {
+  return this.handler().then((h) => Runtime.HttpServer(h, this.httpPort));
+}
+
+module.exports = { runBuild, runDev };

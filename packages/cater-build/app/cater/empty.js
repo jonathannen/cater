@@ -1,12 +1,8 @@
-// Copyright Jon Williams 2017. See LICENSE file.
-import React from "react";
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+import 'react';
 
 // An empty component. Can be used to stub out components that aren't
 // needed on the client or server sides.
-class EmptyComponent extends React.Component {
-  render() {
-    return false;
-  }
-}
+const EmptyComponent = () => false;
 
 export default EmptyComponent;

@@ -1,7 +1,7 @@
-// Copyright Jon Williams 2017. See LICENSE file.
-import React from "react";
-import { caterContextTypes } from "server/cater-provider";
-import PropTypes from "prop-types";
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+import React from 'react';
+import { caterContextTypes } from 'server/cater-provider';
+import PropTypes from 'prop-types';
 
 /**
  * Prompts cater to include a global stylesheet for the document.
@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
  *     ...
  *     <GlobalStyle href={css}/>
  */
+// eslint-disable-next-line react/prefer-stateless-function
 class GlobalStyle extends React.Component {
   static contextTypes = caterContextTypes;
 
@@ -26,11 +27,8 @@ class GlobalStyle extends React.Component {
     href: PropTypes.string.isRequired
   };
 
-  constructor(props, context) {
-    super(props, context);
-  }
-
   render() {
+    // eslint-disable-next-line no-underscore-dangle
     this.context.__caterContext.addGlobalStyle(this.props.href);
     return false;
   }

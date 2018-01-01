@@ -1,11 +1,11 @@
-// Copyright Jon Williams 2017. See LICENSE file.
-const clone = require("clone");
-const fs = require("fs");
-const path = require("path");
-const webpackGenerator = require("./webpack-generator");
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+const clone = require('clone');
+const fs = require('fs');
+const path = require('path');
+const webpackGenerator = require('./webpack-generator');
 
-const ASSET_PATH = "assets";
-const CARET_PATH_SEPARATOR = "?filename=";
+const ASSET_PATH = 'assets';
+const CARET_PATH_SEPARATOR = '?filename=';
 
 /**
  * Resolves the given partial filename source name "app/blah" in the given
@@ -14,7 +14,7 @@ const CARET_PATH_SEPARATOR = "?filename=";
  */
 const resolveWithPaths = function(source, paths, extensions, startFromPath = null) {
   const ext = path.extname(source).toLowerCase();
-  const exts = ext.length > 0 ? [""] : extensions;
+  const exts = ext.length > 0 ? [''] : extensions;
   let startMatching = startFromPath === null;
 
   for (let modulePath of paths) {
@@ -45,8 +45,8 @@ class SideConfiguration {
     this.extensions = context.extensions;
 
     // Can be extended with other sides down the line
-    this.typeClient = this.name == "client";
-    this.typeServer = this.name == "server";
+    this.typeClient = this.name == 'client';
+    this.typeServer = this.name == 'server';
 
     this.assignPaths(context);
     this.configureBabel(context);
@@ -64,11 +64,11 @@ class SideConfiguration {
 
     // Used to split caret ^ type imports
     const prefixes = Object.keys(this.importPrefixResolvers);
-    this.caretPathSplitRegex = new RegExp(`/(${prefixes.join("|")})/`);
+    this.caretPathSplitRegex = new RegExp(`/(${prefixes.join('|')})/`);
   }
 
   assignPaths(context) {
-    this.assetPaths = [path.join(context.appRootPath, "assets")];
+    this.assetPaths = [path.join(context.appRootPath, 'assets')];
     this.sidePaths = context.generatePaths([this.name]);
 
     this.paths = context.generatePaths(context.universalNames.concat([this.name]));
@@ -119,7 +119,7 @@ class SideConfiguration {
     if (this.typeClient) {
       if (source.startsWith(ASSET_PATH)) {
         let result = null;
-        this.assetPaths.forEach(assetPath => {
+        this.assetPaths.forEach((assetPath) => {
           const base = source.substring(ASSET_PATH.length + 1);
           const candidate = path.join(assetPath, base);
           if (fs.existsSync(candidate)) result = candidate;
@@ -138,7 +138,7 @@ class SideConfiguration {
         // prior priority component. So if you were in custom/server/layout.js
         // this would return the original cater/server/layouts.js. Useful
         // for wrappering.
-        if (base === "^") {
+        if (base === '^') {
           startFromPath = filename;
           base = filename.split(this.caretPathSplitRegex).pop();
         }

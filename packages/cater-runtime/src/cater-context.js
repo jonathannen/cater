@@ -1,15 +1,14 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 
 /**
  * Context used by the CaterProvider component.
  */
 class CaterContext {
-
   constructor(bundlePath) {
     this.bundlePath = bundlePath;
     this.globalJSON = {};
     this.globalStyles = [];
-    this.title = "";
+    this.title = '';
   }
 
   /**
@@ -34,7 +33,6 @@ class CaterContext {
   setTitle(title) {
     this.title = title;
   }
-
 }
 
 module.exports = CaterContext; // CommonJS

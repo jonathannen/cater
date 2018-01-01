@@ -1,4 +1,4 @@
-// Copyright Jon Williams 2017. See LICENSE file.
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 // See ./README.md for why these files exist and what they do.
 const path = require('path');
 
@@ -14,6 +14,6 @@ const path = require('path');
  *     const cat = 'assets/cat.gif';
  */
 module.exports.process = function(src, filename, config, options) {
-  const basename = path.basename(filename).replace("'", "\'");
+  const basename = path.basename(filename).replace("'", "'");
   return `module.exports = '${basename}';`;
-}
+};

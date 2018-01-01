@@ -1,10 +1,10 @@
 // A stripped down version of the Cater object.
-const fs = require("fs");
+const fs = require('fs');
 const HttpServer = require('./http-server');
-const Middleware = require("./middleware");
-const path = require("path");
+const Middleware = require('./middleware');
+const path = require('path');
 
-const MANIFEST_FILENAME = "manifest.json";
+const MANIFEST_FILENAME = 'manifest.json';
 
 const loadManifest = function(file) {
   if (!fs.existsSync(file)) {
@@ -17,13 +17,13 @@ class Cater {
   constructor(options) {
     const defaultOptions = {
       appRootPath: process.cwd(),
-      buildDirectory: "build", // TODO
-      bundlePath: "",
-      clientBundleFile: "bundle.js", // TODO
-      entryPath: "",
+      buildDirectory: 'build', // TODO
+      bundlePath: '',
+      clientBundleFile: 'bundle.js', // TODO
+      entryPath: '',
       httpPort: 3000,
-      publicPath: "/static/",
-      serverBundleFile: "server-bundle.js", // TODO
+      publicPath: '/static/',
+      serverBundleFile: 'server-bundle.js', // TODO
       serveStaticAssets: true
     };
 
@@ -43,12 +43,12 @@ class Cater {
   }
 
   handler() {
-    const HandlerCater = require("./handler-cater");
+    const HandlerCater = require('./handler-cater');
     const cater = HandlerCater(this.serverBundlePath, this.bundlePath, this.publicPath);
     let handlers = [cater, Middleware.handlerNotFound];
 
     if (this.options.serveStaticAssets) {
-      const HandlerStatic = require("./handler-static");
+      const HandlerStatic = require('./handler-static');
       const _static = HandlerStatic(this.publicPath, this.staticPath, this.clientManifest);
       handlers = [_static, cater, Middleware.handlerNotFound];
     }
@@ -57,7 +57,7 @@ class Cater {
   }
 
   start() {
-    return this.handler().then(handler => {
+    return this.handler().then((handler) => {
       HttpServer(handler, this.httpPort);
     });
   }
