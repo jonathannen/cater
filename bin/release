@@ -29,6 +29,7 @@ npm publish packages/cater-assets
 npm publish packages/cater-build
 npm publish packages/cater-emotion
 npm publish packages/cater-jest
+npm publish packages/cater-redux
 npm publish packages/cater-runtime
 
 echo "Done"

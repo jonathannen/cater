@@ -1,23 +1,23 @@
 {
   "name": "redux-counter",
-  "version": "0.3.7",
+  "version": "0.4.0",
   "description": "Cater example using the Redux counter example",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.3.7",
-    "cater-redux": "^0.3.7",
+    "cater": "^0.4.0",
     "express": "^4.16.2"
   },
   "scripts": {
-    "dev": "cater dev",
-    "test": "jest",
-    "build": "cater build",
-    "start": "cater start"
+    "dev": "PATH=$PATH:../../node_modules/.bin cater dev",
+    "test": "PATH=$PATH:../../node_modules/.bin jest",
+    "build": "PATH=$PATH:../../node_modules/.bin cater build",
+    "start": "PATH=$PATH:../../node_modules/.bin cater start"
   },
   "devDependencies": {
-    "cater-build": "^0.3.7",
-    "cater-jest": "^0.3.7",
+    "cater-build": "^0.4.0",
+    "cater-jest": "^0.4.0",
+    "cater-redux": "^0.4.0",
     "jest": "^22.0.4",
     "supertest": "^3.0.0"
   },

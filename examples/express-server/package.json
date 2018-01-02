@@ -1,22 +1,22 @@
 {
   "name": "express-server",
-  "version": "0.3.7",
+  "version": "0.4.0",
   "description": "Cater Framework hosted in the Express server framework",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.3.7",
+    "cater": "^0.4.0",
     "express": "^4.16.2"
   },
   "scripts": {
-    "build": "cater build",
+    "build": "PATH=$PATH:../../node_modules/.bin cater build",
     "dev": "node ./index.js",
     "start": "NODE_ENV=production node ./index.js",
-    "test": "jest"
+    "test": "PATH=$PATH:../../node_modules/.bin jest"
   },
   "devDependencies": {
-    "cater-build": "^0.3.7",
-    "cater-jest": "^0.3.7",
+    "cater-build": "^0.4.0",
+    "cater-jest": "^0.4.0",
     "jest": "^22.0.4",
     "supertest": "^3.0.0"
   },
