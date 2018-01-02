@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* Added in support for React Router.
+
 ## [0.4.1] - 2018-01-01
 
 ### Added

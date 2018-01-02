@@ -4,11 +4,12 @@
  * Context used by the CaterProvider component.
  */
 class CaterContext {
-  constructor(bundlePath) {
+  constructor(bundlePath, url) {
     this.bundlePath = bundlePath;
     this.globalJSON = {};
     this.globalStyles = [];
     this.title = '';
+    this.url = url;
   }
 
   /**

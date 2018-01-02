@@ -19,7 +19,7 @@ function reactHandler(req, res, bundlePath, App, Layout, Provider) {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.write('<!DOCTYPE html>');
 
-  const caterContext = new CaterContext(bundlePath);
+  const caterContext = new CaterContext(bundlePath, req.url);
 
   // Equivalent of:
   // <CaterProvider caterContext={}><Provider><App/><Provider></CaterProvider>
