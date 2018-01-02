@@ -1,16 +1,15 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const generator = require('./webpack-generator');
 const webpack = require('webpack');
 
-const builder = function(config, context) {
+function builder(config, context) {
   return new Promise((resolve, reject) => {
     webpack(config).run((err, stats) => {
       if (stats.hasErrors()) return reject(stats.compilation.errors);
       if (context) context.callbackWebpackCompiled(stats);
-      resolve(stats);
+      return resolve(stats);
     });
   });
-};
+}
 
 /**
  * Returns a Promise to a Webpack build to the filesystem. Default
@@ -20,7 +19,7 @@ const builder = function(config, context) {
  *
  * Take a look at the production build at cater/examples/production-build.
  */
-const build = function(context) {
+function build(context) {
   const client = context.sides.client.webpackConfig;
   const server = context.sides.server.webpackConfig;
 
@@ -28,6 +27,6 @@ const build = function(context) {
   // This is necessary as the server uses the final assets (such as images,
   // stylesheets) from the client.
   return builder(client, context).then(() => builder(server));
-};
+}
 
 module.exports = build;

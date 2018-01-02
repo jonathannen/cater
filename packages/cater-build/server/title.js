@@ -18,7 +18,7 @@ class Title extends React.Component {
     const { children } = this.props;
     if (typeof this.props.children === 'string') {
       // eslint-disable-next-line no-underscore-dangle
-      this.context.__caterContext.setTitle(children);
+      this.context.internalCaterContext.setTitle(children);
     }
     return false;
   }

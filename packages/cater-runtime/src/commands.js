@@ -1,5 +1,4 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const RuntimeCater = require('./index');
 
 /**
  * Mixin that enables CLI-commands directly in the Cater App. Enabled
@@ -15,6 +14,8 @@ const RuntimeCater = require('./index');
  *     app.runStart();
  */
 
-module.exports.runStart = function() {
+function runStart() {
   return Promise.resolve(this.start());
-};
+}
+
+module.exports = { runStart };

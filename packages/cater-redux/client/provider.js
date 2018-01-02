@@ -7,7 +7,7 @@ import React from 'react';
 import Reducer from 'app/reducer';
 
 // Get the initial state from the global JSON
-const initialState = window.__cater_redux;
+const initialState = window.INTERNAL_CATER_REDUX;
 const store = createStore(Reducer, initialState);
 
 /**

@@ -4,11 +4,14 @@
   "rules": {
     "arrow-parens": 0,
     "comma-dangle": 0,
+    "function-paren-newline": 0,
     "import/extensions": 0,
     "import/first": 0,
     "import/no-extraneous-dependencies": 0,
     "no-unused-expressions": [2, { "allowTaggedTemplates": true }],
     "import/no-unresolved": [2, { "ignore": ["^(app|assets|client|server)/.*"] }],
+    "react/prefer-stateless-function": 0,
+    "react/prop-types": 0,
     "react/jsx-filename-extension": 0
   },
   "env": {

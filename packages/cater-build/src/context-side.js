@@ -12,13 +12,15 @@ const CARET_PATH_SEPARATOR = '?filename=';
  * paths ["/hello/world", "/hello/other"] with the given extensions [".js",
  * ".jsx"].
  */
-const resolveWithPaths = function(source, paths, extensions, startFromPath = null) {
+function resolveWithPaths(source, paths, extensions, startFromPath = null) {
   const ext = path.extname(source).toLowerCase();
   const exts = ext.length > 0 ? [''] : extensions;
   let startMatching = startFromPath === null;
 
-  for (let modulePath of paths) {
-    for (let extension of exts) {
+  for (let i = 0; i < paths.length; i += 1) {
+    const modulePath = paths[i];
+    for (let j = 0; j < exts.length; j += 1) {
+      const extension = exts[j];
       const potential = path.join(modulePath, source + extension);
       if (startMatching && fs.existsSync(potential)) return potential;
       if (potential === startFromPath) startMatching = true;
@@ -28,11 +30,11 @@ const resolveWithPaths = function(source, paths, extensions, startFromPath = nul
   // With the app and ^ caret style imports there is a chance of a cycle
   // in the import/require. Throw an error if we detect a loop
   if (!!startFromPath && startFromPath === source) {
-    throw `Resolving ${source} imported itself. Aborting to prevent an infinite loop.`;
+    throw Error(`Resolving ${source} imported itself. Aborting to prevent an infinite loop.`);
   }
 
   return source;
-};
+}
 
 /**
  * A side configuration represents a "side" in the sense of "server-side" or
@@ -45,8 +47,8 @@ class SideConfiguration {
     this.extensions = context.extensions;
 
     // Can be extended with other sides down the line
-    this.typeClient = this.name == 'client';
-    this.typeServer = this.name == 'server';
+    this.typeClient = this.name === 'client';
+    this.typeServer = this.name === 'server';
 
     this.assignPaths(context);
     this.configureBabel(context);
@@ -110,9 +112,8 @@ class SideConfiguration {
     // Hackery from jest to get the filename context. We could use a
     // querystring approach, but no need just yet.
     if (!filename && source.includes(CARET_PATH_SEPARATOR)) {
-      const split = source.split(CARET_PATH_SEPARATOR);
-      source = split[0];
-      filename = split[1];
+      // eslint-disable-next-line no-param-reassign
+      [source, filename] = source.split(CARET_PATH_SEPARATOR);
     }
 
     // Handle /asset/* imports for Webpack
@@ -129,7 +130,9 @@ class SideConfiguration {
     }
 
     // Handle /app/* and similar imports
-    for (let prefix of Object.keys(this.importPrefixResolvers)) {
+    const prefixes = Object.keys(this.importPrefixResolvers);
+    for (let i = 0; i < prefixes.length; i += 1) {
+      const prefix = prefixes[i];
       if (source.startsWith(`${prefix}/`)) {
         let base = source.substring(prefix.length + 1);
         let startFromPath = null;
@@ -143,7 +146,6 @@ class SideConfiguration {
           base = filename.split(this.caretPathSplitRegex).pop();
         }
 
-        const resolve = this.importPrefixResolvers[prefix];
         const result = this.resolve(base, startFromPath);
         return result;
       }

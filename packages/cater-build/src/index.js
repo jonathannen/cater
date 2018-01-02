@@ -24,8 +24,8 @@ class Cater extends EventEmitter {
     this.assignProgrammaticDefaults();
     this.loadPackage();
 
-    if (this.plugins == 'auto') autoDefinePlugins(this);
-    configurePlugins(this); // Get plugins ready
+    if (this.plugins === 'auto') this.plugins = autoDefinePlugins(this);
+    this.configuredPlugins = configurePlugins(this); // Get plugins ready
 
     // Assign derived options
     this.assignPaths();
@@ -63,15 +63,18 @@ class Cater extends EventEmitter {
 
   configureSides() {
     this.sides = {};
-    for (let name of this.sideNames) {
-      const config = (this.sides[name] = new SideConfiguration(this, name));
+    for (let i = 0; i < this.sideNames.length; i += 1) {
+      const name = this.sideNames[i];
+      this.sides[name] = new SideConfiguration(this, name);
     }
   }
 
   generatePaths(directories) {
     const result = [];
-    for (let root of this.rootPaths) {
-      for (let dir of directories) {
+    for (let i = 0; i < this.rootPaths.length; i += 1) {
+      const root = this.rootPaths[i];
+      for (let j = 0; j < directories.length; j += 1) {
+        const dir = directories[j];
         const candidate = path.join(root, dir);
         if (fs.existsSync(candidate)) result.push(candidate);
       }
@@ -93,7 +96,8 @@ class Cater extends EventEmitter {
    * Returns a http.Handler for this application.
    */
   handler() {
-    const Middleware = require('./middleware');
+    // TODO
+    const Middleware = require('./middleware'); // eslint-disable-line global-require
     return Middleware(this);
   }
 
@@ -111,16 +115,17 @@ class Cater extends EventEmitter {
 
   start() {
     // TODO
-    const Middleware = require('cater-runtime').Middleware;
+    const { Middleware } = require('cater-runtime'); // eslint-disable-line global-require
     return this.handler().then((handler) => {
       Middleware.httpServer(handler, this.httpPort);
     });
   }
 }
 
-Cater.prototype.prepareCommandLine = function() {
-  const commands = require('./commands.js');
-  Object.keys(commands).forEach((key) => (Cater.prototype[key] = commands[key]));
+Cater.prototype.prepareCommandLine = function prepareCommandLine() {
+  const commands = require('./commands.js'); // eslint-disable-line global-require
+  Object.assign(Cater.prototype, commands);
+  return true;
 };
 
 module.exports = Cater;

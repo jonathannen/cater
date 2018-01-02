@@ -17,7 +17,7 @@ class Layout extends React.Component {
     // eslint-disable-next-line react/prop-types
     const { children } = this.props;
     // eslint-disable-next-line no-underscore-dangle
-    const ctx = this.context.__caterContext;
+    const ctx = this.context.internalCaterContext;
 
     return (
       <html lang="en">

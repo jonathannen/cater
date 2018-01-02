@@ -12,27 +12,28 @@
  *     const httpServer = http.createServer(handler);
  *     httpServer.listen(...);
  */
-const generateHandler = function(handlers) {
-  return function(req, res, outerNext) {
+function generateHandler(handlers) {
+  return function handler(req, res, outerNext) {
     const queue = handlers.slice(0); // Clone handler list
     const next = () => {
-      var handler = queue.shift();
-      if (!handler) return outerNext ? outerNext : false;
-      handler.bind(this)(req, res, next);
+      const nextHandler = queue.shift();
+      if (!nextHandler) return outerNext;
+      nextHandler.bind(this)(req, res, next);
+      return true;
     };
     return next();
   };
-};
+}
 
 /**
  * Final handler that's called if no other middleware responds. Generates
  * a 404 and cleans up.
  */
-const handlerNotFound = function(req, res, handlers) {
+function handlerNotFound(req, res) {
   if (res.finished) return; // Boundary check if the response has actually been sent
   res.writeHead(404);
   res.end();
-};
+}
 
+generateHandler.handlerNotFound = handlerNotFound;
 module.exports = generateHandler;
-module.exports.handlerNotFound = handlerNotFound;

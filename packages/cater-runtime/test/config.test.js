@@ -7,16 +7,16 @@ const fixturesPath = path.join(__dirname, 'fixtures');
 
 describe('Testing the configuration module of Cater', () => {
   test('should load a configuration file if present', () => {
-    let file = path.join(fixturesPath, 'config.cater.simple.js');
-    let options = RuntimeCater.loadConfig(file);
+    const file = path.join(fixturesPath, 'config.cater.simple.js');
+    const options = RuntimeCater.loadConfig(file);
     expect(options.httpPort).toEqual(8080);
   });
 
   test('should use the NODE_ENV environment variable for different configurations', () => {
     const file = path.join(fixturesPath, 'config.cater.env.js');
 
-    const expectPort = function(port) {
-      let options = RuntimeCater.loadConfig(file);
+    const expectPort = function expectPort(port) {
+      const options = RuntimeCater.loadConfig(file);
       expect(options.httpPort).toEqual(port);
     };
 
@@ -32,4 +32,7 @@ describe('Testing the configuration module of Cater', () => {
 });
 
 // Make sure we're not leaving the NODE_ENV at a strange value
-afterAll(() => (process.env.NODE_ENV = 'test'));
+afterAll(() => {
+  process.env.NODE_ENV = 'test';
+  return true;
+});

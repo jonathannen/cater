@@ -16,8 +16,8 @@ const assetExtensions = ['jpg', 'jpeg', 'gif', 'png', 'svg'];
 const assetMatch = `\\.(${assetExtensions.join('|')})$`;
 
 const config = {
+  resolver,
   moduleNameMapper: {},
-  resolver: resolver,
   transform: { '\\.js$': transformer },
   transformIgnorePatterns: ['/node_modules/(?!(cater$|cater-))']
 };
@@ -25,6 +25,8 @@ const config = {
 config.transform[assetMatch] = assetTransformer;
 config.moduleNameMapper[assetMatch] = emptyModule;
 
-module.exports = function() {
+function generate() {
   return clone(config);
-};
+}
+
+module.exports = generate;

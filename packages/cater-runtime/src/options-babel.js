@@ -7,6 +7,8 @@ const BABEL_OPTIONS = {
   plugins: [['add-module-exports'], ['transform-class-properties']]
 };
 
-module.exports = function() {
+function generate() {
   return clone(BABEL_OPTIONS);
-};
+}
+
+module.exports = generate;

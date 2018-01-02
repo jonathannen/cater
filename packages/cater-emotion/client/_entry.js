@@ -1,2 +1,2 @@
-import hydrateEmotion from './_emotion-hydrate';
-import parentEntry from 'client/^'; // Note: Inheritance import
+import './_emotion-hydrate';
+import 'client/^'; // Note: Inheritance import

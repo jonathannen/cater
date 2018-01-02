@@ -4,26 +4,26 @@ import handlerCater from './handler-cater';
 import cater from '../index.js';
 import { Middleware } from 'cater-runtime';
 
-if (!global.__POLYFILL__) {
-  global.__POLYFILL__ = !!require('babel-polyfill');
+if (!global.INTERNAL_POLYFILL) {
+  global.INTERNAL_POLYFILL = !!require('babel-polyfill'); // eslint-disable-line global-require
 }
 
-export const testCater = function(options = {}) {
+export function testCater(options = {}) {
   const app = cater(options);
   return app;
-};
+}
 
 /**
  * Returns a http.Handler that can be used in tests.
  */
-export const testHandler = function(appRootPath = null) {
-  const cater = testCater({ appRootPath: appRootPath || process.cwd() });
-  const server = cater.sides.server;
+export function testHandler(appRootPath = null) {
+  const app = testCater({ appRootPath: appRootPath || process.cwd() });
+  const { server } = app.sides;
 
-  const _cater = handlerCater(server.entryPath, server.bundlePath, cater.publicPath);
-  const errorHandler = (req, res, handlers) => {
-    throw 'Request not handled.';
+  const handler = handlerCater(server.entryPath, server.bundlePath, app.publicPath);
+  const errorHandler = () => {
+    throw new Error('Request not handled.');
   };
 
-  return Middleware([_cater, errorHandler]);
-};
+  return Middleware([handler, errorHandler]);
+}

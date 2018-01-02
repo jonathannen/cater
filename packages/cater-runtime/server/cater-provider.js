@@ -4,7 +4,7 @@ const React = require('react');
 
 // Context shared by Layout to it's child components
 const caterContextTypes = {
-  __caterContext: PropTypes.object
+  internalCaterContext: PropTypes.object
 };
 
 /**
@@ -16,7 +16,7 @@ class CaterProvider extends React.Component {
   getChildContext() {
     if (!this.childContext) {
       this.childContext = {
-        __caterContext: this.props.caterContext
+        internalCaterContext: this.props.caterContext
       };
     }
     return this.childContext;
@@ -29,6 +29,7 @@ class CaterProvider extends React.Component {
 
 // CommonJS
 CaterProvider.childContextTypes = caterContextTypes;
+// eslint-disable-next-line react/forbid-prop-types
 CaterProvider.propTypes = { caterContext: PropTypes.object.isRequired };
 module.exports = CaterProvider;
 module.exports.caterContextTypes = caterContextTypes;

@@ -1,6 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const clone = require('clone');
-const generator = require('./webpack-generator');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 
@@ -15,7 +14,7 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
  * compilation. In the resolved case it'll provide the http.Handler for
  * the webpack client side development server.
  */
-const generateHandler = function(context, reloadCallback = null) {
+function generateHandler(context, reloadCallback = null) {
   const compiler = webpack(context.sides.client.webpackConfig);
   context.callbackWebpackCompiling(compiler);
   let etag = null;
@@ -24,20 +23,20 @@ const generateHandler = function(context, reloadCallback = null) {
     compiler.plugin('done', (result) => {
       etag = null;
       if (result.hasErrors()) {
-        console.log(`Webpack compilation failed.`);
+        console.log('Webpack compilation failed.'); // eslint-disable-line no-console
         return reject(result.compilation.errors);
       }
       context.callbackWebpackCompiled(result);
 
       const success = reloadCallback ? reloadCallback() : true;
       if (!success) {
-        console.log(`Webpack compilation failed.`);
+        console.log('Webpack compilation failed.'); // eslint-disable-line no-console
         return reject(result.compilation.errors);
       }
 
       etag = `W/"${result.hash}-${new Date().getTime()}"`;
-      console.log(`Webpack compilation succeeded`);
-      resolve(compiler);
+      console.log('Webpack compilation succeeded'); // eslint-disable-line no-console
+      return resolve(compiler);
     });
   });
 
@@ -48,7 +47,7 @@ const generateHandler = function(context, reloadCallback = null) {
 
   // Webpack development bundles tend to be large. We can ETag them
   // in development.
-  const cachingHandler = function(req, res, next) {
+  const cachingHandler = function cachingHandler(req, res, next) {
     if (etag !== null) {
       res.setHeader('ETag', etag);
       const ifNoneMatch = req.headers['if-none-match'];
@@ -65,9 +64,9 @@ const generateHandler = function(context, reloadCallback = null) {
   // to complete. The promise will return the handler to the webpack
   // development server.
   return client.then(() => cachingHandler).catch((err) => {
-    console.error(err);
+    console.error(err); // eslint-disable-line no-console
     process.exit(-1);
   });
-};
+}
 
 module.exports = generateHandler;

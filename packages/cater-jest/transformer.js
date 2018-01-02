@@ -8,11 +8,10 @@ const path = require('path');
 const CARET_PATHS = ['app/^', 'client/^', 'server/^'];
 const CARET_PATH_SEPARATOR = '?filename=';
 
-const cache = {};
 const babelOptions = new Cater().sides.server.babel;
 delete babelOptions.resolveModuleSource;
 
-babelOptions.resolveModuleSource = function(source, filename) {
+babelOptions.resolveModuleSource = function resolveModuleSource(source, filename) {
   // Caret paths like server/^ need the context of the file attempting
   // the import. Since we can't pass it through, we put a forbidden path
   // separator in to send over the filename context.
@@ -27,7 +26,7 @@ babelOptions.resolveModuleSource = function(source, filename) {
     let nextDirectory = path.join(currentDirectory, '..');
     while (currentDirectory !== nextDirectory) {
       // If they're equal we're at the root dir
-      let candidate = path.join(currentDirectory, 'assets');
+      const candidate = path.join(currentDirectory, 'assets');
       if (fs.existsSync(candidate)) {
         return path.join(currentDirectory, source);
       }

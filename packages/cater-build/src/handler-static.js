@@ -7,8 +7,8 @@ const path = require('path');
  * The development version of static-middleware.js. This is less performant
  * and has less controls - but will reload files on changes.
  */
-const generate = function(publicPath, staticPath) {
-  return function(req, res, next) {
+function generate(publicPath, staticPath) {
+  return function handler(req, res, next) {
     if (!req.url.startsWith(publicPath)) return next ? next() : false;
 
     const trimmed = req.url.slice(publicPath.length);
@@ -24,7 +24,8 @@ const generate = function(publicPath, staticPath) {
     res.setHeader('Content-Length', stat.size);
     const stream = fs.createReadStream(file);
     stream.pipe(res);
+    return true;
   };
-};
+}
 
 module.exports = generate;

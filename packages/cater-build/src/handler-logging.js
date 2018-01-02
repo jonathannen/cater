@@ -1,9 +1,10 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const prettyBytes = require('pretty-bytes');
 
-const statusCodeAsTerminalColor = function(status) {
+/* eslint-disable no-nested-ternary */
+function statusCodeAsTerminalColor(status) {
   // Referenced from https://github.com/expressjs/morgan/blob/master/index.js#L189
-  var color =
+  const color =
     status >= 500
       ? 31 // red
       : status >= 400
@@ -14,7 +15,7 @@ const statusCodeAsTerminalColor = function(status) {
             ? 32 // green
             : 0; // no color
   return color;
-};
+}
 
 /**
  * Basic http.Handler that outputs to the console. Output looks like:
@@ -24,20 +25,21 @@ const statusCodeAsTerminalColor = function(status) {
  * Status Description, Render Time (server), Byte Size and [Byte Size Human
  * Readable].
  */
-const loggingHandler = function(req, res, next) {
+function loggingHandler(req, res, next) {
   const start = process.hrtime();
   const conn = req.connection;
-  const bytesWritten = conn._bytesWritten === undefined ? 0 : conn._bytesWritten;
+  const bytesWritten = conn.internalBytesWritten === undefined ? 0 : conn.internalBytesWritten;
 
   res.on('finish', () => {
     const bytes = conn.bytesWritten - bytesWritten;
-    conn._bytesWritten = conn.bytesWritten;
+    conn.internalBytesWritten = conn.bytesWritten;
 
     const elapsed = process.hrtime(start);
-    const elapsedMs = elapsed[0] * 1000 + elapsed[1] / 1000000;
+    const elapsedMs = (elapsed[0] * 1000) + (elapsed[1] / 1000000); // prettier-ignore
     const color = statusCodeAsTerminalColor(res.statusCode);
     const gzip = res.getHeaders()['content-encoding'] === 'gzip' ? ' gzipped' : '';
 
+    // eslint-disable-next-line no-console
     console.log(
       `\x1b[0m${req.method} ${req.url} \x1b[${color}m${res.statusCode} ${
         res.statusMessage
@@ -45,7 +47,7 @@ const loggingHandler = function(req, res, next) {
     );
   });
   return next();
-};
+}
 
 // Returns as a function to stay consistent with the other handler-* modules.
 module.exports = () => loggingHandler;

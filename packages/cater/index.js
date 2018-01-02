@@ -9,8 +9,9 @@ try {
   if (!runtime) require.resolve(moduleName);
 } catch (e) {
   throw new Error(
-    `Running Cater in build mode, but the cater-build package isn't installed. Add to your project as a development dependency using npm or yarn.`
+    "Running Cater in build mode, but the cater-build package isn't installed. Add to your project as a development dependency using npm or yarn."
   );
 }
 
+// eslint-disable-next-line global-require, import/no-dynamic-require
 module.exports = require(moduleName);

@@ -6,15 +6,15 @@ const path = require('path');
 
 const MANIFEST_FILENAME = 'manifest.json';
 
-const loadManifest = function(file) {
+function loadManifest(file) {
   if (!fs.existsSync(file)) {
     throw new Error(`Expected to find manifest.json at ${file}. Have you run a cater build?`);
   }
   return JSON.parse(fs.readFileSync(file).toString());
-};
+}
 
 class Cater {
-  constructor(options) {
+  constructor(providedOptions) {
     const defaultOptions = {
       appRootPath: process.cwd(),
       buildDirectory: 'build', // TODO
@@ -27,7 +27,8 @@ class Cater {
       serveStaticAssets: true
     };
 
-    this.options = options = Object.assign(defaultOptions, options);
+    const options = Object.assign(defaultOptions, providedOptions);
+    this.options = options;
 
     const buildPath = path.join(options.appRootPath, options.buildDirectory);
     const staticPath = path.join(buildPath, options.publicPath);
@@ -43,14 +44,14 @@ class Cater {
   }
 
   handler() {
-    const HandlerCater = require('./handler-cater');
+    const HandlerCater = require('./handler-cater'); // eslint-disable-line global-require
     const cater = HandlerCater(this.serverBundlePath, this.bundlePath, this.publicPath);
     let handlers = [cater, Middleware.handlerNotFound];
 
     if (this.options.serveStaticAssets) {
-      const HandlerStatic = require('./handler-static');
-      const _static = HandlerStatic(this.publicPath, this.staticPath, this.clientManifest);
-      handlers = [_static, cater, Middleware.handlerNotFound];
+      const HandlerStatic = require('./handler-static'); // eslint-disable-line global-require
+      const aStatic = HandlerStatic(this.publicPath, this.staticPath, this.clientManifest);
+      handlers = [aStatic, cater, Middleware.handlerNotFound];
     }
 
     return Promise.resolve(Middleware(handlers));

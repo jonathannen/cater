@@ -13,7 +13,9 @@ const path = require('path');
  *
  *     const cat = 'assets/cat.gif';
  */
-module.exports.process = function(src, filename, config, options) {
+function process(src, filename) {
   const basename = path.basename(filename).replace("'", "'");
   return `module.exports = '${basename}';`;
-};
+}
+
+module.exports = { process };

@@ -29,7 +29,7 @@ class GlobalStyle extends React.Component {
 
   render() {
     // eslint-disable-next-line no-underscore-dangle
-    this.context.__caterContext.addGlobalStyle(this.props.href);
+    this.context.internalCaterContext.addGlobalStyle(this.props.href);
     return false;
   }
 }

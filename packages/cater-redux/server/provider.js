@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 
 import Reducer from 'app/reducer';
+
 const store = createStore(Reducer);
 
 /**
@@ -16,7 +17,7 @@ const store = createStore(Reducer);
 class ReduxProvider extends CustomProvider {
   render() {
     const initialState = store.getState();
-    this.caterContext().addGlobalJSON('__cater_redux', initialState);
+    this.caterContext().addGlobalJSON('INTERNAL_CATER_REDUX', initialState);
 
     return (
       <ParentProvider>

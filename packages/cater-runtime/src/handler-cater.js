@@ -15,7 +15,7 @@ const { renderToString } = require('react-dom/server');
  * use the same CaterContext. In this way, App components can set higher-level
  * options such as <head> elements.
  */
-const reactHandler = function(req, res, bundlePath, App, Layout, Provider) {
+function reactHandler(req, res, bundlePath, App, Layout, Provider) {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.write('<!DOCTYPE html>');
 
@@ -25,7 +25,7 @@ const reactHandler = function(req, res, bundlePath, App, Layout, Provider) {
   // <CaterProvider caterContext={}><Provider><App/><Provider></CaterProvider>
   const app = createElement(App, null, null);
   const providerWrap = createElement(Provider, null, app);
-  const caterWrap = createElement(CaterProvider, { caterContext: caterContext }, providerWrap);
+  const caterWrap = createElement(CaterProvider, { caterContext }, providerWrap);
   const appBody = renderToString(caterWrap);
 
   // Equivalent of:
@@ -38,36 +38,37 @@ const reactHandler = function(req, res, bundlePath, App, Layout, Provider) {
     null
   );
   const layout = createElement(Layout, null, rootDiv);
-  const wrappedLayout = createElement(CaterProvider, { caterContext: caterContext }, layout);
+  const wrappedLayout = createElement(CaterProvider, { caterContext }, layout);
   const reactBody = renderToString(wrappedLayout);
 
   res.write(reactBody);
   res.end();
-};
+}
 
 /**
  * Creates a handler with the given entry point (file that loads server
  * components). Plus the bundlePath.
  */
-const generate = function(entryPath, bundlePath, publicPath) {
-  const handler = function(req, res, next = null) {
+function generate(entryPath, bundlePath, publicPath) {
+  const handler = function handler(req, res, next = null) {
     if (!req.url.startsWith(publicPath)) {
       reactHandler(req, res, bundlePath, handler.App, handler.Layout, handler.Provider);
     } else if (next !== null) {
       next();
     }
-    return;
+    return true;
   };
 
   // Get the Layout and App components from the server bundle. Provided
   // as a hook on the handler to use in dev reload scenarios.
-  handler.load = function() {
+  handler.load = function load() {
+    // eslint-disable-next-line global-require, import/no-dynamic-require
     const components = require(entryPath)();
     Object.assign(handler, components);
   };
   handler.load();
 
   return handler;
-};
+}
 
 module.exports = generate;

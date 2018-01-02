@@ -7,34 +7,35 @@ const HttpServer = require('./src/http-server');
 const Middleware = require('./src/middleware');
 const RuntimeCater = require('./src');
 
-const index = function(options = null) {
-  options = options || loadConfig();
+function loadConfig(file = null) {
+  const configFile = file || path.join(process.cwd(), 'cater.config.js');
+  if (!fs.existsSync(configFile)) return {};
+  // eslint-disable-next-line global-require, import/no-dynamic-require
+  const options = require(configFile);
 
-  if (!!options.disableBabel) {
-    const babelOptions = BabelOptions();
-    babelOptions.ignore = /\/node_modules\//;
-    require('babel-register')(babelOptions);
-  }
-  return new RuntimeCater(options);
-};
-
-const loadConfig = function(file = null) {
-  file = file || path.join(process.cwd(), 'cater.config.js');
-  if (!fs.existsSync(file)) return {};
-  const options = require(file);
-
-  if (!!options.env) {
+  if (options.env) {
     const env = options.env[process.env.NODE_ENV];
-    if (!!env) Object.assign(options, env);
+    if (env) Object.assign(options, env);
   }
 
   return options;
-};
+}
 
-const readyCommandLine = function() {
-  const commands = require('./src/commands');
+function index(options = null) {
+  const caterOptions = options || loadConfig();
+
+  if (caterOptions.disableBabel) {
+    const babelOptions = BabelOptions();
+    babelOptions.ignore = /\/node_modules\//;
+    require('babel-register')(babelOptions); // eslint-disable-line global-require
+  }
+  return new RuntimeCater(caterOptions);
+}
+
+function readyCommandLine() {
+  const commands = require('./src/commands'); // eslint-disable-line global-require
   return Object.assign(RuntimeCater.prototype, commands);
-};
+}
 
 const exporting = {
   BabelOptions,

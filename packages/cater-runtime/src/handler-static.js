@@ -25,9 +25,7 @@ const MANIFEST_FILENAME = 'manifest.json';
 // We build a whitelist of files to serve - this will be an object with
 // keys like the request url `/static/bundle.js` pointing to a small
 // object with the full path, mime-type and file size.
-const generateFileList = function(publicPath, staticPath, manifest) {
-  const manifestEntries = Object.values(manifest).map((v) => path.join(publicPath, v));
-
+function generateFileList(publicPath, staticPath, manifest) {
   const files = {};
   const directories = ['.'];
   while (directories.length > 0) {
@@ -43,47 +41,54 @@ const generateFileList = function(publicPath, staticPath, manifest) {
       if (fs.realpathSync(file) !== file) return;
 
       // Directories get added to the queue to process
-      if (stat.isDirectory()) return directories.push(path.join(currentDirectory, name));
+      if (stat.isDirectory()) {
+        directories.push(path.join(currentDirectory, name));
+        return;
+      }
 
       // Don't serve the manifest file
       if (name === MANIFEST_FILENAME) return;
 
       // Is it in the manifest?
       const manifestEntry = Object.entries(manifest).find(
-        ([k, v]) => path.join(publicPath, v) == publicFile
+        ([, v]) => path.join(publicPath, v) === publicFile
       );
 
-      const entry = (files[publicFile] = {
+      const entry = {
         lastModified: stat.mtime,
         manifest: manifestEntry || false,
         mime: mime.contentType(path.extname(file)),
         size: stat.size, // This means the file can't change after starting...
         path: file
-      });
+      };
+      files[publicFile] = entry;
 
       // Is this a digested file?
       if (entry.manifest) {
-        entry.digest = entry.manifest[1].match(/\.([a-f0-9]+)\.[^\.]+/)[1];
+        // eslint-disable-next-line prefer-destructuring
+        entry.digest = entry.manifest[1].match(/\.([a-f0-9]+)\.[^.]+/)[1];
       }
     });
   }
   return files;
-};
+}
 
 // Create a http.Handler that serves static assets.
-const generate = function(publicPath, staticPath, manifest) {
+function generate(publicPath, staticPath, manifest) {
   const files = generateFileList(publicPath, staticPath, manifest);
 
-  return function(req, res, next) {
+  return function handler(req, res, next) {
     // Explict match - we don't traverse the filesystem. Nor do we serve
     // directories.
     let match = files[req.url];
 
     // No match or an attempt to get the gzip version directly
-    if (!match || path.extname(match.path) == '.gz') return next === null ? false : next();
+    if (!match || path.extname(match.path) === '.gz') {
+      return next === null ? false : next();
+    }
 
     // Long term caching for digested assets
-    if (!!match.digest) {
+    if (match.digest) {
       res.setHeader('Cache-Control', 'max-age=31536000, immutable');
       res.setHeader('ETag', match.digest);
     }
@@ -100,9 +105,9 @@ const generate = function(publicPath, staticPath, manifest) {
     res.statusCode = 200;
 
     // Check for statically gzipped versions
-    var acceptGzip = (req.headers['accept-encoding'] || '').includes('gzip');
-    if (acceptGzip && files[req.url + '.gz']) {
-      match = files[req.url + '.gz'];
+    const acceptGzip = (req.headers['accept-encoding'] || '').includes('gzip');
+    if (acceptGzip && files[`${req.url}.gz`]) {
+      match = files[`${req.url}.gz`];
       res.setHeader('Content-Encoding', 'gzip');
     }
     // If the gzip match was found match now points at the gzip version,
@@ -112,7 +117,8 @@ const generate = function(publicPath, staticPath, manifest) {
     res.setHeader('Content-Length', match.size);
     const stream = fs.createReadStream(match.path);
     stream.pipe(res);
+    return true;
   };
-};
+}
 
 module.exports = generate;

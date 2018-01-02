@@ -5,6 +5,8 @@ import { renderToString } from 'react-dom/server';
 import ParentLayout from 'server/^'; // Note: Inheritance import
 import Scripts from 'app/scripts';
 
+/* eslint-disable react/no-danger */
+
 /**
  * Your regular Layout component, but with the emotion styles added in.
  */
@@ -12,9 +14,9 @@ class Layout extends ParentLayout {
   render() {
     const appBody = renderToString(this.props.children);
     const { html, ids, css } = extractCritical(appBody);
-    const renderedIds = `window.__EMOTION_IDS = ${JSON.stringify(ids)};`;
+    const renderedIds = `window.EMOTION_IDS = ${JSON.stringify(ids)};`;
     return (
-      <html>
+      <html lang="en">
         <head>
           <meta charSet="utf-8" />
           <title />

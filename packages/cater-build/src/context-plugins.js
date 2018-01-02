@@ -5,41 +5,49 @@ const path = require('path');
  * Loads plugin modules defined in the cater options.
  */
 
-const configurePlugin = function(cater, name, options) {
+function configurePlugin(cater, name, options) {
   const resolve = require.resolve(name);
   if (!resolve) {
-    throw `Cater plugin ${name} was specificed, but that module wasn't found. Check it's installed.`;
+    throw new Error(
+      `Cater plugin ${name} was specificed, but that module wasn't found. Check it's installed.`
+    );
   }
-  const plugin = require(name);
-  const result = plugin(cater, options); // Plugin should export a function to configure itself
+  const plugin = require(name); // eslint-disable-line global-require, import/no-dynamic-require
+
+  // Plugin should export a function to configure itself
+  plugin.result = plugin(cater, options);
   plugin.componentRootPath = path.dirname(resolve);
   return plugin;
-};
+}
 
-module.exports.autoDefinePlugins = function(cater) {
+function autoDefinePlugins(cater) {
   const deps = Object.keys(cater.package.dependencies || {});
   const dev = Object.keys(cater.package.devDependencies || {});
-  cater.plugins = {};
+  const plugins = {};
 
   deps
     .concat(dev)
     .filter((k) => k.startsWith('cater-'))
     .filter((k) => require.resolve(k).endsWith('plugin.js'))
-    .forEach((k) => (cater.plugins[k] = null));
+    .forEach((k) => {
+      plugins[k] = null;
+    });
 
-  return cater.plugins;
-};
+  return plugins;
+}
 
-module.exports.configurePlugins = function(cater) {
-  cater.configuredPlugins = {};
+function configurePlugins(cater) {
+  const configuredPlugins = {};
 
   cater.defaultPlugins.forEach((name) => {
-    cater.configuredPlugins[name] = configurePlugin(cater, name, null);
+    configuredPlugins[name] = configurePlugin(cater, name, null);
   });
 
   Object.entries(cater.plugins).forEach(([name, options]) => {
-    cater.configuredPlugins[name] = configurePlugin(cater, name, options);
+    configuredPlugins[name] = configurePlugin(cater, name, options);
   });
 
-  return cater.configuredPlugins;
-};
+  return configuredPlugins;
+}
+
+module.exports = { autoDefinePlugins, configurePlugins };
