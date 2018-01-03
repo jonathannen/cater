@@ -1,5 +1,23 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 
+/**
+ * # ^ Cater
+ *
+ * The cater module is the Command-line interface (cli) to Cater. It also
+ * provides wrappering around the cater-build and cater-runtime modules.
+ *
+ * The cater-runtime module is always included. It contains the minimum
+ * configuration to run cater; including in production. The cater-build
+ * module should be a development dependency. It's added to develop and
+ * build a Cater application.
+ *
+ * @module cater
+ * @see module:cater-build
+ * @see module:cater-runtime
+ */
+
+// Determine if we're using the runtime or build versions of cater. Returns
+// that module, depending on the setup.
 const mode =
   process.env.CATER_MODE || (process.env.NODE_ENV === 'production' ? 'runtime' : 'build');
 const runtime = mode === 'runtime';

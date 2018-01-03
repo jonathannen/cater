@@ -12,9 +12,11 @@ const RuntimeCater = require('cater-runtime');
  *     const app = cater(...options);
  *
  * See the cater/examples directory for more detail.
+ *
+ * @module cater-build
  */
-function index(options) {
-  const caterOptions = options || RuntimeCater.loadConfig();
+function index(options = {}) {
+  const caterOptions = Object.assign(RuntimeCater.loadConfig(), options);
   const app = new BuildCater(caterOptions);
 
   const babelOptions = app.sides.server.babel;

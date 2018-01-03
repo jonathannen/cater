@@ -1,19 +1,18 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const http = require('http');
-require('http-shutdown').extend();
-const readline = require('readline');
 
 /**
  * HTTP server that will exit on CTRL-C or two space keystrokes.
  */
 function generate(handler, httpPort) {
-  const httpServer = http.createServer(handler).withShutdown();
+  const httpServer = http.createServer(handler);
   httpServer.listen(httpPort, (err) => {
     if (err) throw err;
     // eslint-disable-next-line no-console
     console.log(`Listening on http://localhost:${httpPort}`);
 
-    // Allow a graceful quit. Requires hitting space twice
+    /* // Allow a graceful quit. Requires hitting space twice
+    TODO: Deprecated for now
     readline.emitKeypressEvents(process.stdin);
     process.stdin.setRawMode(true);
     let lastKey = null;
@@ -34,7 +33,7 @@ function generate(handler, httpPort) {
         console.log('Press space again to exit.');
       }
       lastKey = key.name;
-    });
+    }); */
   });
   return httpServer;
 }

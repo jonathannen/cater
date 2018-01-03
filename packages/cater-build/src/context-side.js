@@ -4,8 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const webpackGenerator = require('./webpack-generator');
 
-const ASSET_PATH = 'assets';
-const CARET_PATH_SEPARATOR = '?filename=';
+const ASSET_PATH = 'assets'; // TODO
+const CARET_PATH_SEPARATOR = '?filename='; // TODO
 
 /**
  * Resolves the given partial filename source name "app/blah" in the given
@@ -29,7 +29,7 @@ function resolveWithPaths(source, paths, extensions, startFromPath = null) {
 
   // With the app and ^ caret style imports there is a chance of a cycle
   // in the import/require. Throw an error if we detect a loop
-  if (!!startFromPath && startFromPath === source) {
+  if (startFromPath && startFromPath === source) {
     throw Error(`Resolving ${source} imported itself. Aborting to prevent an infinite loop.`);
   }
 
@@ -42,41 +42,22 @@ function resolveWithPaths(source, paths, extensions, startFromPath = null) {
  * between the two.
  */
 class SideConfiguration {
-  constructor(context, sideName) {
+  constructor(context, options, sideName) {
     this.name = sideName;
-    this.extensions = context.extensions;
+    this.extensions = options.extensions;
 
     // Can be extended with other sides down the line
     this.typeClient = this.name === 'client';
     this.typeServer = this.name === 'server';
 
-    this.assignPaths(context);
+    this.configurePaths(context);
     this.configureBabel(context);
-
-    this.bundleName = path.parse(context.bundleFilename).name; // bundle.js -> bundle
-    this.bundlePath = `${context.publicPath}${context.bundleFilename}`;
-    if (this.typeServer) {
-      this.bundleName = `server-${this.bundleName}`;
-      this.bundlePath = `${context.publicPath}server-${context.bundleFilename}`;
-    }
-
-    if (!context.debug) this.configureProduction(context);
-
-    this.webpackConfig = webpackGenerator(context, this);
+    this.configureBundle(context, options);
+    this.configureWebpack(context);
 
     // Used to split caret ^ type imports
     const prefixes = Object.keys(this.importPrefixResolvers);
     this.caretPathSplitRegex = new RegExp(`/(${prefixes.join('|')})/`);
-  }
-
-  assignPaths(context) {
-    this.assetPaths = [path.join(context.appRootPath, 'assets')];
-    this.sidePaths = context.generatePaths([this.name]);
-
-    this.paths = context.generatePaths(context.universalNames.concat([this.name]));
-
-    // this.paths = context.universalPaths.concat(this.sidePaths);
-    this.entryPath = this.resolve(context.entryScriptFilename);
   }
 
   configureBabel(context) {
@@ -84,16 +65,29 @@ class SideConfiguration {
       app: this.resolve.bind(this)
     };
     this.importPrefixResolvers[this.name] = this.resolveSide.bind(this);
+
     this.babel = clone(context.babel);
+    this.babel.only = this.paths; // TODO: This'll take some thinking
     this.babel.resolveModuleSource = this.resolveBabel.bind(this);
   }
 
-  configureProduction(context) {
-    if (this.typeClient) {
-      this.productionPath = path.join(context.buildPath, context.publicPath);
-    } else {
-      this.productionPath = context.buildPath;
-    }
+  configureBundle(app, options) {
+    const bundleFilename = this.typeServer ? options.serverBundleFilename : options.bundleFilename;
+    this.bundleName = path.parse(bundleFilename).name; // "bundle.js" to "bundle"
+    this.bundlePath = `${options.publicPath}${bundleFilename}`;
+  }
+
+  configurePaths(context) {
+    this.assetPaths = [path.join(context.appRootPath, 'assets')];
+    this.sidePaths = context.generatePaths([this.name]);
+
+    this.paths = context.generatePaths(context.universalNames.concat([this.name]));
+    this.entryPath = this.resolve(context.entryScriptFilename);
+  }
+
+  configureWebpack(context) {
+    this.webpackConfig = webpackGenerator(context, this);
+    return this.webpackConfig;
   }
 
   /**

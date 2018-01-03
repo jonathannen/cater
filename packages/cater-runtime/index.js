@@ -1,11 +1,19 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const BabelOptions = require('./src/options-babel.js');
+const DefaultOptions = require('./src/options-default.js');
 const fs = require('fs');
 const path = require('path');
 const HandlerCater = require('./src/handler-cater');
 const HttpServer = require('./src/http-server');
 const Middleware = require('./src/middleware');
 const RuntimeCater = require('./src');
+
+/**
+ * The runtime guts of a Cater application. This module is automatically
+ * bought in by the {@link module/cater}.
+ *
+ * @see module/cater.
+ */
 
 function loadConfig(file = null) {
   const configFile = file || path.join(process.cwd(), 'cater.config.js');
@@ -23,7 +31,6 @@ function loadConfig(file = null) {
 
 function index(options = null) {
   const caterOptions = options || loadConfig();
-
   if (caterOptions.disableBabel) {
     const babelOptions = BabelOptions();
     babelOptions.ignore = /\/node_modules\//;
@@ -39,10 +46,12 @@ function readyCommandLine() {
 
 const exporting = {
   BabelOptions,
+  DefaultOptions,
   HandlerCater,
   HttpServer,
   loadConfig,
   Middleware,
-  readyCommandLine
+  readyCommandLine,
+  RuntimeCater
 };
 module.exports = Object.assign(index, exporting);

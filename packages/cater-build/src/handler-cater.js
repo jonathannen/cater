@@ -17,8 +17,8 @@ function unloadCaterBasedModules() {
  * Creates a handler with the given entry point (file that loads server
  * components). Plus the bundlePath.
  */
-function generate(entryPath, bundlePath, publicPath) {
-  const handler = HandlerCater(entryPath, bundlePath, publicPath);
+function generate(entryPath, bundlePath, publicPath, assetHost) {
+  const handler = HandlerCater(entryPath, bundlePath, publicPath, assetHost);
 
   // Callback that gets this handler to unload cater-based modules and
   // reload from teh server entry point.

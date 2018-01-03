@@ -124,7 +124,7 @@ function generate(context, side) {
   };
 
   // Post-process for various environments
-  const forDebugOrBuild = context.debug ? forDebug : forBuild;
+  const forDebugOrBuild = context.mode === 'build' ? forBuild : forDebug;
   forDebugOrBuild(config, side, context);
   if (side.typeServer) forServer(config, side, context);
 

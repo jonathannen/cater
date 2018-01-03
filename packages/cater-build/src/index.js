@@ -1,51 +1,49 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const clone = require('clone');
-const defaultOptions = require('./context-options.js');
-const { autoDefinePlugins, configurePlugins } = require('./context-plugins.js');
-const EventEmitter = require('events');
+const DefaultOptions = require('./options-default.js');
 const fs = require('fs');
 const path = require('path');
+const Plugins = require('./plugins.js');
+const { RuntimeCater } = require('cater-runtime');
 const SideConfiguration = require('./context-side.js');
 
 const events = {
+  configuring: 'configuring',
   configured: 'configured',
+  deploying: 'deploying',
   webpackCompiled: 'webpack-compiled',
   webpackCompiling: 'webpack-compiling'
 };
 
-class Cater extends EventEmitter {
-  constructor(options) {
-    super();
+class BuildCater extends RuntimeCater {
+  constructor(providedOptions) {
+    const options = DefaultOptions(providedOptions);
+    super(options);
 
-    // Deep-clone the defaults in case we mutate arrays/etc in the options.
-    // Then set up the most criticial and widely used pieces.
-    Object.assign(this, clone(defaultOptions), clone(options));
-    this.appRootPath = this.appRootPath || process.cwd();
-    this.assignProgrammaticDefaults();
-    this.loadPackage();
+    this.configureBuildDefaults();
+    this.configuredPlugins = Plugins(this, options);
 
-    if (this.plugins === 'auto') this.plugins = autoDefinePlugins(this);
-    this.configuredPlugins = configurePlugins(this); // Get plugins ready
+    this.babel = options.babel;
+    this.entryScriptFilename = options.entryScriptFilename;
+    this.universalNames = options.universalNames;
 
-    // Assign derived options
-    this.assignPaths();
-    this.configureSides();
+    // EVENT: I know we're already configuring, but this is for the benefit
+    // of the plugins - which have only just been set up.
+    this.emit(events.configuring, this, options);
 
-    this.emit(events.configured, this); // EVENT
+    // Set up the key paths and get the client and server sides ready
+    this.configurePaths(options);
+    this.configureSides(options);
+
+    // EVENT: Allow plugins to make changes at the end of the configuration
+    // cycle
+    this.emit(events.configured, this, options);
+    this.cleanOptions();
   }
 
-  assignProgrammaticDefaults() {
-    this.caterRootPath = path.join(__dirname, '..');
-    this.caterRuntimePath = path.dirname(require.resolve('cater-runtime'));
-    this.debug = process.env.NODE_ENV !== 'production';
-  }
-
-  assignPaths() {
-    this.buildPath = path.join(this.appRootPath, this.buildDirectory);
-
+  configurePaths(options) {
     this.pluginPaths = Object.values(this.configuredPlugins)
       .map((v) => v.componentRootPath)
-      .filter((v) => !!v);
+      .filter((v) => v);
 
     this.rootPaths = [
       this.appRootPath,
@@ -55,17 +53,22 @@ class Cater extends EventEmitter {
     ].filter((v) => fs.existsSync(v));
 
     this.staticPath = path.join(this.buildPath, this.publicPath);
-    this.devStaticPath = path.join(this.appRootPath, this.staticDirectory);
-    this.universalPaths = this.generatePaths(this.universalNames);
+    this.universalPaths = this.generatePaths(options.universalNames);
 
+    // This is used to set up serving directly from /static in dev mode
+    this.devStaticPath = path.join(this.appRootPath, options.staticDirectory);
     if (fs.existsSync(this.devStaticPath)) this.devStaticPathExists = true;
   }
 
-  configureSides() {
+  configureBuildDefaults() {
+    this.caterRootPath = path.join(__dirname, '..');
+  }
+
+  configureSides(options) {
     this.sides = {};
-    for (let i = 0; i < this.sideNames.length; i += 1) {
-      const name = this.sideNames[i];
-      this.sides[name] = new SideConfiguration(this, name);
+    for (let i = 0; i < options.sideNames.length; i += 1) {
+      const name = options.sideNames[i];
+      this.sides[name] = new SideConfiguration(this, options, name);
     }
   }
 
@@ -82,16 +85,6 @@ class Cater extends EventEmitter {
     return result;
   }
 
-  loadPackage() {
-    this.package = {};
-    const packageFile = path.join(this.appRootPath, 'package.json');
-    if (fs.existsSync(packageFile)) {
-      const content = fs.readFileSync(packageFile).toString();
-      this.package = JSON.parse(content);
-    }
-    return this.package;
-  }
-
   /**
    * Returns a http.Handler for this application.
    */
@@ -99,6 +92,18 @@ class Cater extends EventEmitter {
     // TODO
     const Middleware = require('./middleware'); // eslint-disable-line global-require
     return Middleware(this);
+  }
+
+  package() {
+    const packageFile = path.join(this.appRootPath, 'package.json');
+    if (!fs.existsSync(packageFile)) {
+      throw new Error(`Could not load package.json at ${packageFile}`);
+    }
+    return JSON.parse(fs.readFileSync(packageFile).toString());
+  }
+
+  callbackDeploy() {
+    this.emit(events.deploying, this);
   }
 
   /*
@@ -122,10 +127,10 @@ class Cater extends EventEmitter {
   }
 }
 
-Cater.prototype.prepareCommandLine = function prepareCommandLine() {
+BuildCater.prototype.prepareCommandLine = function prepareCommandLine() {
   const commands = require('./commands.js'); // eslint-disable-line global-require
-  Object.assign(Cater.prototype, commands);
+  Object.assign(BuildCater.prototype, commands);
   return true;
 };
 
-module.exports = Cater;
+module.exports = BuildCater;

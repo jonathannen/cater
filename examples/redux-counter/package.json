@@ -5,8 +5,7 @@
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.4.1",
-    "express": "^4.16.2"
+    "cater": "^0.4.1"
   },
   "scripts": {
     "dev": "PATH=$PATH:../../node_modules/.bin cater dev",

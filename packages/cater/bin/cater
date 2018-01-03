@@ -1,45 +1,37 @@
 #!/usr/bin/env node
 
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const path = require("path");
 
-// Available commands
-const BUILD_COMMANDS = ["build", "dev"];
-const RUNTIME_COMMANDS = ["start"];
-const PRODUCTION_COMMANDS = ["build", "start"];
-const COMMANDS = BUILD_COMMANDS.concat(RUNTIME_COMMANDS);
+// Available commands, mapped to their mode
+const commands = {
+  build: 'build',
+  deploy: 'build',
+  dev: 'dev',
+  start: 'runtime'
+};
+const commandList = Object.keys(commands);
 
-// The command line format is `cater [command] <options>` this grabs the
-// command.
-const command = (process.argv[2] || "--help").toLowerCase().trim();
+const command = (process.argv[2] || '--help').toLowerCase().trim();
 
-// Production commands run in the production NODE_ENV by default. However,
-// if NODE_ENV is alreedy set we don't change it.
-let options = {};
-if (PRODUCTION_COMMANDS.includes(command)) {
-  process.env.NODE_ENV = process.env.NODE_ENV || "production";
-  options = { debug: false, build: true }
+function catchFatal(err) {
+  console.error(err); // eslint-disable-line no-console
+  process.exit(-1);
 }
 
-const catchFatal = function(err) {
-  console.error(err);
-  process.exit(-1);
-};
+const commandFunctionName = `run${command.charAt(0).toUpperCase() + command.slice(1)}`;
 
-const commandFunctionName = "run" + command.charAt(0).toUpperCase() + command.slice(1);
-
-if (COMMANDS.includes(command)) {
+if (commandList.includes(command)) {
   // The cater package does this too, but we want to be explicit here as
   // it's not necessarily determined by production versus dev.
-  const isRuntime = RUNTIME_COMMANDS.includes(command);
+  const mode = process.env.CATER_MODE || commands[command];
+  process.env.CATER_MODE = mode;
 
-  process.env.CATER_MODE = process.env.CATER_MODE || (isRuntime ? 'runtime' : 'build');
-
-  const Cater = require('cater');
-  const app = Cater();
+  const Cater = require('cater'); // eslint-disable-line global-require
+  const app = Cater({ mode });
   Cater.readyCommandLine();
   app[commandFunctionName]().catch(catchFatal);
 } else {
+  // eslint-disable-next-line no-console
   console.log(
     `Cater Framework.
 

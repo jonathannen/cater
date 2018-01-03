@@ -14,6 +14,7 @@
  *     app.runStart();
  */
 
+// Starts a production server
 function runStart() {
   return Promise.resolve(this.start());
 }

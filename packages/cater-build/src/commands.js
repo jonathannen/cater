@@ -16,6 +16,8 @@ const webpackBuild = require('./webpack-build');
  *     cater.readyCommandLine();
  *     const app = cater();
  *     app.runBuild();
+ *
+ * @module cater/commands
  */
 
 // Returns a promise to a production build of the application.
@@ -32,10 +34,15 @@ function runBuild() {
     .then(() => webpackBuild(this));
 }
 
+// Used as a hook to signal deployment - particularly to any plugins.
+function runDeploy() {
+  return Promise.resolve(this.callbackDeploy());
+}
+
 // Runs the development server - that's a server with webpack in-memory
 // building (and reloading) the client and server code.
 function runDev() {
   return this.handler().then((h) => Runtime.HttpServer(h, this.httpPort));
 }
 
-module.exports = { runBuild, runDev };
+module.exports = { runBuild, runDeploy, runDev };

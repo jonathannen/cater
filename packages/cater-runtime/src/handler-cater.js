@@ -49,10 +49,13 @@ function reactHandler(req, res, bundlePath, App, Layout, Provider) {
  * Creates a handler with the given entry point (file that loads server
  * components). Plus the bundlePath.
  */
-function generate(entryPath, bundlePath, publicPath) {
+function generate(entryPath, bundlePath, publicPath, assetHost) {
+  // Is a CDN in use?
+  const finalBundlePath = `${assetHost || ''}${bundlePath}`;
+
   const handler = function handler(req, res, next = null) {
     if (!req.url.startsWith(publicPath)) {
-      reactHandler(req, res, bundlePath, handler.App, handler.Layout, handler.Provider);
+      reactHandler(req, res, finalBundlePath, handler.App, handler.Layout, handler.Provider);
     } else if (next !== null) {
       next();
     }

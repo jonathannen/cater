@@ -1,8 +1,8 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
+// TODO: Windows support. This code assumes unix-style paths, which marry
+// up with web-based ones.
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-// pathLib as path is a common variable convention in the babel transform
-const pathLib = require('path');
+const path = require('path');
 
 /**
  * Generates a Babel transform for the server-side rendering of assets. This
@@ -21,10 +21,10 @@ function generateBabelAssetTransform(state) {
   return function babelTransform({ types: t }) {
     return {
       visitor: {
-        ImportDeclaration: function importDeclaration(path) {
+        ImportDeclaration: function importDeclaration(declaration) {
           // Detect assets
-          const importName = path.node.source.value;
-          const ext = pathLib.extname(importName).slice(1);
+          const importName = declaration.node.source.value;
+          const ext = path.extname(importName).slice(1);
           if (!state.extensions.includes(ext)) return;
 
           // Convert "scss" and friends to plain "css".
@@ -35,10 +35,16 @@ function generateBabelAssetTransform(state) {
 
           // Convert the import in to setting a variable with the asset path
           let content = state.manifest[basename];
-          content = content ? pathLib.join(state.publicPath, content) : importName;
-          const id = path.node.specifiers[0].local.name;
+          content = content ? path.join(state.publicPath, content) : importName;
+
+          // Is a CDN configured?
+          if (state.assetHost) {
+            content = `${state.assetHost}${content}`;
+          }
+
+          const id = declaration.node.specifiers[0].local.name;
           const variable = t.variableDeclarator(t.identifier(id), t.stringLiteral(content));
-          path.replaceWith({
+          declaration.replaceWith({
             type: 'VariableDeclaration',
             kind: 'const',
             declarations: [variable]
@@ -80,14 +86,15 @@ function generateWebpackStylesheetRule(state) {
 /**
  * Configures Cater with an asset processing pipeline.
  */
-module.exports = function plugin(cater) {
+module.exports = function plugin(cater, options) {
   // Work out the extensions for different asset classes
   const state = {
-    debug: !!cater.debug,
-    imageExtensions: cater.assetExtensions.image || [],
+    assetHost: cater.assetHost,
+    // debug: !!cater.debug, // TODO
+    imageExtensions: options.image || [],
     publicPath: cater.publicPath,
     manifest: {},
-    stylesheetExtensions: cater.assetExtensions.stylesheet || []
+    stylesheetExtensions: options.stylesheet || []
   };
   state.extensions = state.imageExtensions.concat(state.stylesheetExtensions);
   if (state.extensions.length === 0) return; // Boundary condition. Not asset extensions.
