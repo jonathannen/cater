@@ -2,8 +2,10 @@
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "description": "Workspace for: Modular convention-driven framework for React and Friends.",
   "private": true,
-  "version": "0.4.1",
-  "workspaces": ["packages/*"],
+  "version": "0.4.2",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "docs": "rm -rf docs && jsdoc --configure .jsdoc.conf.js",
     "lint": "eslint . --cache --ext js",
