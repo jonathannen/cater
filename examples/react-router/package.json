@@ -8,17 +8,17 @@
     "cater": "^0.4.1"
   },
   "scripts": {
-    "dev": "PATH=$PATH:../../node_modules/.bin cater dev",
-    "test": "PATH=$PATH:../../node_modules/.bin jest",
-    "build": "PATH=$PATH:../../node_modules/.bin cater build",
-    "start": "PATH=$PATH:../../node_modules/.bin cater start"
+    "build": "cater build",
+    "dev": "cater dev",
+    "start": "cater start",
+    "test": "jest"
   },
   "devDependencies": {
     "cater-build": "^0.4.1",
     "cater-jest": "^0.4.1",
-    "cater-react-router": "^0.4.1",
     "jest": "^22.0.4",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "cater-react-router": "^0.4.1"
   },
   "private": true
 }

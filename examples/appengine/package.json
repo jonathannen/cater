@@ -8,11 +8,11 @@
     "cater": "^0.4.1"
   },
   "scripts": {
-    "dev": "PATH=$PATH:../../node_modules/.bin cater dev",
-    "test": "PATH=$PATH:../../node_modules/.bin jest",
-    "build": "PATH=$PATH:../../node_modules/.bin cater build",
-    "start": "PATH=$PATH:../../node_modules/.bin cater start",
-    "deploy": "PATH=$PATH:../../node_modules/.bin cater build && gcloud app deploy",
+    "dev": "cater dev",
+    "test": "jest",
+    "build": "cater build",
+    "start": "cater start",
+    "deploy": "cater build && gcloud app deploy",
     "browse": "gcloud app browse -s hello-from-cater"
   },
   "devDependencies": {

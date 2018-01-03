@@ -8,10 +8,10 @@
     "cater": "^0.4.1"
   },
   "scripts": {
-    "build": "PATH=$PATH:../../node_modules/.bin cater build",
-    "dev": "PATH=$PATH:../../node_modules/.bin cater dev",
-    "start": "PATH=$PATH:../../node_modules/.bin cater start",
-    "test": "PATH=$PATH:../../node_modules/.bin jest"
+    "build": "cater build",
+    "dev": "cater dev",
+    "start": "cater start",
+    "test": "jest"
   },
   "devDependencies": {
     "cater-build": "^0.4.1",

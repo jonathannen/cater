@@ -8,10 +8,10 @@
     "cater": "^0.4.1"
   },
   "scripts": {
-    "dev": "cater dev",
-    "test": "jest",
     "build": "cater build",
-    "start": "cater start"
+    "dev": "cater dev",
+    "start": "cater start",
+    "test": "jest"
   },
   "devDependencies": {
     "cater-build": "^0.4.1",
