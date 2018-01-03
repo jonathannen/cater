@@ -6,12 +6,13 @@ const babel = OptionsBabel();
 const defaultOptions = {
   babel,
   assetHost: null,
-  buildDirectory: 'build', // TODO
-  bundleFilename: 'bundle.js', // TODO
+  buildDirectory: 'build',
+  bundleFilename: 'bundle.js',
   httpPort: 3000,
   mode: 'runtime',
   publicPath: '/static/',
-  serverBundleFilename: 'server-bundle.js', // TODO
+  renderer: 'react',
+  serverBundleFilename: 'server-bundle.js',
   serveStaticAssets: true
 };
 

@@ -27,6 +27,7 @@ class RuntimeCater extends EventEmitter {
     this.publicPath = options.publicPath;
     this.httpPort = options.httpPort;
     this.mode = options.mode;
+    this.renderer = options.renderer;
 
     if (this.mode === 'runtime') this.configureRuntime(options);
   }
@@ -62,6 +63,7 @@ class RuntimeCater extends EventEmitter {
   handler() {
     const HandlerCater = require('./handler-cater'); // eslint-disable-line global-require
     const cater = HandlerCater(
+      this.renderer,
       this.serverBundlePath,
       this.bundlePath,
       this.publicPath,

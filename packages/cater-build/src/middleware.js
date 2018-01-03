@@ -1,6 +1,6 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const handlerCater = require('./handler-cater');
-const handlerLogging = require('./handler-logging');
+const { HandlerLogging } = require('cater-runtime');
 const handlerStatic = require('./handler-static');
 const handlerWebpack = require('./handler-webpack');
 const { Middleware } = require('cater-runtime');
@@ -13,12 +13,13 @@ function generate(context) {
   const { client, server } = context.sides;
 
   const cater = handlerCater(
+    context.renderer,
     server.entryPath,
     client.bundlePath,
     context.publicPath,
     context.assetHost
   );
-  const logging = handlerLogging();
+  const logging = HandlerLogging();
 
   return handlerWebpack(context, cater.reload).then((webpack) => {
     const handlers = [logging, cater, webpack, Middleware.notFoundHandler];

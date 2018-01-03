@@ -20,7 +20,7 @@ export function testHandler(appRootPath = null) {
   const app = testCater({ appRootPath: appRootPath || process.cwd() });
   const { server } = app.sides;
 
-  const handler = handlerCater(server.entryPath, server.bundlePath, app.publicPath);
+  const handler = handlerCater(app.renderer, server.entryPath, server.bundlePath, app.publicPath);
   const errorHandler = () => {
     throw new Error('Request not handled.');
   };

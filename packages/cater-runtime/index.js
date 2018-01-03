@@ -4,6 +4,7 @@ const DefaultOptions = require('./src/options-default.js');
 const fs = require('fs');
 const path = require('path');
 const HandlerCater = require('./src/handler-cater');
+const HandlerLogging = require('./src/handler-logging');
 const HttpServer = require('./src/http-server');
 const Middleware = require('./src/middleware');
 const RuntimeCater = require('./src');
@@ -48,6 +49,7 @@ const exporting = {
   BabelOptions,
   DefaultOptions,
   HandlerCater,
+  HandlerLogging,
   HttpServer,
   loadConfig,
   Middleware,
