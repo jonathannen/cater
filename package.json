@@ -3,7 +3,9 @@
   "description": "Workspace for: Modular convention-driven framework for React and Friends.",
   "private": true,
   "version": "0.4.2",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "docs": "rm -rf docs && jsdoc --configure .jsdoc.conf.js",
     "lint": "eslint . --cache --ext js",
@@ -16,5 +18,8 @@
       "<rootDir>/packages/*",
       "<rootDir>/packages/cater-build/integration/*"
     ]
+  },
+  "dependencies": {
+    "express": "^4.16.2"
   }
 }
