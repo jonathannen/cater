@@ -3,13 +3,11 @@
   "description": "Workspace for: Modular convention-driven framework for React and Friends.",
   "private": true,
   "version": "0.4.2",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "docs": "rm -rf docs && jsdoc --configure .jsdoc.conf.js",
     "lint": "eslint . --cache --ext js",
-    "test": "jest"
+    "test": "jest --no-cache"
   },
   "jest": {
     "resetModules": true,
