@@ -94,9 +94,10 @@ class BuildCater extends RuntimeCater {
     return Middleware(this);
   }
 
-  package() {
+  package(bail = false) {
     const packageFile = path.join(this.appRootPath, 'package.json');
     if (!fs.existsSync(packageFile)) {
+      if (!bail) return {};
       throw new Error(`Could not load package.json at ${packageFile}`);
     }
     return JSON.parse(fs.readFileSync(packageFile).toString());

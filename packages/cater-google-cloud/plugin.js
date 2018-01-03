@@ -69,7 +69,7 @@ function configured(app, options, currentState) {
 
     // gs://* will use a bucket name of gs://<default-project-id>-<current-package-name>
     if (state.bucket === 'gs://*') {
-      const { name } = app.package();
+      const { name } = app.package(true);
       const defaultProject = execSync(GCLOUD_DEFAULT_PROJECT_COMMAND)
         .toString()
         .trim();
