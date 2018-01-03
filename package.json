@@ -7,7 +7,7 @@
   "scripts": {
     "docs": "rm -rf docs && jsdoc --configure .jsdoc.conf.js",
     "lint": "eslint . --cache --ext js",
-    "test": "jest --no-cache"
+    "test": "jest --no-cache --maxWorkers=4 --no-colors"
   },
   "jest": {
     "resetModules": true,
