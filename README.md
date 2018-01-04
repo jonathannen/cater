@@ -42,7 +42,7 @@ In the spirit of no boilerplate, let's get started. First of all, let's create y
     yarn add cater
     yarn add --dev cater-build
 
-Not that we have to cater modules. One covers the core and runtime portions. The second is for build-time compilation. That's covered later in this README.
+Note that we have two cater modules. One covers the core and runtime portions. The second is for build-time compilation. That's covered later in this README.
 
 Now let's say hello:
 
