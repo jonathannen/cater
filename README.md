@@ -19,7 +19,7 @@ Good luck. To get in touch, drop me a line at the author details listed in packa
 There are three main motivations behind cater:
 
 * **Micro-Services having First-Class "Micro-Applications"**<br/>Having experience with several Ruby on Rails monoliths, we now want to write platforms as a series focused, contained applications.
-* **No Boilerplate**<br/>Lots of focused applications sounds tidy, but generally means lots of boilerplate. Lots of repeated code. Cater's mantra is "no boilerplate". We want focuses, contained _straightforward_ applications.
+* **No Boilerplate**<br/>Lots of focused applications sounds tidy, but generally means lots of boilerplate. Lots of repeated code. Cater's mantra is "no boilerplate". We want focused, contained _straightforward_ applications.
 * **Fully Universal Applicatins**<br/>Boilerplate is one complicating issue. Overlap, repetition and competition between the client and server code is another. Cater aims to be a simple way of building and maintaining Universal applications.
 
 This library was somewhat inspired from using the [Next.js](https://github.com/zeit/next.js/) Framework. This is an attempt to learn from the ground up, plus take a modular and convention-driven approach.
