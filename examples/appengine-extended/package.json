@@ -1,11 +1,11 @@
 {
   "name": "appengine-extended",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Hello World example for deployment to Google Cloud Appengine (flexible)",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
-    "cater": "^0.4.2"
+    "cater": "^0.5.0"
   },
   "scripts": {
     "dev": "cater dev",
@@ -16,11 +16,11 @@
     "browse": "gcloud app browse -s hello-from-cater"
   },
   "devDependencies": {
-    "cater-build": "^0.4.2",
-    "cater-jest": "^0.4.2",
+    "cater-build": "^0.5.0",
+    "cater-jest": "^0.5.0",
     "jest": "^22.0.4",
     "supertest": "^3.0.0",
-    "cater-google-cloud": "^0.4.2"
+    "cater-google-cloud": "^0.5.0"
   },
   "private": true
 }
