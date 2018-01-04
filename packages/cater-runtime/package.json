@@ -17,12 +17,10 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "clone": "^2.1.1",
-    "escape-html": "^1.0.3",
     "js-string-escape": "^1.0.1",
     "mime-types": "^2.1.17",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "safe-string": "^1.0.1"
+    "react-dom": "^16.2.0"
   },
   "devDependencies": {
     "jest": "^22.0.4"
