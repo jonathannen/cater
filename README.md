@@ -69,7 +69,7 @@ The first command will build your code into the build directory. The second star
 
 That's the very simple intro. Most of the time you'll want to add the cater commands to the package.json scripts, add tests and the like. You'll find more detailed code in the [examples directory](https://github.com/clashbit/cater/tree/master/examples). This includes a very slightly upgraded version of [this Hello World Example](https://github.com/clashbit/cater/tree/master/examples/hello-world).
 
-## Universal Imports
+## Universal Imports (aka app/\*)
 
 The core Cater piece plugs in to the Babel and Webpack framework to produce differentiated builds for the client and server sides. What does this mean? If you had a directory structure like:
 
@@ -92,7 +92,7 @@ However, there are plenty of components where it is necessary. If you take a loo
 
 You can also specify imports like 'server/name' or 'client/name' where you want a specific side to apply.
 
-## Universal Wrappering
+## Universal Wrappering (aka caret imports)
 
 Another key feature is wrappering. For any import of 'app/my-component' a tree of paths will be searched. This will be a series of paths, which are then searched with the directory "app" and then either the directory "client" or "server", depending on the side. The tree will look something like:
 
@@ -106,7 +106,7 @@ Another key feature is wrappering. For any import of 'app/my-component' a tree o
       - app
       - <client|server>
 
-In the above example, cater-assets is a "plugin", which are described below. Plugins bring in specific features, such as asset compilation, Redux, or CSS-in-JS.
+In the above example, cater-assets is a "plugin", which are described below. Plugins bring in specific features, such as asset compilation, Redux, or CSS-in-JS. The cater-assets plugin happens to be one that is always included by default.
 
 Let's assume the code is running server-side and you wanted to import the Title component from app/title. The code (at build time) would check:
 
@@ -120,9 +120,11 @@ So it's possible to _override_ the Title component at "cater-build/server/title.
 
 However, sometimes you want to inherit. In this case you want to replace the component, but also get a reference to the origial. For this, you use the caret import. Imports like 'app/^' will return the next component in the search path.
 
-For "your-current-application/server/title.js" that would be "cater-build/server/title.js". From here you can either extend that component or wrapper it yourself.
+What does that mean? Taking the example of "your-current-application/server/title.js" an import of 'app/^' would return the component _up the path list_, being the Title component in "cater-build/server/title.js". In your own Title component you can then extent or wrapper that original component as you see fit.
 
-The Title component is a contrived example, but there are a number of real applications. The simpliest of which is wrappering providers. Each plugin can add a provider that then wrappers the following one. An example of this is the [cater-redux/server/provider.js](https://github.com/clashbit/cater/blob/master/packages/cater-redux/server/provider.js). It adds in the Provider from redux-react inside the caret import.
+The Title component is a contrived example, but there are a number of real applications. The simpliest of which is wrappering providers. Each plugin can add a provider that then wrappers the following one. An example of this is the [cater-redux/server/provider.js](https://github.com/clashbit/cater/blob/master/packages/cater-redux/server/provider.js).
+
+This code adds in the Redux Provider and then wrappers it in the parent provider. In this way you can stack providers and other components between your application, plugins and the core Cater code.
 
 ## Plugins
 
@@ -130,7 +132,7 @@ So we have Universal Imports and Universal Wrappering. Why? The main reason is t
 
 Plugins add in features and libraries like Asset Compilation, Redux, CSS-in-JS, or React Router. Ideally with zero configuration.
 
-Universal Imports allow plugins to provide Universal components. Taking the simple Title component in Hello-Cater above, this component is different for the server and client sides. On the server it sets the &lt;head> &lt;title> element. On the client it uses JavaScript to change document.title.
+Universal Imports allow plugins to provide Universal components. Taking the simple Title component in Hello-Cater above, this component is different for the server and client sides. On the server it sets the &lt;head> &lt;title> element. On the client it uses JavaScript to change _document.title_. Killer.
 
 Univeral Wrapping allows plugins to cascade behavior. The most common case is adding in providers. A CSS-in-JS Theme Provider can wrapper a Redux or React Router Provider without being aware of the specifics of the other plugins.
 
