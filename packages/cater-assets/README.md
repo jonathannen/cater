@@ -13,4 +13,4 @@ These files can be used by importing them in your project. For example if you ha
 
 This component would render the image with your awesome cat picture.
 
-For more information, look at the [top-level Cater Documentation](https://github.com/jonathannen/cater).
+For more information, look at the [top-level Cater Documentation](https://github.com/clashbit/cater).

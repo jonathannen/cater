@@ -4,7 +4,7 @@
   "description": "Utilities to help run Jest testing with Cater",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
-  "homepage": "https://github.com/jonathannen/cater",
+  "homepage": "https://github.com/clashbit/cater",
   "main": "index.js",
   "dependencies": {
     "babel-core": "^6.26.0",

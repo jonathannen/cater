@@ -9,6 +9,6 @@ export default () => {
     'cater/examples/hello-world' example is the simplest implementation the App
     instance.
 
-    For more information, head over to https://github.com/jonathannen/cater
+    For more information, head over to https://github.com/clashbit/cater
     `);
 };

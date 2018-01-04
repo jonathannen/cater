@@ -4,7 +4,7 @@
   "description": "Enables the emotion CSS library for cater",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
-  "homepage": "https://github.com/jonathannen/cater",
+  "homepage": "https://github.com/clashbit/cater",
   "main": "plugin.js",
   "scripts": {
     "test": "jest"

@@ -5,10 +5,8 @@
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "bin": "./bin/cater",
-  "homepage": "https://github.com/jonathannen/cater",
-  "keywords": [
-    "react"
-  ],
+  "homepage": "https://github.com/clashbit/cater",
+  "keywords": ["react"],
   "main": "index.js",
   "repository": "jonathannen/cater",
   "scripts": {
