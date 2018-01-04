@@ -128,7 +128,7 @@ However, sometimes you want to inherit. In this case you want to replace the com
 
 What does that mean? Taking the example of "your-current-application/server/title.js" an import of 'app/^' would return the component _up the path list_, being the Title component in "cater-build/server/title.js". In your own Title component you can then extent or wrapper that original component as you see fit. Like so:
 
-    import ParentTitle from 'app/^'; # ...the mysterious caret import...
+    import ParentTitle from 'app/^'; // ...the mysterious caret import...
     import React from 'react';
 
     class MyTitle extends React.Component {
