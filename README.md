@@ -1,13 +1,19 @@
 # ^ Cater &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/facebook/react/blob/master/LICENSE) [![Build Status](https://travis-ci.org/clashbit/cater.svg?branch=master)](https://travis-ci.org/clashbit/cater)
 
+Hello.
+
 Cater is a convention-driven framework for building Universal applications, using React and Friends.
 
 Out-of-the-box Cater is configured with the following components:
 
 * Babel 6
+* Jest 22
 * React 16
 * Webpack 3
-* Jest 22
+
+As core components, Cater tends to have a strong opinion on how they're set up. The configuration is augmented and extended by Plugins.
+
+The big thing is to **eliminate as much boilerplate as possible**. If you're writing code for your users rather than your tools, Cater is doing it's job.
 
 Still so much to do. This project is still very much pre-1.0.But feel free to have a poke around. If you want to get a quick idea, take a look at the [hello-world application](https://github.com/clashbit/cater/tree/master/examples/hello-world) and it's peers under [examples](https://github.com/clashbit/cater/tree/master/examples).
 
@@ -120,7 +126,19 @@ So it's possible to _override_ the Title component at "cater-build/server/title.
 
 However, sometimes you want to inherit. In this case you want to replace the component, but also get a reference to the origial. For this, you use the caret import. Imports like 'app/^' will return the next component in the search path.
 
-What does that mean? Taking the example of "your-current-application/server/title.js" an import of 'app/^' would return the component _up the path list_, being the Title component in "cater-build/server/title.js". In your own Title component you can then extent or wrapper that original component as you see fit.
+What does that mean? Taking the example of "your-current-application/server/title.js" an import of 'app/^' would return the component _up the path list_, being the Title component in "cater-build/server/title.js". In your own Title component you can then extent or wrapper that original component as you see fit. Like so:
+
+    import ParentTitle from 'app/^'; # ...the mysterious caret import...
+    import React from 'react';
+
+    class MyTitle extends React.Component {
+
+        render() {
+          return <ParentTitle>I've changed the title!</ParentTitle>
+        }
+    }
+
+    export default MyTitle;
 
 The Title component is a contrived example, but there are a number of real applications. The simpliest of which is wrappering providers. Each plugin can add a provider that then wrappers the following one. An example of this is the [cater-redux/server/provider.js](https://github.com/clashbit/cater/blob/master/packages/cater-redux/server/provider.js).
 
