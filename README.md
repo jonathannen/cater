@@ -11,15 +11,16 @@ Out-of-the-box Cater is configured with the following components:
 
 Still so much to do. This project is still very much pre-1.0.But feel free to have a poke around. If you want to get a quick idea, take a look at the [hello-world application](https://github.com/clashbit/cater/tree/master/examples/hello-world) and it's peers under [examples](https://github.com/clashbit/cater/tree/master/examples).
 
-Good luck. To get in touch, drop me a line at the author details listed in package.json 🙇‍♂️.
+Good luck. To get in touch, drop me a line at the author details listed in package.json 🙇‍♂️
+.
 
 ## Motivation
 
 There are three main motivations behind cater:
 
-* Having experience with several Ruby on Rails monoliths, we now want to write platforms as focused, contained applications.
-* Lots of focused applications sounds tidy, but generally means lots of boilerplate. Cater's mantra is "no boilerplate".
-* A simple way of building and maintaining Universal applications.
+* **Micro-Services having First-Class "Micro-Applications"**<br/>Having experience with several Ruby on Rails monoliths, we now want to write platforms as a series focused, contained applications.
+* **No Boilerplate**<br/>Lots of focused applications sounds tidy, but generally means lots of boilerplate. Lots of repeated code. Cater's mantra is "no boilerplate". We want focuses, contained _straightforward_ applications.
+* **Fully Universal Applicatins**<br/>Boilerplate is one complicating issue. Overlap, repetition and competition between the client and server code is another. Cater aims to be a simple way of building and maintaining Universal applications.
 
 This library was somewhat inspired from using the [Next.js](https://github.com/zeit/next.js/) Framework. This is an attempt to learn from the ground up, plus take a modular and convention-driven approach.
 
