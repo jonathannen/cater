@@ -1,30 +1,23 @@
-# Cater example: App Engine (Extended)
+# Cater example: App Engine Extended
 
-Example for deployment to Google Cloud App Engine Flexible. This is an extended example that includes:
-
-* CDN Support using [Google Cloud storage](https://cloud.google.com/appengine/docs/flexible/nodejs/serving-static-files#example_of_serving_static_files_from_a_cloud_storage_bucket/).
+Example for deployment to Google Cloud App Engine Flexible. This version also includes using Google Cloud Storage as a CDN.
 
 ## Instructions
 
-Appears Google Cloud Storage doesn't have a no-gzip option when acting as a server.
+First, get all the packages installed:
 
-    gsutil mb gs://cater-sample-1
-    _PWD=$(pwd) && cd build/static && node -e "console.log(Object.values(require('./manifest.json')).join('\n'));" | gsutil -m cp -z css,html,js,svg -r -a public-read -I gs://cater-sample-1/static || cd _PWD
+    yarn install
 
-    gsutil mb gs://<your-bucket-name>
-    gsutil defacl set public-read gs://<your-bucket-name>
-    gsutil -m rsync -r -c -x 'manifest.json' -n ./static gs://<your-bucket-name>/static
-    https://storage.googleapis.com/<your-bucket-name>/static/
+To see the App running locally, run:
 
+    yarn run dev
 
-    gsutil defacl set public-read gs://cater-sample-1
+To deploy to Google Cloud App Engine, you'll need a Google Cloud account ready for deployment. To get started, read through the [Quickstart for Node.js for App Engine Flexible](https://cloud.google.com/appengine/docs/flexible/nodejs/quickstart).
 
-gsutil -m cp -z css,html,js,svg -r -a public-read ./build/static gs://cater-sample-1/static
+Once you're ready to deploy run the following. Note that this setup will create a bucket with a default name of _gs://<project-id>-appengine-extended_. You can change this in cater.config.js. Otherwise, just run:
 
-    gsutil -m -h Content-Encoding:gzip rsync -r -c -x -n '^manifest\.json$|\.gz$' ./build/static/**.css gs://cater-sample-1/static
+    yarn run build
+    yarn run deploy
+    yarn run browse
 
-    https://storage.googleapis.com/cater-sample-1/static/manifest.js
-
-    gsutil -h "Content-Type:text/html" \
-          -h "Cache-Control:public, max-age=3600" cp -r images \
-          gs://bucket/images
+This will deploy to App Engine and then open a browser to the deployed application.

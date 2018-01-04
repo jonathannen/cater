@@ -1,4 +1,4 @@
-# Cater example: "Hello World"
+# Cater example: "Express"
 
 Application that is super-friendly and says Hello.
 

@@ -10,5 +10,7 @@ Adapted from the [examples on the Redux repository](https://github.com/reactjs/r
 
 To run:
 
+    yarn install
     yarn dev
-    open http://localhost:3000
+
+Head on over to http://localhost:3000

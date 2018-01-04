@@ -10,4 +10,7 @@ Adapted from the [examples on the Redux repository](https://github.com/reactjs/r
 
 Behold:
 
+    yarn install
     yarn dev
+
+Head on over to http://localhost:3000

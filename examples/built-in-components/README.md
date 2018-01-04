@@ -1,10 +1,14 @@
- # Cater example: "Built-In Components"
+# Cater example: "Built-In Components"
 
 Demonstrates Cater Built-In Components. Including:
 
-- SkipServerSideRender
+* SkipServerSideRender
 
- ## Instructions
+## Instructions
 
+The usual! Run:
 
- 
+    yarn run install
+    yarn run dev
+
+Head on over to http://localhost:3000
