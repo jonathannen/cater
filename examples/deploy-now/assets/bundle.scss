@@ -1,0 +1,21 @@
+$primary-color: linen;
+$background-color: tomato;
+
+body {
+  background: $background-color;
+  color: $primary-color;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+body > div {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+a {
+  color: $primary-color;
+}
+
+h1 {
+  font-weight: 200;
+}

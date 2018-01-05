@@ -1,4 +1,4 @@
-# Cater example: App Engine
+# Cater example: Deploy to App Engine
 
 Example for deployment to Google Cloud App Engine Flexible.
 

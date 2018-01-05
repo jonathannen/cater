@@ -1,7 +1,7 @@
 {
-  "name": "appengine",
+  "name": "deploy-now",
   "version": "0.5.2",
-  "description": "Hello World example for deployment to Google Cloud Appengine (flexible)",
+  "description": "Hello World example for deployment to now.sh",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
   "dependencies": {
@@ -12,15 +12,13 @@
     "test": "jest",
     "build": "cater build",
     "start": "cater start",
-    "deploy": "cater deploy",
-    "browse": "gcloud app browse -s hello-from-cater"
+    "deploy": "now"
   },
   "devDependencies": {
     "cater-build": "^0.5.2",
     "cater-jest": "^0.5.2",
     "jest": "^22.0.4",
-    "supertest": "^3.0.0",
-    "cater-google-cloud": "^0.5.2"
+    "supertest": "^3.0.0"
   },
   "private": true
 }
