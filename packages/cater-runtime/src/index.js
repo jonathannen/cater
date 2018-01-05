@@ -1,5 +1,4 @@
-// A stripped down version of the Cater object.
-const DefaultOptions = require('./options-default');
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 const EventEmitter = require('events');
 const fs = require('fs');
 const HttpServer = require('./http-server');
@@ -16,23 +15,22 @@ function loadManifest(file) {
 }
 
 class RuntimeCater extends EventEmitter {
-  constructor(providedOptions) {
+  constructor(config) {
     super();
-    const options = DefaultOptions(providedOptions);
 
     // In general options are used to configure the object - they shouldn't
     // be used after configuration. Following are some values used directly.
-    this.configureRuntimeDefaults(options);
-    this.assetHost = options.assetHost;
-    this.publicPath = options.publicPath;
-    this.httpPort = options.httpPort;
-    this.mode = options.mode;
-    this.renderer = options.renderer;
+    this.configureRuntimeDefaults(config);
+    this.assetHost = config.assetHost;
+    this.publicPath = config.publicPath;
+    this.httpPort = config.httpPort;
+    this.mode = config.mode;
+    this.renderer = config.renderer;
 
-    if (this.mode === 'runtime') this.configureRuntime(options);
+    if (this.mode === 'runtime') this.configureRuntime(config);
   }
 
-  cleanOptions() {
+  cleanConfig() {
     // Fix up the asset host so that it always ends without the slash
     if (this.assetHost) {
       // Will convert https://cdn.example.org/ to https://cdn.example.org
@@ -42,22 +40,23 @@ class RuntimeCater extends EventEmitter {
     this.options = null; // Don't use options post configuration
   }
 
-  configureRuntimeDefaults(options) {
-    this.appRootPath = options.appRootPath || process.cwd();
+  configureRuntimeDefaults(config) {
+    this.appRootPath = config.appRootPath || process.cwd();
     this.caterRuntimePath = path.join(__dirname, '..');
-    this.buildPath = path.join(this.appRootPath, options.buildDirectory);
+    this.buildPath = path.join(this.appRootPath, config.buildDirectory);
   }
 
-  configureRuntime(options) {
-    this.serveStaticAssets = options.serveStaticAssets;
-    this.staticPath = path.join(this.buildPath, options.publicPath);
+  configureRuntime(config) {
+    this.serveStaticAssets = config.serveStaticAssets;
+    this.staticPath = path.join(this.buildPath, config.publicPath);
+
     this.loadManifests();
-    this.bundlePath = path.join(options.publicPath, this.clientManifest[options.bundleFilename]);
-    this.serverBundlePath = path.join(
-      this.buildPath,
-      this.serverManifest[options.serverBundleFilename]
-    );
-    this.cleanOptions();
+    const clientBundle = this.clientManifest[config.bundleFilename];
+    const serverBundle = this.serverManifest[config.serverBundleFilename];
+    this.bundlePath = path.join(config.publicPath, clientBundle);
+    this.serverBundlePath = path.join(this.buildPath, serverBundle);
+
+    this.cleanConfig();
   }
 
   handler() {

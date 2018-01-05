@@ -1,9 +1,9 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const DefaultOptions = require('./options-default.js');
+const { Config, RuntimeCater } = require('cater-runtime');
+const DefaultConfig = require('./config-default.js');
 const fs = require('fs');
 const path = require('path');
 const Plugins = require('./plugins.js');
-const { RuntimeCater } = require('cater-runtime');
 const SideConfiguration = require('./context-side.js');
 
 const events = {
@@ -15,32 +15,32 @@ const events = {
 };
 
 class BuildCater extends RuntimeCater {
-  constructor(providedOptions) {
-    const options = DefaultOptions(providedOptions);
-    super(options);
+  constructor(providedConfig) {
+    const config = Config(providedConfig, DefaultConfig());
+    super(config);
 
     this.configureBuildDefaults();
-    this.configuredPlugins = Plugins(this, options);
+    this.configuredPlugins = Plugins(this, config);
 
-    this.babel = options.babel;
-    this.entryScriptFilename = options.entryScriptFilename;
-    this.universalNames = options.universalNames;
+    this.babel = config.babel;
+    this.entryScriptFilename = config.entryScriptFilename;
+    this.universalNames = config.universalNames;
 
     // EVENT: I know we're already configuring, but this is for the benefit
     // of the plugins - which have only just been set up.
-    this.emit(events.configuring, this, options);
+    this.emit(events.configuring, this, config);
 
     // Set up the key paths and get the client and server sides ready
-    this.configurePaths(options);
-    this.configureSides(options);
+    this.configurePaths(config);
+    this.configureSides(config);
 
     // EVENT: Allow plugins to make changes at the end of the configuration
     // cycle
-    this.emit(events.configured, this, options);
-    this.cleanOptions();
+    this.emit(events.configured, this, config);
+    this.cleanConfig();
   }
 
-  configurePaths(options) {
+  configurePaths(config) {
     this.pluginPaths = Object.values(this.configuredPlugins)
       .map((v) => v.componentRootPath)
       .filter((v) => v);
@@ -53,10 +53,10 @@ class BuildCater extends RuntimeCater {
     ].filter((v) => fs.existsSync(v));
 
     this.staticPath = path.join(this.buildPath, this.publicPath);
-    this.universalPaths = this.generatePaths(options.universalNames);
+    this.universalPaths = this.generatePaths(config.universalNames);
 
     // This is used to set up serving directly from /static in dev mode
-    this.devStaticPath = path.join(this.appRootPath, options.staticDirectory);
+    this.devStaticPath = path.join(this.appRootPath, config.staticDirectory);
     if (fs.existsSync(this.devStaticPath)) this.devStaticPathExists = true;
   }
 
@@ -64,11 +64,11 @@ class BuildCater extends RuntimeCater {
     this.caterRootPath = path.join(__dirname, '..');
   }
 
-  configureSides(options) {
+  configureSides(config) {
     this.sides = {};
-    for (let i = 0; i < options.sideNames.length; i += 1) {
-      const name = options.sideNames[i];
-      this.sides[name] = new SideConfiguration(this, options, name);
+    for (let i = 0; i < config.sideNames.length; i += 1) {
+      const name = config.sideNames[i];
+      this.sides[name] = new SideConfiguration(this, config, name);
     }
   }
 

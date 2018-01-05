@@ -1,6 +1,7 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const clone = require('clone');
-const { DefaultOptions } = require('cater-runtime');
+const { DefaultConfig } = require('cater-runtime');
+const merge = require('deepmerge');
 
 const caterAssetPluginDefaults = {
   image: ['gif', 'jpeg', 'jpg', 'png', 'svg'],
@@ -24,10 +25,11 @@ const buildDefaults = {
 };
 
 // Combine the build-time defaults with the runtime ones from cater-runtime
-const runtimeDefaults = DefaultOptions();
-const defaultOptions = Object.assign(runtimeDefaults, buildDefaults);
+const runtimeDefaults = DefaultConfig();
+const defaultConfig = merge(runtimeDefaults, buildDefaults);
 
-function generate(provided = {}) {
-  return Object.assign(clone(defaultOptions), provided);
+function generate() {
+  return clone(defaultConfig);
 }
+
 module.exports = generate;

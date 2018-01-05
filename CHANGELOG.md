@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+* Revamped the options approach to use configuration objects. This is the start of allowing the build process to replace configuration boilerplate.
+
 ## [0.5.0] - 2018-01-01
 
 ### Added

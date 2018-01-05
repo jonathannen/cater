@@ -1,23 +1,20 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-
 import path from 'path';
-import RuntimeCater from 'cater-runtime';
+import { Config } from 'cater-runtime';
 
 const fixturesPath = path.join(__dirname, 'fixtures');
 
 describe('Testing the configuration module of Cater', () => {
   test('should load a configuration file if present', () => {
-    const file = path.join(fixturesPath, 'config.cater.simple.js');
-    const options = RuntimeCater.loadConfig(file);
-    expect(options.httpPort).toEqual(8080);
+    const config = Config({ appRootPath: fixturesPath });
+    expect(config.httpPort).toEqual(3333);
   });
 
   test('should use the NODE_ENV environment variable for different configurations', () => {
-    const file = path.join(fixturesPath, 'config.cater.env.js');
-
+    // Uses httpPortX instead of httpPort to differeniate from other tests
     const expectPort = function expectPort(port) {
-      const options = RuntimeCater.loadConfig(file);
-      expect(options.httpPort).toEqual(port);
+      const config = Config({ appRootPath: fixturesPath });
+      expect(config.httpPortX).toEqual(port);
     };
 
     process.env.NODE_ENV = 'development';

@@ -1,6 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const BuildCater = require('./src');
-const RuntimeCater = require('cater-runtime');
 
 /**
  * Primary entry point for the build-versions of Cater. Returns an
@@ -9,19 +8,18 @@ const RuntimeCater = require('cater-runtime');
  * Example Usage (assumes cater-build installed):
  *
  *     const cater = require('cater');
- *     const app = cater(...options);
+ *     const app = cater(...config);
  *
  * See the cater/examples directory for more detail.
  *
  * @module cater-build
  */
-function index(options = {}) {
-  const caterOptions = Object.assign(RuntimeCater.loadConfig(), options);
-  const app = new BuildCater(caterOptions);
+function index(providedConfig = {}) {
+  const app = new BuildCater(providedConfig);
 
-  const babelOptions = app.sides.server.babel;
-  Object.assign(babelOptions, { cache: false, only: app.sides.server.paths });
-  require('babel-register')(babelOptions); // eslint-disable-line global-require
+  const babelConfig = app.sides.server.babel;
+  Object.assign(babelConfig, { cache: false, only: app.sides.server.paths });
+  require('babel-register')(babelConfig); // eslint-disable-line global-require
   return app;
 }
 

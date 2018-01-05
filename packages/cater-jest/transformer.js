@@ -8,10 +8,10 @@ const path = require('path');
 const CARET_PATHS = ['app/^', 'client/^', 'server/^'];
 const CARET_PATH_SEPARATOR = '?filename=';
 
-const babelOptions = new Cater().sides.server.babel;
-delete babelOptions.resolveModuleSource;
+const babelConfig = new Cater().sides.server.babel;
+delete babelConfig.resolveModuleSource;
 
-babelOptions.resolveModuleSource = function resolveModuleSource(source, filename) {
+babelConfig.resolveModuleSource = function resolveModuleSource(source, filename) {
   // Caret paths like server/^ need the context of the file attempting
   // the import. Since we can't pass it through, we put a forbidden path
   // separator in to send over the filename context.
@@ -39,4 +39,4 @@ babelOptions.resolveModuleSource = function resolveModuleSource(source, filename
   return source;
 };
 
-module.exports = babelJest.createTransformer(babelOptions);
+module.exports = babelJest.createTransformer(babelConfig);

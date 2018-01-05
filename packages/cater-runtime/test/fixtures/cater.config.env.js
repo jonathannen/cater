@@ -1,15 +1,13 @@
 module.exports = {
-  httpPort: 3001,
-
   env: {
     development: {
-      httpPort: 3002
+      httpPortX: 3002
     },
     test: {
-      httpPort: 3003
+      httpPortX: 3003
     },
     production: {
-      httpPort: 8080
+      httpPortX: 8080
     }
   }
 };

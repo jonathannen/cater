@@ -1,10 +1,12 @@
+// Copyright Jon Williams 2017-2018. See LICENSE file.
 const clone = require('clone');
-const OptionsBabel = require('./options-babel');
+const BabelConfig = require('./config-babel');
 
-const babel = OptionsBabel();
+const babel = BabelConfig();
 
 const defaultOptions = {
   babel,
+  babelRegisterDisable: false,
   assetHost: null,
   buildDirectory: 'build',
   bundleFilename: 'bundle.js',
@@ -16,8 +18,8 @@ const defaultOptions = {
   serveStaticAssets: true
 };
 
-function generate(provided = {}) {
-  return Object.assign(clone(defaultOptions), provided);
+function generate() {
+  return clone(defaultOptions);
 }
 
 module.exports = generate;
