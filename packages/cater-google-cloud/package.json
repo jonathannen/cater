@@ -1,6 +1,6 @@
 {
   "name": "cater-google-cloud",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Adds Google Cloud deployment and utilities to Cater",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
