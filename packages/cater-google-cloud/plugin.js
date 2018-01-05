@@ -84,7 +84,7 @@ function building(app, build, state) {
 module.exports = { ${assetDefinition}
   env: {
     production: {
-      httpPort: process.env.PORT || 8080
+      httpPort: parseInt(process.env.PORT, 10) || 8080
     }
   }
 }`
