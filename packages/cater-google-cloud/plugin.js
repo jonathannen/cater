@@ -42,7 +42,9 @@ function commandDeploy() {
 // Runs a command
 function runCommand(command, stdio = false) {
   const options = stdio ? { stdio: 'inherit' } : {};
-  console.log(command);
+
+  // Echo the command we're proposing to run
+  console.log(command); // eslint-disable-line no-console
   const result = spawnSync('sh', ['-c', command], options);
   if (result.status !== 0) {
     if (!stdio) {
