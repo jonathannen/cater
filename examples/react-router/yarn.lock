@@ -1077,11 +1077,11 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
 
-cater-assets@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/cater-assets/-/cater-assets-0.5.2.tgz#8552b95c26684d225c9bd40f7f1f81b1f34eb454"
+cater-assets@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/cater-assets/-/cater-assets-0.5.3.tgz#da0ffc4fd3748aec68063fbceb73c82df3726618"
   dependencies:
-    cater-build "^0.5.2"
+    cater-build "^0.5.3"
     css-loader "^0.28.7"
     extract-text-webpack-plugin "^3.0.2"
     file-loader "^1.1.6"
@@ -1089,15 +1089,15 @@ cater-assets@^0.5.2:
     sass-loader "^6.0.6"
     webpack "^3.10.0"
 
-cater-build@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/cater-build/-/cater-build-0.5.2.tgz#f18be974bd4fd44d5e4be439fe7011c6047f9240"
+cater-build@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/cater-build/-/cater-build-0.5.3.tgz#a45bc073f7ae84d27b5ebc1b536d2093cf47a68f"
   dependencies:
     babel-core "^6.26.0"
     babel-loader "^7.1.2"
-    cater-assets "^0.5.2"
-    cater-jest "^0.5.2"
-    cater-runtime "^0.5.2"
+    cater-assets "^0.5.3"
+    cater-jest "^0.5.3"
+    cater-runtime "^0.5.3"
     clone "^2.1.1"
     compression-webpack-plugin "^1.1.3"
     deepmerge "^2.0.1"
@@ -1108,9 +1108,9 @@ cater-build@^0.5.2:
     webpack-dev-middleware "^2.0.3"
     webpack-manifest-plugin "^1.3.2"
 
-cater-jest@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/cater-jest/-/cater-jest-0.5.2.tgz#bc04b66eb4637f6621e62a1de448a79231857817"
+cater-jest@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/cater-jest/-/cater-jest-0.5.3.tgz#1a74ad112822ff606cff39f06f935f219a2c9525"
   dependencies:
     babel-core "^6.26.0"
     babel-jest "^22.0.4"
@@ -1118,16 +1118,16 @@ cater-jest@^0.5.2:
     react "^16.2.0"
     react-test-renderer "^16.2.0"
 
-cater-react-router@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/cater-react-router/-/cater-react-router-0.5.2.tgz#a0ff7c7fe1e510af72280ffbc0c42528d9495d45"
+cater-react-router@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/cater-react-router/-/cater-react-router-0.5.3.tgz#4b3541d06ecb3eec0909115c143529d22421f7b5"
   dependencies:
-    cater-build "^0.5.2"
+    cater-build "^0.5.3"
     react-router-dom "^4.2.2"
 
-cater-runtime@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/cater-runtime/-/cater-runtime-0.5.2.tgz#2ef7a53f5fffe9e740af566b68f640226f2c5eb3"
+cater-runtime@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/cater-runtime/-/cater-runtime-0.5.3.tgz#c25628f0417f2b0e89e017247ab78b4e31eeca94"
   dependencies:
     babel-core "^6.26.0"
     babel-plugin-add-module-exports "^0.2.1"
@@ -1143,11 +1143,11 @@ cater-runtime@^0.5.2:
     react "^16.2.0"
     react-dom "^16.2.0"
 
-cater@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/cater/-/cater-0.5.2.tgz#fbc5bdcb09ce7c6b25c3da8baba603abe8184bd9"
+cater@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/cater/-/cater-0.5.3.tgz#d9ee7d6e5f5bf75202f8d0c5dd37bc005f2d529a"
   dependencies:
-    cater-runtime "^0.5.2"
+    cater-runtime "^0.5.3"
 
 center-align@^0.1.1:
   version "0.1.3"
