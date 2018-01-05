@@ -79,8 +79,8 @@
     to-fast-properties "^2.0.0"
 
 "@types/node@*":
-  version "8.5.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.5.tgz#6f9e8164ae1a55a9beb1d2571cfb7acf9d720c61"
+  version "0.12.14"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-0.12.14.tgz#117c531e3f49b0ecfa1b439495abe22517fdfa7f"
 
 abab@^1.0.3:
   version "1.0.4"
@@ -3963,8 +3963,8 @@ mime@^1.4.1:
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
 
 mime@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/mime/-/mime-2.1.0.tgz#1022a5ada445aa30686e4059abaea83d0b4e8f9c"
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-2.2.0.tgz#161e541965551d3b549fa1114391e3a3d55b923b"
 
 mimic-fn@^1.0.0:
   version "1.1.0"
