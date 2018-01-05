@@ -2,7 +2,7 @@
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "description": "Workspace for: Modular convention-driven framework for React and Friends.",
   "private": true,
-  "version": "0.5.2",
+  "version": "0.5.3",
   "workspaces": [
     "packages/*"
   ],
@@ -16,6 +16,10 @@
       "<rootDir>/examples/*",
       "<rootDir>/packages/*",
       "<rootDir>/packages/cater-build/integration/*"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/examples/"
     ]
   },
   "dependencies": {
