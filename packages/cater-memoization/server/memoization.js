@@ -31,7 +31,8 @@ class Memoization extends Component {
       cache[this.props.cacheKey] = result;
     }
 
-    return <span dangerouslySetInnerHTML={{ __html: result }} />; // eslint-disable-line react/no-danger
+    // eslint-disable-next-line react/no-danger
+    return <span dangerouslySetInnerHTML={{ __html: result }} />;
   }
 }
 
