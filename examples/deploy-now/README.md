@@ -2,8 +2,6 @@
 
 Example for deployment to Zeit [Now](https://zeit.co/now) Service.
 
-You can see this example running on Now at [https://now-mmtjcwkqne.now.sh/](https://now-mmtjcwkqne.now.sh/).
-
 ## Instructions
 
 Fortunately, Now makes life really simple.

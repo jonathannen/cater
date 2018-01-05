@@ -15,7 +15,7 @@ const defaultOptions = {
   publicPath: '/static/',
   renderer: 'react',
   serverBundleFilename: 'server-bundle.js',
-  serveStaticAssets: true
+  serveStaticAssets: null // Will default to true unless assetHost is seet
 };
 
 function generate() {

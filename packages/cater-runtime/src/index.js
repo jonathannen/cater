@@ -47,7 +47,14 @@ class RuntimeCater extends EventEmitter {
   }
 
   configureRuntime(config) {
-    this.serveStaticAssets = config.serveStaticAssets;
+    // If static assets is set, this overrides everything else. Otherwise
+    // if the CDN (assetHost) is configured, the serving is off - on otherwise.
+    if (config.serveStaticAssets) {
+      this.serveStaticAssets = true;
+    } else {
+      this.serveStaticAssets = !this.assetHost;
+    }
+
     this.staticPath = path.join(this.buildPath, config.publicPath);
 
     this.loadManifests();

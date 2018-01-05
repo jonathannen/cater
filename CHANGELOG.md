@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Included the packages/cater-memoization plugin as an example of a Universal Component. This performs memoization (caching) of child content on the server-side. Also included examples/memoization to demonstrate the component.
 * Added a deployment example for the Zeit Now service.
 
+### Fixed
+
+* The Static Server shouldn't run in production if a CDN is configured.
+
 ## [0.5.2] - 2018-01-04
 
 ### Changed
