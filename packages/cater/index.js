@@ -18,8 +18,7 @@
 
 // Determine if we're using the runtime or build versions of cater. Returns
 // that module, depending on the setup.
-const mode =
-  process.env.CATER_MODE || (process.env.NODE_ENV === 'production' ? 'runtime' : 'build');
+const mode = process.env.CATER_MODE || (process.env.NODE_ENV === 'production' ? 'runtime' : 'dev');
 const runtime = mode === 'runtime';
 const moduleName = runtime ? 'cater-runtime' : 'cater-build';
 

@@ -61,8 +61,10 @@ class Config {
 
   loadConfigurationFiles() {
     // Determine which directories to traverse
-    const directories =
-      this.mode === 'runtime' ? [this.buildPath, this.appRootPath] : [this.appRootPath];
+    const includeBuildConfig = ['deploy', 'runtime'].includes(this.mode);
+    const directories = includeBuildConfig
+      ? [this.buildPath, this.appRootPath]
+      : [this.appRootPath];
 
     const files = directories
       .map((directory) => {

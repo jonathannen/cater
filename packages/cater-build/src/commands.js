@@ -1,8 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const fs = require('fs-extra');
-const path = require('path');
 const Runtime = require('cater-runtime');
-const webpackBuild = require('./webpack-build');
 
 /**
  * Mixin that enables CLI-commands directly in the Cater App. Enabled
@@ -22,16 +19,7 @@ const webpackBuild = require('./webpack-build');
 
 // Returns a promise to a production build of the application.
 function runBuild() {
-  return fs
-    .remove(this.buildPath)
-    .then(() => {
-      if (this.devStaticPathExists) {
-        const prodStaticPath = path.join(this.buildPath, this.publicPath);
-        return fs.copy(this.devStaticPath, prodStaticPath);
-      }
-      return Promise.resolve(true);
-    })
-    .then(() => webpackBuild(this));
+  return this.build();
 }
 
 // Used as a hook to signal deployment - particularly to any plugins.

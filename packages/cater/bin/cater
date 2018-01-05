@@ -5,7 +5,7 @@
 // Available commands, mapped to their mode
 const commands = {
   build: 'build',
-  deploy: 'build',
+  deploy: 'deploy',
   dev: 'dev',
   start: 'runtime'
 };

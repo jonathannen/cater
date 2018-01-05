@@ -1,12 +1,16 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
+const Build = require('./build');
 const { Config, RuntimeCater } = require('cater-runtime');
 const DefaultConfig = require('./config-default.js');
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const Plugins = require('./plugins.js');
 const SideConfiguration = require('./context-side.js');
+const webpackBuild = require('./webpack-build');
 
 const events = {
+  building: 'building',
+  built: 'built',
   configuring: 'configuring',
   configured: 'configured',
   deploying: 'deploying',
@@ -38,6 +42,28 @@ class BuildCater extends RuntimeCater {
     // cycle
     this.emit(events.configured, this, config);
     this.cleanConfig();
+  }
+
+  // Returns a build as a Promise object
+  build() {
+    const currentBuild = new Build(this.buildPath);
+
+    return fs
+      .remove(this.buildPath) // rm -rf ./build
+      .then(() => fs.mkdirp(this.buildPath)) // mkdir ./build
+      .then(() => {
+        this.emit(events.building, this, currentBuild);
+        if (this.devStaticPathExists) {
+          const prodStaticPath = path.join(this.buildPath, this.publicPath);
+          return fs.copy(this.devStaticPath, prodStaticPath); // cp -r ./static ./build/static
+        }
+        return Promise.resolve(true);
+      })
+      .then(() => webpackBuild(this)) // webpack -out ./build
+      .then(() => {
+        this.emit(events.built, this, currentBuild);
+        return Promise.resolve(currentBuild);
+      });
   }
 
   configurePaths(config) {

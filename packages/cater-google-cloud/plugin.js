@@ -54,6 +54,33 @@ function checkCommandInstalled(command, throwError, reason) {
   }
 }
 
+// Called when the Cater App is being built
+function building(app, build) {
+  build.emitConfigurationFile(
+    'cater-google-cloud',
+    `
+module.exports = {
+  assetHostGoogleCloudStorage: 'gs://*',
+  env: {
+    production: {
+      httpPort: process.env.PORT || 8080
+    }
+  }
+}`
+  );
+}
+
+// Copyright Jon Williams 2017-2018. See LICENSE file.
+
+// module.exports = {
+//   assetHostGoogleCloudStorage: 'gs://*',
+//   env: {
+//     production: {
+//       httpPort: process.env.PORT || 8080 // App Engine supplies via an ENV variable.
+//     }
+//   }
+// };
+
 // Called when the Cater (Build-Time) App is about to be configured.
 function configured(app, options, currentState) {
   const state = currentState;
@@ -96,7 +123,7 @@ function configured(app, options, currentState) {
   return state;
 }
 
-module.exports = function plugin(app) {
+module.exports = function plugin(caterApp) {
   const state = {
     bucket: null,
     buildPath: null,
@@ -104,15 +131,17 @@ module.exports = function plugin(app) {
     usingCloudStorageCDN: false
   };
 
-  app.once('configured', (a, options) => configured(a, options, state));
+  caterApp.on('building', building);
 
-  app.on('deploying', (a) => {
+  caterApp.once('configured', (app, options) => configured(app, options, state));
+
+  caterApp.on('deploying', (app) => {
     if (state.usingCloudStorageCDN) {
       // eslint-disable-next-line no-console
       console.log(`    Deploying CDN assets using gsutil to bucket ${state.bucketName}...`);
 
       // Convert the manifest into a file that can be piped to the gsutil command
-      const files = Object.values(a.loadManifests());
+      const files = Object.values(app.loadManifests());
       const list = files
         .map((name) => {
           const filename = path.join(state.staticPath, name);
