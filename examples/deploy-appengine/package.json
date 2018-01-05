@@ -11,7 +11,7 @@
     "dev": "cater dev",
     "test": "jest",
     "build": "cater build",
-    "start": "cater start",
+    "start": "NODE_ENV=production cater start",
     "deploy": "cater deploy",
     "browse": "gcloud app browse -s hello-from-cater"
   },

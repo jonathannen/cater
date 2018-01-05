@@ -10,7 +10,7 @@
   "scripts": {
     "build": "cater build",
     "dev": "cater dev",
-    "start": "cater start",
+    "start": "NODE_ENV=production cater start",
     "test": "jest"
   },
   "devDependencies": {

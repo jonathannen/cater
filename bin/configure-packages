@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const clone = require("clone");
-const fs = require("fs");
-const path = require("path");
+const clone = require('clone');
+const fs = require('fs');
+const path = require('path');
 
 // Packages that are optionally installed in a example or package directory
-const WHITELIST_PACKAGES = ["express"];
+const WHITELIST_PACKAGES = ['express'];
 
 KEY_VERSIONS = {
-  "babel-core": "^6.26.0",
-  jest: "^22.0.4",
-  webpack: "^3.10.0"
+  'babel-core': '^6.26.0',
+  jest: '^22.0.4',
+  webpack: '^3.10.0'
 };
 
 const readPackageFile = function(...args) {
@@ -22,7 +22,7 @@ const readPackageFile = function(...args) {
 };
 
 // Get the version from the top level package.json
-const masterPackage = readPackageFile(__dirname, "..", "package.json");
+const masterPackage = readPackageFile(__dirname, '..', 'package.json');
 const version = masterPackage.version;
 
 const updatePackageFile = function(...args) {
@@ -34,28 +34,28 @@ const updatePackageFile = function(...args) {
   // Get whitelist dependencies
   const deps = Object.assign({}, package.dependencies);
   const devs = Object.assign({}, package.devDependencies);
-  const addDeps = WHITELIST_PACKAGES.filter(x => Object.keys(deps).includes(x));
-  const addDevs = Object.keys(package.devDependencies || {}).filter(k => k.startsWith("cater-"));
+  const addDeps = WHITELIST_PACKAGES.filter((x) => Object.keys(deps).includes(x));
+  const addDevs = Object.keys(package.devDependencies || {}).filter((k) => k.startsWith('cater-'));
 
   const updatedPackage = fn(package);
 
   // Add back in whitelisted dependencies
-  addDeps.forEach(name => (updatedPackage.dependencies[name] = deps[name]));
-  addDevs.forEach(name => (updatedPackage.devDependencies[name] = devs[name]));
+  addDeps.forEach((name) => (updatedPackage.dependencies[name] = deps[name]));
+  addDevs.forEach((name) => (updatedPackage.devDependencies[name] = devs[name]));
 
   // Update deps and devDeps
-  [updatedPackage.dependencies, updatedPackage.devDependencies].forEach(d => {
+  [updatedPackage.dependencies, updatedPackage.devDependencies].forEach((d) => {
     if (!d) return; // // Not specified in this package
 
     // Update packages like babel, jest to the master version number
     Object.keys(KEY_VERSIONS)
-      .filter(k => !!d[k])
-      .forEach(k => (d[k] = KEY_VERSIONS[k]));
+      .filter((k) => !!d[k])
+      .forEach((k) => (d[k] = KEY_VERSIONS[k]));
 
     // Lock all cater-* packages to the same version
     Object.keys(d)
-      .filter(k => k.startsWith("cater-"))
-      .forEach(k => (d[k] = `^${version}`));
+      .filter((k) => k.startsWith('cater-'))
+      .forEach((k) => (d[k] = `^${version}`));
   });
 
   fs.writeFileSync(packageFile, JSON.stringify(updatedPackage, null, 2));
@@ -64,47 +64,47 @@ const updatePackageFile = function(...args) {
 
 // Package template used for examples/*/package.json
 const exampleTemplate = {
-  author: "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
-  license: "MIT",
+  author: 'Jon Williams <jon@jonathannen.com> https://jonathannen.com',
+  license: 'MIT',
   version: version,
   private: true,
   dependencies: {
     cater: `^${version}`
   },
   devDependencies: {
-    "cater-build": `^${version}`,
-    "cater-jest": `^${version}`,
-    jest: "^22.0.4",
-    supertest: "^3.0.0"
+    'cater-build': `^${version}`,
+    'cater-jest': `^${version}`,
+    jest: '^22.0.4',
+    supertest: '^3.0.0'
   }
 };
 
 // Package template used for packages/*/package.json
 const packageTemplate = {
-  author: "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
-  license: "MIT",
+  author: 'Jon Williams <jon@jonathannen.com> https://jonathannen.com',
+  license: 'MIT',
   version: masterPackage.version,
   scripts: {
-    test: "jest"
+    test: 'jest'
   }
 };
 
 // Scripts added to examples/*/package.json - if not present already
 const scripts = {
-  build: "cater build",
-  dev: "cater dev",
-  start: "cater start",
-  test: "jest"
+  build: 'cater build',
+  dev: 'cater dev',
+  start: 'NODE_ENV=production cater start',
+  test: 'jest'
 };
 
 // Example Packages
-const exampleDirectory = path.join(__dirname, "..", "examples");
-fs.readdirSync(exampleDirectory).forEach(directory => {
-  const result = updatePackageFile(exampleDirectory, directory, "package.json", pkg => {
+const exampleDirectory = path.join(__dirname, '..', 'examples');
+fs.readdirSync(exampleDirectory).forEach((directory) => {
+  const result = updatePackageFile(exampleDirectory, directory, 'package.json', (pkg) => {
     pkg.name = directory;
     pkg = Object.assign(pkg, clone(exampleTemplate));
 
-    Object.keys(scripts).forEach(k => {
+    Object.keys(scripts).forEach((k) => {
       if (!!pkg.scripts[k]) return;
       pkg.scripts[k] = scripts[k];
     });
@@ -114,9 +114,9 @@ fs.readdirSync(exampleDirectory).forEach(directory => {
 });
 
 // Regular Packages
-const packageDirectory = path.join(__dirname, "..", "packages");
-fs.readdirSync(packageDirectory).forEach(directory => {
-  const result = updatePackageFile(packageDirectory, directory, "package.json", pkg => {
+const packageDirectory = path.join(__dirname, '..', 'packages');
+fs.readdirSync(packageDirectory).forEach((directory) => {
+  const result = updatePackageFile(packageDirectory, directory, 'package.json', (pkg) => {
     pkg.name = directory;
     return Object.assign(pkg, clone(packageTemplate));
   });
