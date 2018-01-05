@@ -3,14 +3,16 @@ const cater = require('cater');
 const server = require('./server');
 
 const app = cater();
+const port = app.httpPort || 3000;
 
 app
   .handler()
   .then((handler) => {
     server.get('*', handler);
-    server.listen((port, err) => {
+    server.listen(port, (err) => {
       if (err) throw err;
-      console.log(`Listening at http://localhost:${port}`); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.log(`Express+Cater listening at http://localhost:${port}`);
     });
   })
   .catch((err) => {
