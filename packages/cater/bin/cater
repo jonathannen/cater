@@ -2,6 +2,10 @@
 
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 
+// Command-line interface for cater. For detail on how this works, run
+//
+//    cater --help
+
 // Available commands, mapped to their mode
 const commands = {
   build: 'build',
@@ -27,8 +31,9 @@ if (commandList.includes(command)) {
   process.env.CATER_MODE = mode;
 
   const Cater = require('cater'); // eslint-disable-line global-require
-  const app = Cater({ mode });
   Cater.readyCommandLine();
+
+  const app = Cater({ mode });
   app[commandFunctionName]().catch(catchFatal);
 } else {
   // eslint-disable-next-line no-console
@@ -37,7 +42,9 @@ if (commandList.includes(command)) {
 
     Usage:
         cater build
+        cater deploy
         cater dev
+        cater start
         cater --help
 
     Options:
