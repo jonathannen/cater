@@ -1,0 +1,24 @@
+{
+  "name": "memoization",
+  "version": "0.5.2",
+  "description": "Demonstrates the Memoization plugin for Cater",
+  "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+  "license": "MIT",
+  "dependencies": {
+    "cater": "^0.5.2"
+  },
+  "scripts": {
+    "build": "cater build",
+    "dev": "cater dev",
+    "start": "cater start",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "cater-build": "^0.5.2",
+    "cater-jest": "^0.5.2",
+    "cater-memoization": "^0.5.2",
+    "jest": "^22.0.4",
+    "supertest": "^3.0.0"
+  },
+  "private": true
+}

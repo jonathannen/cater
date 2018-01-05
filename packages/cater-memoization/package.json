@@ -1,0 +1,19 @@
+{
+  "name": "cater-memoization",
+  "version": "0.5.2",
+  "description": "Provides memoization for React components in Universal Applications",
+  "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+  "license": "MIT",
+  "homepage": "https://github.com/clashbit/cater",
+  "main": "plugin.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "peerDependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
+  "devDependencies": {
+    "jest": "^22.0.4"
+  }
+}

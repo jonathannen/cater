@@ -74,6 +74,10 @@ class RuntimeCater extends EventEmitter {
       const HandlerStatic = require('./handler-static'); // eslint-disable-line global-require
       const aStatic = HandlerStatic(this.publicPath, this.staticPath, this.clientManifest);
       handlers = [aStatic, cater, Middleware.handlerNotFound];
+
+      // If you need to enable logging in production.
+      // const logging = require('./handler-logging')(); // eslint-disable-line global-require
+      // handlers = [logging, aStatic, cater, Middleware.handlerNotFound];
     }
 
     return Promise.resolve(Middleware(handlers));
