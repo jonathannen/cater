@@ -1107,6 +1107,10 @@ cater-build@^0.4.2:
     webpack-dev-middleware "^2.0.3"
     webpack-manifest-plugin "^1.3.2"
 
+cater-google-cloud@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/cater-google-cloud/-/cater-google-cloud-0.4.2.tgz#126430796ba45fbc9242054d2208dcd7cbfccc97"
+
 cater-jest@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/cater-jest/-/cater-jest-0.4.2.tgz#9278921ac97d03a9a0694f2923a05919e22759ea"

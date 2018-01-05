@@ -35,11 +35,12 @@ function generateBabelAssetTransform(state) {
 
           // Convert the import in to setting a variable with the asset path
           let content = state.manifest[basename];
-          content = content ? path.join(state.publicPath, content) : importName;
-
-          // Is a CDN configured?
-          if (state.assetHost) {
-            content = `${state.assetHost}${content}`;
+          if (content) {
+            // changes this to:
+            // https://yourcnd.example.org/static/name.21323131.jpg
+            content = state.assetHost + state.publicPath + content;
+          } else {
+            content = importName; // Hmmm. Not found. Good luck...
           }
 
           const id = declaration.node.specifiers[0].local.name;
@@ -62,7 +63,7 @@ function generateWebpackImageRule(state) {
       {
         loader: 'file-loader',
         options: {
-          publicPath: state.publicPath,
+          publicPath: state.assetHost + state.publicPath,
           name: '[name].[hash].[ext]',
           emitFile: true
         }
@@ -86,13 +87,12 @@ function generateWebpackStylesheetRule(state) {
 /**
  * Configures Cater with an asset processing pipeline.
  */
-module.exports = function plugin(cater, options) {
+module.exports = function plugin(caterApp, options) {
   // Work out the extensions for different asset classes
   const state = {
-    assetHost: cater.assetHost,
-    // debug: !!cater.debug, // TODO
+    assetHost: caterApp.assetHost,
     imageExtensions: options.image || [],
-    publicPath: cater.publicPath,
+    publicPath: caterApp.publicPath,
     manifest: {},
     stylesheetExtensions: options.stylesheet || []
   };
@@ -103,26 +103,34 @@ module.exports = function plugin(cater, options) {
     filename: '[name].[contenthash].css'
   });
 
-  // Set up the babel transform for all assets. This will turn
-  // import myNameGif from 'assets/name.gif' to myNameGif = path-to-file.
-  const babelTransform = generateBabelAssetTransform(state);
-  const imageRule = generateWebpackImageRule(state);
-  const cssRule = generateWebpackStylesheetRule(state);
-
   // When webpack compiles, grab the manifests for use by the babel
   // transformed. This will enable the transform to return the real asset
   // path.
-  cater.on('webpack-compiled', (_, stats) => {
+  caterApp.on('webpack-compiled', (_, stats) => {
     const manifestSource = stats.compilation.assets['manifest.json'].source();
     state.manifest = JSON.parse(manifestSource);
   });
 
-  cater.on('configured', () => {
-    const config = cater.sides.client.webpackConfig;
-    config.module.rules.push(imageRule);
-    config.module.rules.push(cssRule);
-    config.plugins.push(state.extractCssPlugin);
+  caterApp.on('configured', (app) => {
+    // Update state based upon any changes
+    state.assetHost = app.assetHost || '';
 
-    cater.sides.server.babel.plugins.push([babelTransform, {}]);
+    const babelTransform = generateBabelAssetTransform(state);
+    const imageRule = generateWebpackImageRule(state);
+    const cssRule = generateWebpackStylesheetRule(state);
+
+    // Alter the client and server-side webpack configurations
+    const webpack = app.sides.client.webpackConfig;
+    webpack.module.rules.push(imageRule);
+    webpack.module.rules.push(cssRule);
+    webpack.plugins.push(state.extractCssPlugin);
+
+    // Update webpack with the CDN if necessary
+    if (state.assetHost.length > 0) {
+      webpack.output.publicPath = state.assetHost + webpack.output.publicPath;
+    }
+
+    // Update Server side to handle images
+    app.sides.server.babel.plugins.push([babelTransform, {}]);
   });
 };

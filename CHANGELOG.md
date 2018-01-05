@@ -7,11 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.5.2] - 2018-01-04
+
 ### Changed
 
 * Revamped the options approach to use configuration objects. This is the start of allowing the build process to replace configuration boilerplate.
+* Removed the App Engine example and replaced it with the "Extended" example instead.
 
-## [0.5.0] - 2018-01-01
+### Fixed
+
+* CDN support in the Google App Engine example wasn't working. Need to be careful which plugins active at different stages of the build-deploy cycles.
+
+## [0.5.0] - 2018-01-03
 
 ### Added
 

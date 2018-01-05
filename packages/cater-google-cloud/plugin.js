@@ -4,7 +4,19 @@ const fs = require('fs');
 const path = require('path');
 
 /**
+ * # Let's Cater on Google Cloud
+ *
  * Utilities and other tools for deploying Cater applications to Google Cloud.
+ *
+ * Configuration Options:
+ *
+ *    **assetHostGoogleCloudStorage**
+ *    Sets the bucket you wish to deploy to as a CDN. Typically will be
+ *    "gs://name-of-your-bucket". Will default to
+ *    "gs://<project-id>-<application-package-name>/"
+ *
+ *    **disableGoogleCloudStorageCDN**
+ *    If true, the Google Cloud Storage CDN isn't used.
  *
  * @module cater-google-cloud
  */
@@ -30,6 +42,7 @@ function commandDeploy() {
 // Runs a command
 function runCommand(command, stdio = false) {
   const options = stdio ? { stdio: 'inherit' } : {};
+  console.log(command);
   const result = spawnSync('sh', ['-c', command], options);
   if (result.status !== 0) {
     if (!stdio) {
@@ -55,12 +68,18 @@ function checkCommandInstalled(command, throwError, reason) {
 }
 
 // Called when the Cater App is being built
-function building(app, build) {
+function building(app, build, state) {
+  let assetDefinition = '';
+  if (state.bucket !== null) {
+    assetDefinition = `
+  assetHostGoogleCloudStorage: '${state.bucket}',
+  assetHost: '${state.assetHost}',`;
+  }
+
   build.emitConfigurationFile(
     'cater-google-cloud',
-    `
-module.exports = {
-  assetHostGoogleCloudStorage: 'gs://*',
+    ` // Configures defaults required by Google Cloud App Engine
+module.exports = { ${assetDefinition}
   env: {
     production: {
       httpPort: process.env.PORT || 8080
@@ -70,29 +89,18 @@ module.exports = {
   );
 }
 
-// Copyright Jon Williams 2017-2018. See LICENSE file.
-
-// module.exports = {
-//   assetHostGoogleCloudStorage: 'gs://*',
-//   env: {
-//     production: {
-//       httpPort: process.env.PORT || 8080 // App Engine supplies via an ENV variable.
-//     }
-//   }
-// };
-
 // Called when the Cater (Build-Time) App is about to be configured.
-function configured(app, options, currentState) {
+function configuring(app, config, currentState) {
   const state = currentState;
   checkCommandInstalled('gcloud', false, 'deploying to App Engine');
   state.buildPath = app.buildPath;
-  state.staticPath = app.staticPath;
+  state.bucket = null;
 
   // Are we using Google Cloud Storage as a CDN? If so set it up.
-  state.bucket = options.assetHostGoogleCloudStorage;
-  if (state.bucket) {
-    checkCommandInstalled('gsutil', false, 'using Google Cloud Storage as a CDN');
+  if (config.disableGoogleCloudStorageCDN !== true) {
     state.usingCloudStorageCDN = true;
+    state.bucket = config.assetHostGoogleCloudStorage || 'gs://*';
+    checkCommandInstalled('gsutil', false, 'using Google Cloud Storage as a CDN');
 
     // gs://* will use a bucket name of gs://<default-project-id>-<current-package-name>
     if (state.bucket === 'gs://*') {
@@ -102,19 +110,22 @@ function configured(app, options, currentState) {
         .trim();
       state.bucketName = `${defaultProject}-${name}`;
       state.bucket = `gs://${state.bucketName}`;
-      state.bucketPath = `${state.bucket}${app.publicPath}`;
     } else {
       state.bucketName = state.bucket.replace(/^gs:\/\//, '').trim();
     }
 
+    // Turns gs://some-bucket-name to gs://some-bucket-name/static
+    state.bucketPath = `${state.bucket}${app.publicPath}`;
+
     // Is asset host already defined?
-    if (app.assetHost) {
+    const bucketHost = `https://storage.googleapis.com/${state.bucketName}`;
+    if (app.assetHost && app.assetHost !== bucketHost) {
       // eslint-disable-next-line no-console
       console.log(
         "Warn: You have defined both an asset host and a Google Cloud Storage Bucket in your configuration. Usually you only want one or the other. We'll set the asset host based upon the bucket."
       );
     } else {
-      state.assetHost = `https://storage.googleapis.com/${state.bucketName}`;
+      state.assetHost = bucketHost;
       // eslint-disable-next-line no-param-reassign
       app.assetHost = state.assetHost;
     }
@@ -124,6 +135,9 @@ function configured(app, options, currentState) {
 }
 
 module.exports = function plugin(caterApp) {
+  // Nothing to do unless we're building or deploying
+  if (!['build', 'deploy'].includes(caterApp.mode)) return;
+
   const state = {
     bucket: null,
     buildPath: null,
@@ -131,11 +145,12 @@ module.exports = function plugin(caterApp) {
     usingCloudStorageCDN: false
   };
 
-  caterApp.on('building', building);
-
-  caterApp.once('configured', (app, options) => configured(app, options, state));
+  caterApp.once('building', (app, build) => building(app, build, state));
+  caterApp.once('configuring', (app, config) => configuring(app, config, state));
 
   caterApp.on('deploying', (app) => {
+    state.staticPath = app.staticPath;
+
     if (state.usingCloudStorageCDN) {
       // eslint-disable-next-line no-console
       console.log(`    Deploying CDN assets using gsutil to bucket ${state.bucketName}...`);
