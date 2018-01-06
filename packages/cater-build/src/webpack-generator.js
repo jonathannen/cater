@@ -118,7 +118,15 @@ function generate(context, side) {
   const resolve = {
     plugins: [
       {
+        // TODO: Not quite happy with how this turned out. We don't get to see
+        // that the import in the (say) assets/blah.scss file is actually
+        // 'assets/cat.png' rather than './assets/cat.png'. This covers the
+        // case, but not very neatly to my liking.
         apply: (resolver) => {
+          // Universal imports from the assets directory (say in SCSS files).
+          // Get clobbered into relative paths. Which then become
+          // <appRootPath>/assets/assets/cat.png rather than just assets. This
+          // Hook fixes that issue then it comes around.
           resolver.plugin('file', (ctx, callback) => {
             if (!ctx.path.includes('/assets/assets/') || fs.existsSync(ctx.path)) return callback();
             ctx.path = ctx.path.replace('/assets/assets/', '/assets/');
