@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* Build-time Cater now handles reloading of server-side modules correctly. Added a file watcher that will reload when server-modules change (de-bounced to 1s intervals).
+
 ### Fixed
 
 * Build-time Cater Handler no longer uses a hardcoded regex to unload module names.
