@@ -1,0 +1,21 @@
+@import 'body.scss';
+// $bg-img: url('./cat-tiny.jpg');
+
+body {
+  // background-image: $bg-img;
+}
+
+body > div {
+  background: $background-color;
+  margin: 0 auto;
+  max-width: 600px;
+  padding: 20px;
+}
+
+a {
+  color: $primary-color;
+}
+
+h1 {
+  font-weight: 200;
+}

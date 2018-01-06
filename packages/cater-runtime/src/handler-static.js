@@ -65,8 +65,11 @@ function generateFileList(publicPath, staticPath, manifest) {
 
       // Is this a digested file?
       if (entry.manifest) {
-        // eslint-disable-next-line prefer-destructuring
-        entry.digest = entry.manifest[1].match(/\.([a-f0-9]+)\.[^.]+/)[1];
+        const match = entry.manifest[1].match(/\.([a-f0-9]+)\.[^.]+/);
+        if (match && match.length > 1) {
+          // eslint-disable-next-line prefer-destructuring
+          entry.digest = match[1];
+        }
       }
     });
   }

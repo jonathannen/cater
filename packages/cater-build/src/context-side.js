@@ -2,10 +2,10 @@
 const clone = require('clone');
 const fs = require('fs');
 const path = require('path');
+const querystring = require('querystring');
 const webpackGenerator = require('./webpack-generator');
 
 const ASSET_PATH = 'assets'; // TODO
-const CARET_PATH_SEPARATOR = '?filename='; // TODO
 
 /**
  * Resolves the given partial filename source name "app/blah" in the given
@@ -102,12 +102,24 @@ class SideConfiguration {
    * through. However, examples like app/app will resolve according to the
    * path rules of this side.
    */
-  resolveBabel(source, filename) {
-    // Hackery from jest to get the filename context. We could use a
-    // querystring approach, but no need just yet.
-    if (!filename && source.includes(CARET_PATH_SEPARATOR)) {
-      // eslint-disable-next-line no-param-reassign
-      [source, filename] = source.split(CARET_PATH_SEPARATOR);
+  resolveBabel(providedSource, filename) {
+    let source = providedSource;
+
+    // Does this have a querystring? If so there might be other actions to
+    // perform. One is hackery from jest that let's use obtain the filename
+    // context that is otherwise lost.
+    if (this.sideName === 'server') {
+      if (source.includes('?')) {
+        const [, start, end] = providedSource.split(/^(.*)\?(.*)$/);
+        const query = querystring.parse(end);
+        source = start;
+
+        // Some jest plumbing will pass in 'module.js?filename=xxxx' to
+        // get the filename context. This is necessary for cater-style univeral
+        // wrappering.
+        // eslint-disable-next-line no-param-reassign, prefer-destructuring
+        if (!filename && query.filename) filename = query.filename;
+      }
     }
 
     // Handle /asset/* imports for Webpack
