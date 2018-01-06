@@ -120,6 +120,16 @@ class BuildCater extends RuntimeCater {
     return Middleware(this);
   }
 
+  // Returns all the "sides" of this application, as an array of string. This
+  // will typically return `['app', 'client', 'server', 'assets']`.
+  listSides() {
+    // Assets hardcoded. See https://github.com/clashbit/cater/issues/1
+    return Object.values(this.sides)
+      .map((s) => s.name)
+      .concat(this.universalNames)
+      .concat('assets');
+  }
+
   package(bail = false) {
     const packageFile = path.join(this.appRootPath, 'package.json');
     if (!fs.existsSync(packageFile)) {

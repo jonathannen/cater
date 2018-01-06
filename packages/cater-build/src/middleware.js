@@ -9,22 +9,14 @@ const { Middleware } = require('cater-runtime');
  * Similar to the production cater-runtime middleware, but adds in logging and
  * the webpack compilation process.
  */
-function generate(context) {
-  const { client, server } = context.sides;
-
-  const cater = handlerCater(
-    context.renderer,
-    server.entryPath,
-    client.bundlePath,
-    context.publicPath,
-    context.assetHost
-  );
+function generate(app) {
+  const cater = handlerCater(app);
   const logging = HandlerLogging();
 
-  return handlerWebpack(context, cater.reload).then((webpack) => {
+  return handlerWebpack(app, cater.reload).then((webpack) => {
     const handlers = [logging, cater, webpack, Middleware.notFoundHandler];
-    if (context.devStaticPathExists) {
-      const aStatic = handlerStatic(context.publicPath, context.devStaticPath);
+    if (app.devStaticPathExists) {
+      const aStatic = handlerStatic(app.publicPath, app.devStaticPath);
       handlers.splice(1, 0, aStatic);
     }
     return Middleware(handlers);
