@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+* Build-time Cater Handler no longer uses a hardcoded regex to unload module names.
+
 ## [0.5.3] - 2018-01-04
 
 ### Added

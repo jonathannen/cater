@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const { HandlerCater } = require("cater-runtime");
+const { HandlerCater } = require('cater-runtime');
 
 /**
  * Creates a handler with the given entry point (file that loads server
@@ -19,16 +19,16 @@ function generate(app) {
   // rather than fewer is better than the reverse.
   const sideMatches = app
     .listSides()
-    .map(v => `\\/${v}\\/`)
-    .join("|");
+    .map((v) => `\\/${v}\\/`)
+    .join('|');
   const caterModuleNameRegExp = new RegExp(`.+(${sideMatches}).+`);
 
   // Unloads cater-based modules from the regular node require cache. This is used
   // to trigger a reload of server-side code.
   function unloadCaterBasedModules() {
     const moduleNames = Object.keys(require.cache);
-    const unloadList = moduleNames.filter(v => v.match(caterModuleNameRegExp));
-    unloadList.forEach(v => delete require.cache[v]);
+    const unloadList = moduleNames.filter((v) => v.match(caterModuleNameRegExp));
+    unloadList.forEach((v) => delete require.cache[v]);
     return true;
   }
 
@@ -39,15 +39,15 @@ function generate(app) {
     try {
       handler.load();
 
-      if (!handler.App || typeof handler.App !== "function") {
+      if (!handler.App || typeof handler.App !== 'function') {
         throw new Error(
           "Didn't find an App component. Make sure you have a React component in app/app.js."
         );
       }
 
-      if (!handler.Layout || typeof handler.Layout !== "function") {
+      if (!handler.Layout || typeof handler.Layout !== 'function') {
         throw new Error(
-          "Hmm. Found a empty Layout component. Have you got a blank component in app/layout.js?"
+          'Hmm. Found a empty Layout component. Have you got a blank component in app/layout.js?'
         );
       }
 

@@ -1,0 +1,38 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "name": "Run Jest",
+      "program": "${workspaceRoot}/node_modules/jest-cli/bin/jest.js",
+      "args": [
+        "-i"
+      ],
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/examples/show-assets",
+      "name": "Show Assets",
+      "program": "${workspaceRoot}/node_modules/cater/bin/cater",
+      "args": [
+        "dev"
+      ],
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/examples/hello-world",
+      "name": "Hello World",
+      "program": "${workspaceRoot}/node_modules/cater/bin/cater",
+      "args": [
+        "dev"
+      ],
+    }
+  ]
+}
