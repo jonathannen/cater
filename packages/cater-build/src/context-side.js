@@ -104,25 +104,20 @@ class SideConfiguration {
    */
   resolveBabel(providedSource, filename) {
     let source = providedSource;
-    if (source[0] === '.') {
-      throw source;
-    }
 
     // Does this have a querystring? If so there might be other actions to
     // perform. One is hackery from jest that let's use obtain the filename
     // context that is otherwise lost.
-    if (this.sideName === 'server') {
-      if (source.includes('?')) {
-        const [, start, end] = providedSource.split(/^(.*)\?(.*)$/);
-        const query = querystring.parse(end);
-        source = start;
+    if (source.includes('?')) {
+      const [, start, end] = providedSource.split(/^(.*)\?(.*)$/);
+      const query = querystring.parse(end);
+      source = start;
 
-        // Some jest plumbing will pass in 'module.js?filename=xxxx' to
-        // get the filename context. This is necessary for cater-style univeral
-        // wrappering.
-        // eslint-disable-next-line no-param-reassign, prefer-destructuring
-        if (!filename && query.filename) filename = query.filename;
-      }
+      // Some jest plumbing will pass in 'module.js?filename=xxxx' to
+      // get the filename context. This is necessary for cater-style univeral
+      // wrappering.
+      // eslint-disable-next-line no-param-reassign, prefer-destructuring
+      if (!filename && query.filename) filename = query.filename;
     }
 
     // Handle /asset/* imports for Webpack
