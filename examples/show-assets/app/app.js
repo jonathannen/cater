@@ -26,11 +26,7 @@ export default () => (
 
     <p>
       <img alt="Cute Cat GIF" src={gif} width="100" height="66" />
-    </p>
-    <p>
       <img alt="Cute Cat PNG" src={png} width="100" height="66" />
-    </p>
-    <p>
       <img alt="Cute Cat JPG" src={jpg} width="100" height="66" />
     </p>
     <p>
@@ -44,9 +40,6 @@ export default () => (
     <h2>Assets Loaded as data URIs</h2>
     <p>
       <img alt="Tiny Cat JPG" src={jpgTiny} width="100" height="66" />
-    </p>
-
-    <p>
       <img
         alt="Cat PNG that's forced to be a data URI"
         src={pngForceData}

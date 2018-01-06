@@ -104,6 +104,9 @@ class SideConfiguration {
    */
   resolveBabel(providedSource, filename) {
     let source = providedSource;
+    if (source[0] === '.') {
+      throw source;
+    }
 
     // Does this have a querystring? If so there might be other actions to
     // perform. One is hackery from jest that let's use obtain the filename
@@ -134,7 +137,6 @@ class SideConfiguration {
         if (result !== null) return result;
       }
     }
-
     // Handle /app/* and similar imports
     const prefixes = Object.keys(this.importPrefixResolvers);
     for (let i = 0; i < prefixes.length; i += 1) {
@@ -156,6 +158,7 @@ class SideConfiguration {
         return result;
       }
     }
+
     return source;
   }
 

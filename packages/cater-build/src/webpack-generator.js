@@ -1,4 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -13,7 +14,6 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 function forDebug(result) {
   // Slower, but more accurate source maps for development
   result.devtool = 'eval-source-map';
-  result.plugins.push(new webpack.NamedModulesPlugin());
   return result;
 }
 
@@ -102,6 +102,7 @@ function generate(context, side) {
   };
 
   const plugins = [
+    new webpack.NamedModulesPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(), //
     new webpack.NoEmitOnErrorsPlugin(),
     new ManifestPlugin()
@@ -114,13 +115,28 @@ function generate(context, side) {
   };
   if (side.typeClient) output.path = path.join(context.buildPath, context.publicPath);
 
+  const resolve = {
+    plugins: [
+      {
+        apply: (resolver) => {
+          resolver.plugin('file', (ctx, callback) => {
+            if (!ctx.path.includes('/assets/assets/') || fs.existsSync(ctx.path)) return callback();
+            ctx.path = ctx.path.replace('/assets/assets/', '/assets/');
+            return callback(null, ctx);
+          });
+        }
+      }
+    ]
+  };
+
   // Assemble the final pieces in a single Webpack configuration
   const config = {
     context: context.appRootPath,
     entry,
     module,
     plugins,
-    output
+    output,
+    resolve
   };
 
   // Post-process for various environments
