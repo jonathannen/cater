@@ -1,13 +1,18 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
+/* eslint-disable no-param-reassign */
+const CompressionPlugin = require('compression-webpack-plugin');
 const fs = require('fs');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 
-const CompressionPlugin = require('compression-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-
-/* eslint-disable no-param-reassign */
+/**
+ * Generates a Webpack configuration object for the given App and
+ * App side (i.e. app.sides.client or app.sides.server).
+ *
+ * @module cater-build/webpack-generator
+ */
 
 // Webpack setting specifically for DEBUG situations. Local development
 // server is the prime example.
@@ -18,8 +23,8 @@ function forDebug(result) {
 }
 
 // When the webpack is running on the server side.
-function forServer(result, side, context) {
-  result.output.path = context.buildPath;
+function forServer(result, side, app) {
+  result.output.path = app.buildPath;
   result.output.libraryTarget = 'commonjs2';
   return result;
 }
@@ -79,11 +84,20 @@ function forBuild(result) {
   // );
 }
 
-/**
- * Generates a Webpack configuration object for the given context and
- * context side (i.e. context.sides.client or context.sides.server).
- */
-function generate(context, side) {
+// Configures Hot Module Replacement
+function forHotModuleReplacement(result, side) {
+  result.entry[side.bundleName] = [
+    'react-hot-loader/patch',
+    'webpack-hot-middleware/client?noInfo=false'
+  ].concat(result.entry[side.bundleName]);
+
+  result.plugins.push(new webpack.HotModuleReplacementPlugin());
+
+  return result;
+}
+
+// Generate the Webpack configuration
+function generate(app, side) {
   // Component parts of the Webpack configuration
   const entry = {};
   entry[side.bundleName] = [side.entryPath];
@@ -96,7 +110,7 @@ function generate(context, side) {
         test: /\.js$/,
         loader: 'babel-loader',
         include: side.paths,
-        exclude: /\/node_modules\/(?!(cater$|cater-))/
+        exclude: /\/node_modules\/(?!(cater$|cater-))/ // TODO
       }
     ]
   };
@@ -110,10 +124,10 @@ function generate(context, side) {
 
   const output = {
     chunkFilename: '[name].[chunkhash].js',
-    path: context.buildPath,
-    publicPath: context.publicPath
+    path: app.buildPath,
+    publicPath: app.publicPath
   };
-  if (side.typeClient) output.path = path.join(context.buildPath, context.publicPath);
+  if (side.typeClient) output.path = path.join(app.buildPath, app.publicPath);
 
   const resolve = {
     plugins: [
@@ -139,7 +153,7 @@ function generate(context, side) {
 
   // Assemble the final pieces in a single Webpack configuration
   const config = {
-    context: context.appRootPath,
+    context: app.appRootPath,
     entry,
     module,
     plugins,
@@ -147,10 +161,12 @@ function generate(context, side) {
     resolve
   };
 
-  // Post-process for various environments
-  const forDebugOrBuild = context.mode === 'build' ? forBuild : forDebug;
-  forDebugOrBuild(config, side, context);
-  if (side.typeServer) forServer(config, side, context);
+  // Post-process for various environments and specialized settings
+  const forDebugOrBuild = app.mode === 'build' ? forBuild : forDebug;
+  forDebugOrBuild(config, side, app);
+  if (side.typeServer) forServer(config, side, app);
+
+  if (app.hotModuleReplacement && side.typeClient) forHotModuleReplacement(config, side);
 
   return config;
 }

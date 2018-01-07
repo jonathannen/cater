@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 * Build-time Cater now handles reloading of server-side modules correctly. Added a file watcher that will reload when server-modules change (de-bounced to 1s intervals).
+* Enabled Hot Module Replacement (HMR) feature of webpack. For the moment, this needs to be explictly enabled with the HMR environment variable set to '1'. e.g. HMR=1 yarn run dev.
 
 ### Fixed
 

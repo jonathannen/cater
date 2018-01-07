@@ -101,9 +101,14 @@ function generate(app) {
     });
   }
 
+  function wrappedHandler(req, res, next = null) {
+    if (req.url === '/__webpack_hmr') return next ? next() : null;
+    return handler(req, res, next);
+  }
+
   // Callback that gets this handler to unload cater-based modules and
   // reload from teh server entry point.
-  handler.reload = function reload(firstRun = false) {
+  wrappedHandler.reload = function reload(firstRun = false) {
     unloadCaterModules();
     try {
       handler.load();
@@ -113,8 +118,7 @@ function generate(app) {
       // error. Otherwise display the error and let the dev fix it up.
       if (firstRun) throw e;
 
-      app.triggerError(e);
-      console.error(e); // eslint-disable-line no-console
+      app.triggerBuildError(e);
       return false;
     }
 
@@ -122,9 +126,9 @@ function generate(app) {
     watchCaterServerModules();
     return true;
   };
-  handler.reload(true);
+  wrappedHandler.reload(true);
 
-  return handler;
+  return wrappedHandler;
 }
 
 module.exports = generate;

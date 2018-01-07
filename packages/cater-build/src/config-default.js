@@ -3,13 +3,21 @@ const clone = require('clone');
 const { DefaultConfig } = require('cater-runtime');
 const merge = require('deepmerge');
 
-// Combine the
+/**
+ * # Build Configuration Defaults
+ *
+ * Additional configuration values that are used at dev and/or build time.
+ *
+ *     **hotModuleReplacement**
+ *     Enable the Hot Module Replacement feature of webpack. Right now will
+ *     only enable if the env variable HMR is set to '1'.
+ */
+
 const buildDefaults = {
-  defaultPlugins: [
-    'cater-assets' // asset extensions
-  ],
+  defaultPlugins: ['cater-assets'],
   entryScriptFilename: '_entry.js',
   extensions: ['.js', '.jsx', ''],
+  hotModuleReplacement: process.env.HMR === '1',
   mode: 'dev',
   plugins: 'auto',
   publicPath: '/static/',

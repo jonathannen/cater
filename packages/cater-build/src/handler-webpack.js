@@ -1,7 +1,10 @@
+import { REGEXP_ABSOLUTE_RESOURCE_PATH } from 'webpack/lib/ModuleFilenameHelpers';
+
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const clone = require('clone');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const DEFAULT_WEBPACK_WATCH_OPTIONS = {
   inline: true,
@@ -14,9 +17,9 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
  * compilation. In the resolved case it'll provide the http.Handler for
  * the webpack client side development server.
  */
-function generateHandler(context, reloadCallback = null) {
-  const compiler = webpack(context.sides.client.webpackConfig);
-  context.callbackWebpackCompiling(compiler);
+function generateHandler(app, reloadCallback = null) {
+  const compiler = webpack(app.sides.client.webpackConfig);
+  app.callbackWebpackCompiling(compiler);
   let etag = null;
 
   const client = new Promise((resolve, reject) => {
@@ -26,7 +29,7 @@ function generateHandler(context, reloadCallback = null) {
         console.log('Webpack compilation failed.'); // eslint-disable-line no-console
         return reject(result.compilation.errors);
       }
-      context.callbackWebpackCompiled(result);
+      app.callbackWebpackCompiled(result);
 
       const success = reloadCallback ? reloadCallback() : true;
       if (!success) {
@@ -42,12 +45,19 @@ function generateHandler(context, reloadCallback = null) {
 
   // Good to go. Start the server.
   const watchOptions = clone(DEFAULT_WEBPACK_WATCH_OPTIONS);
-  watchOptions.publicPath = context.publicPath;
-  const middleware = webpackDevMiddleware(compiler, watchOptions);
+  watchOptions.hot = true; // >>
+  watchOptions.publicPath = app.publicPath;
+
+  const devMiddleware = webpackDevMiddleware(compiler, watchOptions);
+
+  // Enable Hot Module Replacement, if enabled
+  const hotMiddleware = app.hotModuleReplacement
+    ? webpackHotMiddleware(compiler, { reload: REGEXP_ABSOLUTE_RESOURCE_PATH })
+    : null;
 
   // Webpack development bundles tend to be large. We can ETag them
   // in development.
-  const cachingHandler = function cachingHandler(req, res, next) {
+  const cachingHandler = function cachingHandler(req, res, providedNext) {
     if (etag !== null) {
       res.setHeader('ETag', etag);
       const ifNoneMatch = req.headers['if-none-match'];
@@ -57,7 +67,11 @@ function generateHandler(context, reloadCallback = null) {
       }
     }
 
-    return middleware(req, res, next);
+    // If necessary, add the hot middleware into the middleware chain
+    let next = providedNext;
+    if (app.hotModuleReplacement) next = () => hotMiddleware(req, res, next);
+
+    return devMiddleware(req, res, next);
   };
 
   // Returned promise waits for both the client and server compilations

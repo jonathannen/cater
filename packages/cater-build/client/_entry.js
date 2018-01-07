@@ -10,6 +10,11 @@ import { hydrate } from 'react-dom';
  * In this default case, the project-supplied App component is rendered to
  * the #root <div id='root'></div> on the page.
  */
+
+// Plug into Hot Module Replacement, if it's available
+if (module.hot) module.hot.accept(App);
+
+// Hydrate the React app against the root element
 const rootElement = document.getElementById('root');
 hydrate(
   <Provider>

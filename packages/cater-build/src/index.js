@@ -28,6 +28,7 @@ class BuildCater extends RuntimeCater {
 
     this.babel = config.babel;
     this.entryScriptFilename = config.entryScriptFilename;
+    this.hotModuleReplacement = config.hotModuleReplacement;
     this.universalNames = config.universalNames;
 
     // EVENT: I know we're already configuring, but this is for the benefit
@@ -161,7 +162,8 @@ class BuildCater extends RuntimeCater {
   }
 
   // Trigger that an error has occurred at dev or build time
-  triggerError(error) {
+  triggerBuildError(error) {
+    console.error(error); // eslint-disable-line no-console
     this.error = error;
   }
 }
