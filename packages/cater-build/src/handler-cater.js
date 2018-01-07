@@ -18,6 +18,7 @@ const { HandlerCater } = require('cater-runtime');
 // Creates a build-time handler using the configuration from the provided
 // Cater application.
 function generate(app) {
+  // Get an instance of the cater-runtime handler
   const { renderer, publicPath, assetHost } = app;
   const handler = HandlerCater(
     renderer,
@@ -56,12 +57,13 @@ function generate(app) {
   // Server-side trigger of module reloading
   function reloadCaterServerModules() {
     handler.reload();
-    console.log('Reloaded Server-Side modules'); // eslint-disable-line no-console
+    console.log('Reloaded Server-Side modules.'); // eslint-disable-line no-console
     return true;
   }
 
   // Debounce is used on reloading of server modules. If multiple files are
-  // saved at the same time, it'll aggregate into one reload.
+  // saved at the same time, it'll aggregate into one reload within the
+  // debounce interval period.
   let timeout = null;
   const debounceInterval = 1000; // 1 second debounce
   function reloadCaterServerModulesDebounced() {
@@ -88,38 +90,39 @@ function generate(app) {
     return true;
   }
 
+  // Validates that any server load/reload has got React components
+  function checkServerComponents() {
+    ['App', 'Layout', 'Provider'].forEach((v) => {
+      if (!handler[v] || typeof handler[v] !== 'function') {
+        throw new Error(
+          `Didn't find the ${v} component. Make sure you have a React component in app/${v.toLowerCase()}.js.`
+        );
+      }
+    });
+  }
+
   // Callback that gets this handler to unload cater-based modules and
   // reload from teh server entry point.
   handler.reload = function reload(firstRun = false) {
     unloadCaterModules();
-
     try {
       handler.load();
-
-      if (!handler.App || typeof handler.App !== 'function') {
-        throw new Error(
-          "Didn't find an App component. Make sure you have a React component in app/app.js."
-        );
-      }
-
-      if (!handler.Layout || typeof handler.Layout !== 'function') {
-        throw new Error(
-          'Hmm. Found a empty Layout component. Have you got a blank component in app/layout.js?'
-        );
-      }
-
-      tagCaterModules();
-      watchCaterServerModules();
-      return true;
+      checkServerComponents();
     } catch (e) {
       // If this is the first run through, don't start cater - throw an
       // error. Otherwise display the error and let the dev fix it up.
       if (firstRun) throw e;
+
+      app.triggerError(e);
       console.error(e); // eslint-disable-line no-console
       return false;
     }
+
+    tagCaterModules();
+    watchCaterServerModules();
+    return true;
   };
-  // handler.reload(true);
+  handler.reload(true);
 
   return handler;
 }

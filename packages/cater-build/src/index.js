@@ -143,10 +143,6 @@ class BuildCater extends RuntimeCater {
     this.emit(events.deploying, this);
   }
 
-  /*
-   * Inversion that is triggered when a client-side webpack is successfully
-   * compiled. Can be used by plugins to take post-compilation actions.
-   */
   callbackWebpackCompiled(stats) {
     this.emit(events.webpackCompiled, this, stats);
   }
@@ -155,12 +151,18 @@ class BuildCater extends RuntimeCater {
     this.emit(events.webpackCompiling, this, compiler);
   }
 
+  // Kicks of the dev-time server
   start() {
     // TODO
     const { Middleware } = require('cater-runtime'); // eslint-disable-line global-require
     return this.handler().then((handler) => {
       Middleware.httpServer(handler, this.httpPort);
     });
+  }
+
+  // Trigger that an error has occurred at dev or build time
+  triggerError(error) {
+    this.error = error;
   }
 }
 
