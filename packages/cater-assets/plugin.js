@@ -36,6 +36,11 @@ const vm = require('vm');
 // Default size that images are turned into data uris
 const DEFAULT_DATA_URI_SIZE_LIMIT = 1024 * 4; // 4KB
 
+const DEFAULT_OPTIONS = {
+  image: ['gif', 'jpeg', 'jpg', 'png', 'svg'],
+  stylesheet: ['css', 'scss']
+};
+
 /*
  * Generates a Babel transform for the server-side rendering of assets. This
  * allows both the server and client sides to have the same asset definition
@@ -194,7 +199,9 @@ function onConfigured(app, state) {
 }
 
 // Configures Cater with an asset processing pipeline.
-module.exports = function plugin(caterApp, options) {
+module.exports = function plugin(caterApp, providedOptions) {
+  const options = providedOptions || DEFAULT_OPTIONS;
+
   // Work out the extensions for different asset classes
   const state = {
     assetHost: caterApp.assetHost,

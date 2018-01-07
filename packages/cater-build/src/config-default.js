@@ -3,15 +3,10 @@ const clone = require('clone');
 const { DefaultConfig } = require('cater-runtime');
 const merge = require('deepmerge');
 
-const caterAssetPluginDefaults = {
-  image: ['gif', 'jpeg', 'jpg', 'png', 'svg'],
-  stylesheet: ['css', 'scss']
-};
-
 // Combine the
 const buildDefaults = {
   defaultPlugins: [
-    ['cater-assets', caterAssetPluginDefaults] // asset extensions
+    'cater-assets' // asset extensions
   ],
   entryScriptFilename: '_entry.js',
   extensions: ['.js', '.jsx', ''],
