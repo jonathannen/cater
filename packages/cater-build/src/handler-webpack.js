@@ -1,10 +1,7 @@
-import { REGEXP_ABSOLUTE_RESOURCE_PATH } from 'webpack/lib/ModuleFilenameHelpers';
-
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const clone = require('clone');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const DEFAULT_WEBPACK_WATCH_OPTIONS = {
   inline: true,
@@ -51,9 +48,12 @@ function generateHandler(app, reloadCallback = null) {
   const devMiddleware = webpackDevMiddleware(compiler, watchOptions);
 
   // Enable Hot Module Replacement, if enabled
-  const hotMiddleware = app.hotModuleReplacement
-    ? webpackHotMiddleware(compiler, { reload: REGEXP_ABSOLUTE_RESOURCE_PATH })
-    : null;
+  let hotMiddleware = null;
+  if (app.hotModuleReplacement) {
+    // eslint-disable-next-line global-require
+    const webpackHotMiddleware = require('webpack-hot-middleware');
+    hotMiddleware = webpackHotMiddleware(compiler, { reload: true });
+  }
 
   // Webpack development bundles tend to be large. We can ETag them
   // in development.
