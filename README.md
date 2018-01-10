@@ -273,12 +273,12 @@ If you feel like working on this project, reach out. Contact details are in the 
 
 Navigating the code:
 
-* contrib
+* `contrib`
   * Plugins that are versioned independently of the core cater packages.
-* examples
+* `examples`
   * Examples illustrating the use of Cater. Many of these also function as integration tests for specific plugins and features.
   * An ideal example has no boilerplate and can be replicated easily by someone new to Cater.
-* packages
+* `packages`
   * The core Cater packages. This includes:
   * `cater` contains the CLI code and `cater-runtime` as a dependency. It'll also work with `cater-build`, but only if it's explictly installed.
   * `cater-build` has the components to run Cater at dev and build-time. As a result the code is aimed to be more verbose and defensive.
