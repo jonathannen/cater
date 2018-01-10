@@ -17,8 +17,8 @@
     {
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceRoot}/examples/show-assets",
-      "name": "Show Assets",
+      "cwd": "${workspaceRoot}/examples/show-errors",
+      "name": "Show Errors",
       "program": "${workspaceRoot}/node_modules/cater/bin/cater",
       "args": [
         "dev"

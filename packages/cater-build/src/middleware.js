@@ -19,7 +19,7 @@ function generate(app) {
   const logging = HandlerLogging();
 
   return handlerWebpack(app, cater.reload).then((webpack) => {
-    const handlers = [logging, errors, webpack, cater, Middleware.notFoundHandler];
+    const handlers = [logging, errors, cater, webpack, Middleware.notFoundHandler];
     // TODO: Should be always on - and detect if the path becomes active
     if (app.devStaticPathExists) {
       const aStatic = handlerStatic(app.publicPath, app.devStaticPath);

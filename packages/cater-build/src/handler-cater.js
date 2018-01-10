@@ -114,7 +114,6 @@ function generate(app) {
 
       return false;
     } catch (e) {
-      console.error(e);
       // Error occured.
       app.triggerError('server', e);
       watchCaterServerModules(wrappedHandler.reload, server.requiredFileList);

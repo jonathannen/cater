@@ -1,6 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 import React, { Component } from 'react';
-// import tim from 'planet-death';
 
 /* eslint-disable no-unreachable */
 
