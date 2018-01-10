@@ -16,40 +16,50 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
  */
 function generateHandler(app, reloadCallback = null) {
   const compiler = webpack(app.sides.client.webpackConfig);
-  app.callbackWebpackCompiling(compiler);
-  let etag = null;
+  app.triggerWebpackCompiling(compiler);
 
+  let etag = null;
   const client = new Promise((resolve, reject) => {
     compiler.plugin('done', (result) => {
+      app.triggerRetry('client');
       etag = null;
+      // Check for client side errors
       if (result.hasErrors()) {
-        console.log('Webpack compilation failed.'); // eslint-disable-line no-console
+        console.error('Webpack (Client) compilation failed.'); // eslint-disable-line no-console
+        app.triggerErrors('client', result.compilation.errors);
         return reject(result.compilation.errors);
       }
-      app.callbackWebpackCompiled(result);
+      // Client side appears all clear
+      app.triggerWebpackCompiled(result);
+      app.triggerResolution('client');
 
-      const success = reloadCallback ? reloadCallback() : true;
-      if (!success) {
-        console.log('Webpack compilation failed.'); // eslint-disable-line no-console
-        return reject(result.compilation.errors);
-      }
+      // Next check if there is an error reloading on the server side. Note
+      // this isn't a chained promise as the enclosing promise is intended
+      // to run once at startup. This runs everytime Webpack does.
+      reloadCallback()
+        .then(() => {
+          // This is the happy path - client and server are ready and no errors
+          app.triggerResolution(); // *All* error states are cleared down
+          etag = `W/"${result.hash}-${new Date().getTime()}"`;
+          // Success! Set the etag and notify any listeners
+          // eslint-disable-next-line no-console
+          console.log('Webpack and server compilation succeeded');
+          return resolve(compiler);
+        })
+        .catch((error) => reject(error));
 
-      etag = `W/"${result.hash}-${new Date().getTime()}"`;
-      console.log('Webpack compilation succeeded'); // eslint-disable-line no-console
-      return resolve(compiler);
+      return true;
     });
   });
 
-  // Good to go. Start the server.
+  // Good to go. Get the Webpack middlewares set up
   const watchOptions = clone(DEFAULT_WEBPACK_WATCH_OPTIONS);
-  watchOptions.hot = true; // >>
+  watchOptions.hot = app.hotModuleReplacement;
   watchOptions.publicPath = app.publicPath;
 
   const devMiddleware = webpackDevMiddleware(compiler, watchOptions);
-
-  // Enable Hot Module Replacement, if enabled
   let hotMiddleware = null;
-  if (app.hotModuleReplacement) {
+  if (watchOptions.hot) {
     // eslint-disable-next-line global-require
     const webpackHotMiddleware = require('webpack-hot-middleware');
     hotMiddleware = webpackHotMiddleware(compiler, { reload: true });
@@ -69,17 +79,21 @@ function generateHandler(app, reloadCallback = null) {
 
     // If necessary, add the hot middleware into the middleware chain
     let next = providedNext;
-    if (app.hotModuleReplacement) next = () => hotMiddleware(req, res, next);
-
+    if (watchOptions.hot) next = () => hotMiddleware(req, res, providedNext);
     return devMiddleware(req, res, next);
   };
 
   // Returned promise waits for both the client and server compilations
   // to complete. The promise will return the handler to the webpack
   // development server.
-  return client.then(() => cachingHandler).catch((err) => {
-    console.error(err); // eslint-disable-line no-console
-    process.exit(-1);
+  const handlerPromise = client.then(() => cachingHandler);
+
+  // If start on error is set cature errors, otherwise pass to the next promise catch
+  if (!app.startOnError) return handlerPromise;
+  return handlerPromise.catch(() => {
+    // eslint-disable-next-line no-console
+    console.error('Error detected on App start - Server will still start as startOnError is set.');
+    return cachingHandler;
   });
 }
 

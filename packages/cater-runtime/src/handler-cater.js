@@ -22,7 +22,6 @@ function generate(renderer, entryPath, bundlePath, publicPath, assetHost) {
     const components = require(entryPath)();
     Object.assign(handler, components);
   };
-  handler.load();
 
   // Determine which Render we're using - either React or Fast
   // eslint-disable-next-line global-require

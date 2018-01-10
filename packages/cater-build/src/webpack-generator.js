@@ -119,7 +119,12 @@ function generate(app, side) {
     new webpack.NamedModulesPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(), //
     new webpack.NoEmitOnErrorsPlugin(),
-    new ManifestPlugin()
+    new ManifestPlugin(),
+    new webpack.DefinePlugin({
+      ENV: JSON.stringify(process.env.NODE_ENV),
+      MODE: JSON.stringify(process.env.CATER_MODE),
+      SIDE: JSON.stringify(side.sideName)
+    })
   ];
 
   const output = {

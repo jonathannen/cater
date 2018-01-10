@@ -22,6 +22,7 @@ const buildDefaults = {
   plugins: 'auto',
   publicPath: '/static/',
   sideNames: ['client', 'server'],
+  startOnError: true,
   staticDirectory: 'static',
   universalNames: ['app'],
   universalPrefix: 'app'

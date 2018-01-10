@@ -1,11 +1,11 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 // Note ES2015 imports:
-import handlerCater from "./handler-cater";
-import cater from "../index.js";
-import { Middleware } from "cater-runtime";
+import handlerCater from './handler-cater';
+import cater from '../index.js';
+import { Middleware } from 'cater-runtime';
 
 if (!global.INTERNAL_POLYFILL) {
-  global.INTERNAL_POLYFILL = !!require("babel-polyfill"); // eslint-disable-line global-require
+  global.INTERNAL_POLYFILL = !!require('babel-polyfill'); // eslint-disable-line global-require
 }
 
 export function testCater(options = {}) {
@@ -18,11 +18,11 @@ export function testCater(options = {}) {
  */
 export function testHandler(appRootPath = null) {
   const app = testCater({ appRootPath: appRootPath || process.cwd() });
-  const { server } = app.sides;
 
   const handler = handlerCater(app);
+  handler.load();
   const errorHandler = () => {
-    throw new Error("Request not handled.");
+    throw new Error('Request not handled.');
   };
 
   return Middleware([handler, errorHandler]);

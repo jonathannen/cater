@@ -58,6 +58,9 @@ class SideConfiguration {
     // Used to split caret ^ type imports
     const prefixes = Object.keys(this.importPrefixResolvers);
     this.caretPathSplitRegex = new RegExp(`/(${prefixes.join('|')})/`);
+
+    // Files that have been required
+    this.requiredFileList = [];
   }
 
   configureBabel(context) {
@@ -98,11 +101,21 @@ class SideConfiguration {
   }
 
   /**
+   * Hook for any babel-side requirements.
+   */
+  resolveBabel(source, filename) {
+    const result = this.resolveBabelInternal(source, filename);
+    if (!this.requiredFileList.includes(result)) this.requiredFileList.push(result);
+    return result;
+  }
+
+  /**
    * Resolves a file using babel rules. Most resolutions will pass straight
    * through. However, examples like app/app will resolve according to the
    * path rules of this side.
    */
-  resolveBabel(providedSource, filename) {
+
+  resolveBabelInternal(providedSource, filename) {
     let source = providedSource;
 
     // Does this have a querystring? If so there might be other actions to

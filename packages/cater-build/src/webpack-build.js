@@ -5,7 +5,7 @@ function builder(config, context) {
   return new Promise((resolve, reject) => {
     webpack(config).run((err, stats) => {
       if (stats.hasErrors()) return reject(stats.compilation.errors);
-      if (context) context.callbackWebpackCompiled(stats);
+      if (context) context.triggerWebpackCompiled(stats);
       return resolve(stats);
     });
   });

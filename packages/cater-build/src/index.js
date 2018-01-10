@@ -1,11 +1,12 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const Build = require('./build');
+const Build = require('./app-build');
 const { Config, RuntimeCater } = require('cater-runtime');
 const DefaultConfig = require('./config-default.js');
+const errors = require('./app-errors');
 const fs = require('fs-extra');
 const path = require('path');
 const Plugins = require('./plugins.js');
-const SideConfiguration = require('./context-side.js');
+const SideConfiguration = require('./app-side.js');
 const webpackBuild = require('./webpack-build');
 
 const events = {
@@ -29,6 +30,7 @@ class BuildCater extends RuntimeCater {
     this.babel = config.babel;
     this.entryScriptFilename = config.entryScriptFilename;
     this.hotModuleReplacement = config.hotModuleReplacement;
+    this.startOnError = config.startOnError;
     this.universalNames = config.universalNames;
 
     // EVENT: I know we're already configuring, but this is for the benefit
@@ -99,6 +101,15 @@ class BuildCater extends RuntimeCater {
     }
   }
 
+  // Returns all paths that relate to cater-specific modules. Note that these
+  // are in no priority order.
+  getAllPaths() {
+    const combined = Object.values(this.sides)
+      .map((s) => s.sidePaths)
+      .reduce((a, b) => a.concat(b), this.universalPaths);
+    return [...new Set(combined)];
+  }
+
   generatePaths(directories) {
     const result = [];
     for (let i = 0; i < this.rootPaths.length; i += 1) {
@@ -112,9 +123,7 @@ class BuildCater extends RuntimeCater {
     return result;
   }
 
-  /**
-   * Returns a http.Handler for this application.
-   */
+  // Returns a http.Handler for this application as a Promise.
   handler() {
     // TODO
     const Middleware = require('./middleware'); // eslint-disable-line global-require
@@ -140,18 +149,6 @@ class BuildCater extends RuntimeCater {
     return JSON.parse(fs.readFileSync(packageFile).toString());
   }
 
-  callbackDeploy() {
-    this.emit(events.deploying, this);
-  }
-
-  callbackWebpackCompiled(stats) {
-    this.emit(events.webpackCompiled, this, stats);
-  }
-
-  callbackWebpackCompiling(compiler) {
-    this.emit(events.webpackCompiling, this, compiler);
-  }
-
   // Kicks of the dev-time server
   start() {
     // TODO
@@ -161,12 +158,17 @@ class BuildCater extends RuntimeCater {
     });
   }
 
-  // Trigger that an error has occurred at dev or build time
-  triggerBuildError(error) {
-    console.error(error); // eslint-disable-line no-console
-    this.error = error;
+  triggerWebpackCompiled(stats) {
+    this.emit(events.webpackCompiled, this, stats);
+  }
+
+  triggerWebpackCompiling(compiler) {
+    this.emit(events.webpackCompiling, this, compiler);
   }
 }
+
+// Composition
+Object.assign(BuildCater.prototype, errors);
 
 BuildCater.prototype.prepareCommandLine = function prepareCommandLine() {
   const commands = require('./commands.js'); // eslint-disable-line global-require

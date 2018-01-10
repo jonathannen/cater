@@ -1,4 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
+import './_dev';
 import App from 'app/app';
 import Provider from 'app/provider';
 import React from 'react';
@@ -11,7 +12,7 @@ import { hydrate } from 'react-dom';
  * the #root <div id='root'></div> on the page.
  */
 
-// Plug into Hot Module Replacement, if it's available
+// Enable Hot Module Replacement if it's turned on
 if (module.hot) module.hot.accept(App);
 
 // Hydrate the React app against the root element

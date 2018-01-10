@@ -75,6 +75,9 @@ class RuntimeCater extends EventEmitter {
       this.publicPath,
       this.assetHost
     );
+
+    // Trigger the cater handler to load the application from the bundle
+    cater.load();
     let handlers = [cater, Middleware.handlerNotFound];
 
     if (this.serveStaticAssets) {
