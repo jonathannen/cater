@@ -38,7 +38,6 @@ function generateHandler(app, reloadCallback = null) {
       reloadCallback()
         .then(() => {
           // This is the happy path - client and server are ready and no errors
-          if (app.hasErrors()) console.log('All errors resolved'); // eslint-disable-line no-console
           app.triggerResolution(); // *All* error states are cleared down
 
           etag = `W/"${result.hash}-${new Date().getTime()}"`;
