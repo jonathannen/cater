@@ -179,7 +179,7 @@ Let's assume the code is running server-side and you wanted to import the Title 
 
 So it's possible to _override_ the Title component at `cater-build/server/title.js` by putting one at either `your-current-application/app/title.js` or `your-current-application/server/title.js`. Whichever is appropriate.
 
-However, sometimes you want to inherit. In this case you want to replace the component, but also get a reference to the origial. For this, you use the caret import. Imports like 'app/^' will return the next component in the search path.
+However, sometimes you want to inherit. In this case you want to replace the component, but also get a reference to the origial. For this, you use the caret `^` import. Imports like `app/^` will return the next component in the search path.
 
 What does that mean? Taking the example of `your-current-application/server/title.js` an import of `app/^` would return the component _up the path list_, being the Title component in `cater-build/server/title.js`. In your own Title component you can then extent or wrapper that original component as you see fit. Like so:
 
