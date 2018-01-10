@@ -120,7 +120,7 @@ In this way, you can test and build your application in a full "cater-build" env
 
 Cater is designed to make your applications as Universal as possible. Whilst some code will be shared, there are always differences between running code on the server-side and client-side. When Cater starts up, it creates configurations for different "sides", representing the server and client sides. These configurations are largely shared, but varying where necessary for that particular side.
 
-Along with the client and server sides, the "Universal Side" is code that is shared by the client and server. In the Getting Started example, the app/app.js component was under the Universal "app" directory.
+Along with the client and server sides, the "Universal Side" is code that is shared by the client and server. In the Getting Started example, the `app/app.js` component was under the Universal "app" directory.
 
 It's possible that we will add sides down the line - for example for React Native or Electron.
 
@@ -139,19 +139,19 @@ The core Cater piece plugs into the Babel and Webpack framework to produce diffe
       - sidebar.js
     - package.json
 
-In this trivial example, the App React Component lays out both the Main and Sidebar components. It does this by importing 'app/main' and 'app/sidebar'.
+In this trivial example, the App React Component lays out both the Main and Sidebar components. It does this by importing `app/main` and `app/sidebar`.
 
-One the client-side, this brings in app/app.js, which resolves to app/main.js and client/sidebar.js. On the server it brings in the same, except the Sidebar resolves to server/sidebar.js. In this way you can create differentiate components depending on the "side" they are on.
+One the client-side, this brings in `app/app.js`, which then imports `app/main.js` and `client/sidebar.js`. On the server it brings in the same, except the Sidebar resolves to `server/sidebar.js`. In this way you can create differentiate components depending on the "side" they are on.
 
-For many components, this isn't necessary. You just import from app. Or, you can still import './your/regular/file/like/normal'.
+For many components, this isn't necessary. You just import from app. Or, you can still import `./your/regular/file/like/normal`.
 
 However, there are plenty of components where it is necessary. If you take a look at the cater-redux package you'll see Provider Components. On the server side it determines the initial state. On the client side it rehydrates the Redux state.
 
-You can also specify imports like 'server/name' or 'client/name' where you want a specific side to apply.
+You can also specify imports like `server/name` or `client/name` where you want a specific side to apply.
 
 ### Universal Wrappering
 
-Another key feature is wrappering. For any import of 'app/my-component' a tree of paths will be searched. This will be a series of paths, which are then searched with the directory "app" and then either the directory "client" or "server", depending on the side. The tree will look something like:
+Another key feature is wrappering. For any import of `app/my-component` a tree of paths will be searched. This will be a series of paths, which are then searched with the directory "app" and then either the directory "client" or "server", depending on the side. The tree will look something like:
 
     + <your-current-application>
       - app
@@ -173,11 +173,11 @@ Let's assume the code is running server-side and you wanted to import the Title 
     cater-assets/server/title
     ... and so on.
 
-So it's possible to _override_ the Title component at "cater-build/server/title.js" by putting one at either "your-current-application/app/title.js" or "your-current-application/server/title.js". Whichever is appropriate.
+So it's possible to _override_ the Title component at `cater-build/server/title.js` by putting one at either `your-current-application/app/title.js` or `your-current-application/server/title.js`. Whichever is appropriate.
 
 However, sometimes you want to inherit. In this case you want to replace the component, but also get a reference to the origial. For this, you use the caret import. Imports like 'app/^' will return the next component in the search path.
 
-What does that mean? Taking the example of "your-current-application/server/title.js" an import of 'app/^' would return the component _up the path list_, being the Title component in "cater-build/server/title.js". In your own Title component you can then extent or wrapper that original component as you see fit. Like so:
+What does that mean? Taking the example of `your-current-application/server/title.js` an import of `app/^` would return the component _up the path list_, being the Title component in `cater-build/server/title.js`. In your own Title component you can then extent or wrapper that original component as you see fit. Like so:
 
     import ParentTitle from 'app/^'; // ...the mysterious caret import...
     import React from 'react';
@@ -201,7 +201,7 @@ So we have Universal Imports and Universal Wrappering. Why? The main reason is t
 
 Plugins add in features and libraries like Asset Compilation, Redux, CSS-in-JS, or React Router. Ideally with zero configuration.
 
-Universal Imports allow plugins to provide Universal components. Taking the simple Title component in Hello-Cater above, this component is different for the server and client sides. On the server it sets the &lt;head> &lt;title> element. On the client it uses JavaScript to change _document.title_. Killer.
+Universal Imports allow plugins to provide Universal components. Taking the simple Title component in Hello-Cater above, this component is different for the server and client sides. On the server it sets the `<head><title>` element. On the client it uses JavaScript to change `document.title`. Killer.
 
 Univeral Wrapping allows plugins to cascade behavior. The most common case is adding in providers. A CSS-in-JS Theme Provider can wrapper a Redux or React Router Provider without being aware of the specifics of the other plugins.
 
@@ -231,7 +231,7 @@ Then run as before:
 
     yarn run cater dev
 
-Head back to http://localhost:3000 and you'll be able to use the links to click between the Hello and Goodbye routes. Note that the code routes client-side using the "BrowserRouter" react-router component.
+Head back to http://localhost:3000 and you'll be able to use the links to click between the Hello and Goodbye routes. Note that the code routes client-side using the `BrowserRouter` react-router component.
 
 That's it. This example is simplified, but can easily be extended to a full application.
 
