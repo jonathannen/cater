@@ -65,7 +65,7 @@ class Errors extends React.Component {
         );
       });
     } else {
-      lines = error.stack.split(/[\r\n]+/).map((line, index) => (
+      lines = (error.stack || []).split(/[\r\n]+/).map((line, index) => (
         // eslint-disable-next-line react/no-array-index-key
         <li key={line + index} className="cater-error-frame">
           {line}

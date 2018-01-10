@@ -249,14 +249,14 @@ The eponymous introduction application. Hello World is a single App Component th
 **/examples/custom-layout**<br/>
 A Cater application with it's own customized Layout.
 
-**/examples/emotion**<br/>
-Shows Cater being used with the [emotion](https://github.com/emotion-js/emotion) CSS-in-JS framework.
-
 **/examples/express**<br/>
 By default, Cater in development will launch it's own http.Server. However, you use your own. In this example, we plug Cater into the Express web framework. Express handles the incoming requests, delegating to the Cater handler.
 
 **/examples/redux-counter-split**<br/>
 Cater with the Redux framework enabled.
+
+**/examples/show-emotion**<br/>
+Shows Cater being used with the [emotion](https://github.com/emotion-js/emotion) CSS-in-JS framework.
 
 ## Alternatives
 

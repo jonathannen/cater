@@ -18,18 +18,27 @@ import PropTypes from 'prop-types';
  *     import css from 'assets/my-css-file.scss';
  *     ...
  *     <GlobalStyle href={css}/>
+ *
+ * Or for inline styles:
+ *
+ *     <GlobalStyle css="body { background: tomato }"/>
  */
-// eslint-disable-next-line react/prefer-stateless-function
 class GlobalStyle extends React.Component {
   static contextTypes = caterContextTypes;
 
   static propTypes = {
-    href: PropTypes.string.isRequired
+    css: PropTypes.string,
+    href: PropTypes.string
+  };
+
+  static defaultProps = {
+    css: null,
+    href: null
   };
 
   render() {
-    // eslint-disable-next-line no-underscore-dangle
-    this.context.internalCaterContext.addGlobalStyle(this.props.href);
+    if (this.props.href) this.context.internalCaterContext.addGlobalStyleLink(this.props.href);
+    if (this.props.css) this.context.internalCaterContext.addGlobalStyle(this.props.css);
     return false;
   }
 }

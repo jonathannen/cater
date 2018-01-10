@@ -32,15 +32,15 @@ function generateReactRenderer(bundlePath, components) {
     const app = createElement(components.App, null, null);
     const providerWrap = createElement(components.Provider, null, app);
     const caterWrap = createElement(CaterProvider, { caterContext }, providerWrap);
-    const appBody = renderToString(caterWrap);
+    const providerAppBody = renderToString(caterWrap);
 
     // Equivalent of:
     // <CaterProvider caterContext={}>
-    // <Layout><div id="__CATER_ROOT">{app}</div></Layout>
+    // <Layout><div id='root'>{providerAppBody}</div></Layout>
     // </CaterProvider>
     const rootDiv = createElement(
       'div',
-      { id: 'root', dangerouslySetInnerHTML: { __html: appBody } },
+      { id: 'root', dangerouslySetInnerHTML: { __html: providerAppBody } },
       null
     );
     const layout = createElement(components.Layout, null, rootDiv);

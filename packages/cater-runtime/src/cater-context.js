@@ -6,8 +6,10 @@
 class CaterContext {
   constructor(bundlePath, url) {
     this.bundlePath = bundlePath;
+    this.globalJavaScript = [];
     this.globalJSON = {};
     this.globalStyles = [];
+    this.globalStyleLinks = [];
     this.title = '';
     this.url = url;
   }
@@ -16,8 +18,23 @@ class CaterContext {
    * Adds a stylesheet that is intended to be rendered in the head of the
    * component. See the GlobalStyles component, which uses this function.
    */
-  addGlobalStyle(href) {
-    this.globalStyles.push(href);
+  addGlobalStyle(css) {
+    this.globalStyles.push(css);
+  }
+
+  /**
+   * Adds a stylesheet that is intended to be rendered in the head of the
+   * component. See the GlobalStyles component, which uses this function.
+   */
+  addGlobalStyleLink(href) {
+    this.globalStyleLinks.push(href);
+  }
+
+  /**
+   * Add the piece of JavaScript to be added at the end of the page.
+   */
+  addGlobalJavaScript(script) {
+    this.globalJavaScript.push(script);
   }
 
   /**

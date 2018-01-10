@@ -9,27 +9,32 @@ import Scripts from 'app/scripts';
  * layout should extend this component. See examples/custom-layout for
  * more.
  */
-// eslint-disable-next-line react/prefer-stateless-function
+
 class Layout extends React.Component {
   static contextTypes = caterContextTypes;
 
   render() {
-    // eslint-disable-next-line react/prop-types
     const { children } = this.props;
-    // eslint-disable-next-line no-underscore-dangle
     const ctx = this.context.internalCaterContext;
 
+    let css = '';
+    if (ctx.globalStyles) {
+      const joinedCss = ctx.globalStyles.join('\n');
+      css = <style dangerouslySetInnerHTML={{ __html: joinedCss }} />;
+    }
+
     return (
-      <html lang="en">
+      <html lang="en" onError="console.log(2)">
         <head>
           <meta charSet="utf-8" />
           <link rel="preload" href={ctx.bundlePath} as="script" />
           <title>{ctx.title}</title>
-          {ctx.globalStyles.map((href) => (
+          {ctx.globalStyleLinks.map((href) => (
             <link href={href} key={href} rel="stylesheet" type="text/css" />
           ))}
+          {css}
         </head>
-        <body>
+        <body onError="console.log(1)">
           {children}
           <Scripts />
         </body>

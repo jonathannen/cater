@@ -1,4 +1,4 @@
-# Cater example: "Emotion"
+# Cater example: Show Emotion.
 
 Example that uses the [Emotion CSS-in-JS](https://github.com/emotion-js/emotion) library.
 
