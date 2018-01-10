@@ -102,14 +102,17 @@ function generate(app) {
   // reload from the server entry point.
   function reload() {
     try {
-      app.triggerRetry('server');
+      const isError = app.triggerRetry('server');
 
       // Happy path of loading the server-side components.
       unloadCaterModules();
       handler.load(); // Will import server/_entry.js
       checkServerComponents(handler);
       watchCaterServerModules(wrappedHandler.reload);
-      app.triggerResolution('server');
+
+      const isResolved = app.triggerResolution('server');
+      if (isError && isResolved) console.log('All errors resolved'); // eslint-disable-line no-console
+
       server.requiredFileList = [];
 
       return false;

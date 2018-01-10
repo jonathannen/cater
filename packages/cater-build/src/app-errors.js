@@ -59,12 +59,13 @@ function triggerErrors(source, errors) {
 // Resolves any errors for the given sources. If no sources are provided
 // then all errors are resolved.
 function triggerResolution(...sources) {
-  if (!this.hasErrors()) return;
+  if (!this.hasErrors()) return true;
   this.triggerRetry(...sources);
-  if (!this.hasErrors()) console.log('Errors resolved'); // eslint-disable-line no-console
+  return !this.hasErrors();
 }
 
 function triggerRetry(...sources) {
+  if (!this.hasErrors()) return false; // Flag back there are no errors
   if (sources.length === 0) {
     this.errors = {};
   } else {
@@ -73,6 +74,7 @@ function triggerRetry(...sources) {
       errors[v] = [];
     });
   }
+  return true;
 }
 
 module.exports = {

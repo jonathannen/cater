@@ -31,7 +31,6 @@ function generateHandler(app, reloadCallback = null) {
       }
       // Client side appears all clear
       app.triggerWebpackCompiled(result);
-      app.triggerResolution('client');
 
       // Next check if there is an error reloading on the server side. Note
       // this isn't a chained promise as the enclosing promise is intended
@@ -39,7 +38,9 @@ function generateHandler(app, reloadCallback = null) {
       reloadCallback()
         .then(() => {
           // This is the happy path - client and server are ready and no errors
+          if (app.hasErrors()) console.log('All errors resolved'); // eslint-disable-line no-console
           app.triggerResolution(); // *All* error states are cleared down
+
           etag = `W/"${result.hash}-${new Date().getTime()}"`;
           // Success! Set the etag and notify any listeners
           // eslint-disable-next-line no-console
