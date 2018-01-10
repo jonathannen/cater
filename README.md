@@ -21,6 +21,8 @@ Good luck. To get in touch, drop me a line at the author details listed in packa
 
 <hr/>
 
+## Table of Contents
+
 * [Motivation](#motivation)
 * [Getting Started](#getting-started)
 * [Core Concepts](#core-concepts)
@@ -31,6 +33,8 @@ Good luck. To get in touch, drop me a line at the author details listed in packa
 * [Plugins](#plugins)
 * [Examples](#examples)
 * [Alternatives](#alternatives)
+
+<hr/>
 
 ## Motivation
 
