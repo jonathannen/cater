@@ -4,9 +4,9 @@ Hello.
 
 Cater is a convention-driven framework for building Universal applications, using React and Friends.
 
-The primary goal of Cater is to **eliminate as much boilerplate as possible**. If you're writing code for your users rather than your tools, Cater is doing it's job.
+The primary goal of Cater is to **eliminate as much boilerplate as possible**. If you're writing code for your users rather than your tools, Cater is doing its job.
 
-Out-of-the-box Cater is configured with the following components:
+Cater will configure the following components out-of-the-box
 
 * Babel 6
 * Jest 22
@@ -15,7 +15,7 @@ Out-of-the-box Cater is configured with the following components:
 
 As core components, Cater tends to have a strong opinion on how they're set up. The configuration is augmented and extended by Plugins.
 
-Feel free to have a poke around. If you want to get a quick idea, take a look at the [hello-world application](https://github.com/clashbit/cater/tree/master/examples/hello-world) and it's peers under [examples](https://github.com/clashbit/cater/tree/master/examples).
+Feel free to have a poke around. For a quick look, take a look at the [hello-world application](https://github.com/clashbit/cater/tree/master/examples/hello-world) and its peers under [examples](https://github.com/clashbit/cater/tree/master/examples).
 
 Good luck. To get in touch, drop me a line at the author details listed in package.json 🙇‍♂️
 
@@ -37,8 +37,8 @@ Good luck. To get in touch, drop me a line at the author details listed in packa
 There are three main motivations behind cater:
 
 * **Micro-Services having First-Class "Micro-Applications"**<br/>Having experience with several Ruby on Rails monoliths, we now want to write platforms as a series focused, contained applications.
-* **No Boilerplate**<br/>Lots of focused applications sounds tidy, but generally means lots of boilerplate. Lots of repeated code. Cater's mantra is "no boilerplate". We want focused, contained _straightforward_ applications.
-* **Fully Universal Applicatins**<br/>Boilerplate is one complicating issue. Overlap, repetition and competition between the client and server code is another. Cater aims to be a simple way of building and maintaining Universal applications.
+* **No Boilerplate**<br/>Lots of focused applications sounds tidy, but also means lots of boilerplate. Lots of repeated code. Cater's mantra is "no boilerplate". We want focussed, contained _straightforward_ applications.
+* **Fully Universal Applications**<br/>Boilerplate is one complicating issue. Overlap, repetition, and competition between the client and server code is another. Cater aims to be a simple way of building and maintaining Universal applications.
 
 <a id="getting-started"></a>
 
@@ -124,11 +124,11 @@ Along with the client and server sides, the "Universal Side" is code that is sha
 
 It's possible that we will add sides down the line - for example for React Native or Electron.
 
-To faciliate code differences between the sides, Cater has Universal Imports, Universal Wrappering (See Below).
+To facilitate code differences between the sides, Cater has Universal Imports, Universal Wrappering (See Below).
 
 ### Universal Imports
 
-The core Cater piece plugs in to the Babel and Webpack framework to produce differentiated builds for the client and server sides. What does this mean? If you had a directory structure like:
+The core Cater piece plugs into the Babel and Webpack framework to produce differentiated builds for the client and server sides. What does this mean? If you had a directory structure like:
 
     + app
       - app.js
@@ -143,7 +143,7 @@ In this trivial example, the App React Component lays out both the Main and Side
 
 One the client-side, this brings in app/app.js, which resolves to app/main.js and client/sidebar.js. On the server it brings in the same, except the Sidebar resolves to server/sidebar.js. In this way you can create differentiate components depending on the "side" they are on.
 
-For many components this isn't necessary. You just import from app. Or, you can still import './your/regular/file/like/normal'.
+For many components, this isn't necessary. You just import from app. Or, you can still import './your/regular/file/like/normal'.
 
 However, there are plenty of components where it is necessary. If you take a look at the cater-redux package you'll see Provider Components. On the server side it determines the initial state. On the client side it rehydrates the Redux state.
 
@@ -249,14 +249,14 @@ A Cater application with it's own customized Layout.
 Shows Cater being used with the [emotion](https://github.com/emotion-js/emotion) CSS-in-JS framework.
 
 **/examples/express**<br/>
-By default, Cater in development will launch it's own http.Server. However, you use your own. In this example, we plug Cater in to the Express web framework. Express handles the incoming requests, delegating to the Cater handler.
+By default, Cater in development will launch it's own http.Server. However, you use your own. In this example, we plug Cater into the Express web framework. Express handles the incoming requests, delegating to the Cater handler.
 
 **/examples/redux-counter-split**<br/>
 Cater with the Redux framework enabled.
 
 ## Alternatives
 
-Cater is very new and still working towards version 1.0. However, there are plenty of great React frameworks out there. To menion a couple:
+Cater is very new and still working towards version 1.0. However, there are plenty of great React frameworks out there. To mention a couple:
 
 The first alternative to mention is [Create React App](https://github.com/facebookincubator/create-react-app). It's the best way to get started on a React application.
 
