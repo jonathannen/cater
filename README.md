@@ -33,6 +33,7 @@ Good luck. To get in touch, drop me a line at the author details listed in packa
 * [Plugins](#plugins)
 * [Examples](#examples)
 * [Alternatives](#alternatives)
+* [Contributing](#contributing)
 
 <hr/>
 
@@ -265,3 +266,20 @@ Cater is very new and still working towards version 1.0. However, there are plen
 The first alternative to mention is [Create React App](https://github.com/facebookincubator/create-react-app). It's the best way to get started on a React application.
 
 This library was somewhat inspired from using the [Next.js](https://github.com/zeit/next.js/) Framework. This is an attempt to learn from the ground up, plus take a modular and convention-driven approach.
+
+## Contributing
+
+If you feel like working on this project, reach out. Contact details are in the top-level `package.json`.
+
+Navigating the code:
+
+* contrib
+  * Plugins that are versioned independently of the core cater packages.
+* examples
+  * Examples illustrating the use of Cater. Many of these also function as integration tests for specific plugins and features.
+  * An ideal example has no boilerplate and can be replicated easily by someone new to Cater.
+* packages
+  * The core Cater packages. This includes:
+  * `cater` contains the CLI code and `cater-runtime` as a dependency. It'll also work with `cater-build`, but only if it's explictly installed.
+  * `cater-build` has the components to run Cater at dev and build-time. As a result the code is aimed to be more verbose and defensive.
+  * `cater-runtime` has the code for running a cater application in production. For this it's leaner and focussed on performance and robustness.
