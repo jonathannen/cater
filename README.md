@@ -4,6 +4,8 @@ Hello.
 
 Cater is a convention-driven framework for building Universal applications, using React and Friends.
 
+The primary goal of Cater is to **eliminate as much boilerplate as possible**. If you're writing code for your users rather than your tools, Cater is doing it's job.
+
 Out-of-the-box Cater is configured with the following components:
 
 * Babel 6
@@ -13,12 +15,22 @@ Out-of-the-box Cater is configured with the following components:
 
 As core components, Cater tends to have a strong opinion on how they're set up. The configuration is augmented and extended by Plugins.
 
-The big thing is to **eliminate as much boilerplate as possible**. If you're writing code for your users rather than your tools, Cater is doing it's job.
-
-Still so much to do. This project is still very much pre-1.0.But feel free to have a poke around. If you want to get a quick idea, take a look at the [hello-world application](https://github.com/clashbit/cater/tree/master/examples/hello-world) and it's peers under [examples](https://github.com/clashbit/cater/tree/master/examples).
+Feel free to have a poke around. If you want to get a quick idea, take a look at the [hello-world application](https://github.com/clashbit/cater/tree/master/examples/hello-world) and it's peers under [examples](https://github.com/clashbit/cater/tree/master/examples).
 
 Good luck. To get in touch, drop me a line at the author details listed in package.json 🙇‍♂️
-.
+
+<hr/>
+
+* [Motivation](#motivation)
+* [Getting Started](#getting-started)
+* [Core Concepts](#core-concepts)
+  * [Modes](#modes)
+  * [Sides](#sides)
+  * [Universal Imports](#universal-imports)
+  * [Universal Wrappering](#universal-wrappering)
+* [Plugins](#plugins)
+* [Examples](#examples)
+* [Alternatives](#alternatives)
 
 ## Motivation
 
@@ -28,7 +40,7 @@ There are three main motivations behind cater:
 * **No Boilerplate**<br/>Lots of focused applications sounds tidy, but generally means lots of boilerplate. Lots of repeated code. Cater's mantra is "no boilerplate". We want focused, contained _straightforward_ applications.
 * **Fully Universal Applicatins**<br/>Boilerplate is one complicating issue. Overlap, repetition and competition between the client and server code is another. Cater aims to be a simple way of building and maintaining Universal applications.
 
-This library was somewhat inspired from using the [Next.js](https://github.com/zeit/next.js/) Framework. This is an attempt to learn from the ground up, plus take a modular and convention-driven approach.
+<a id="getting-started"></a>
 
 ## Getting Started (aka "Hello Cater")
 
@@ -75,7 +87,46 @@ The first command will build your code into the build directory. The second star
 
 That's the very simple intro. Most of the time you'll want to add the cater commands to the package.json scripts, add tests and the like. You'll find more detailed code in the [examples directory](https://github.com/clashbit/cater/tree/master/examples). This includes a very slightly upgraded version of [this Hello World Example](https://github.com/clashbit/cater/tree/master/examples/hello-world).
 
-## Universal Imports (aka app/\*)
+<a id='core-concepts'></a>
+
+## Core Concepts
+
+<a id="modes"></a>
+
+### Modes (aka "Times")
+
+Cater is designed to be a build-centric framework. You develop against a development version of the framework, and then build this to static code for release. We call this different stages "modes". Cater has three primary modes:
+
+* **Dev**: is for development. This is a hot-reloading local version that a developer will typically work against.
+* **Build**: signifies the code is being built for production. Many of the dev-time tools are used, such as Webpack. However, they are configured for production-time execution. For example, built turns on JavaScript minification.
+* **Runtime**: is for running the code in a production or production-like environment.
+
+These are referred to as dev-time, build-time and runtime.
+
+These will be related to the NODE_ENV values you may be familar with, but with some differences. For example, the build spans both development and production configurations. In build you're still running in the development (cater-build) environment, but you are generating production (runtime) code. In Cater idiom, dev-time also resembles what would often be an integration test.
+
+These modes also have very different performance profiles. The Hello-World example above takes (on typical hardware) 2ms to render in dev and the JavaScript bundle is almost 2MB. In production the code those figures are 0.5ms and 32KB (of gzipped, minified JavaScript).
+
+Dev and Build modes are enabled by the cater-build package. That's why we recommend you install cater-build as a development dependency (devDependency). Runtime is enabled by the cater package, which imports cater-runtime.
+
+    yarn add cater
+    yarn add --dev cater-build
+
+In this way, you can test and build your application in a full "cater-build" environment and then only deploy the production packages absolutely necessary for runtime.
+
+<a id="sides"></a>
+
+### Sides
+
+Cater is designed to make your applications as Universal as possible. Whilst some code will be shared, there are always differences between running code on the server-side and client-side. When Cater starts up, it creates configurations for different "sides", representing the server and client sides. These configurations are largely shared, but varying where necessary for that particular side.
+
+Along with the client and server sides, the "Universal Side" is code that is shared by the client and server. In the Getting Started example, the app/app.js component was under the Universal "app" directory.
+
+It's possible that we will add sides down the line - for example for React Native or Electron.
+
+To faciliate code differences between the sides, Cater has Universal Imports, Universal Wrappering (See Below).
+
+### Universal Imports
 
 The core Cater piece plugs in to the Babel and Webpack framework to produce differentiated builds for the client and server sides. What does this mean? If you had a directory structure like:
 
@@ -98,7 +149,7 @@ However, there are plenty of components where it is necessary. If you take a loo
 
 You can also specify imports like 'server/name' or 'client/name' where you want a specific side to apply.
 
-## Universal Wrappering (aka caret imports)
+### Universal Wrappering
 
 Another key feature is wrappering. For any import of 'app/my-component' a tree of paths will be searched. This will be a series of paths, which are then searched with the directory "app" and then either the directory "client" or "server", depending on the side. The tree will look something like:
 
@@ -140,7 +191,7 @@ What does that mean? Taking the example of "your-current-application/server/titl
 
     export default MyTitle;
 
-The Title component is a contrived example, but there are a number of real applications. The simpliest of which is wrappering providers. Each plugin can add a provider that then wrappers the following one. An example of this is the [cater-redux/server/provider.js](https://github.com/clashbit/cater/blob/master/packages/cater-redux/server/provider.js).
+The Title component is a contrived example, but there are a number of real applications. The simplest of which is wrappering providers. Each plugin can add a provider that then wrappers the following one. An example of this is the [cater-redux/server/provider.js](https://github.com/clashbit/cater/blob/master/packages/cater-redux/server/provider.js).
 
 This code adds in the Redux Provider and then wrappers it in the parent provider. In this way you can stack providers and other components between your application, plugins and the core Cater code.
 
@@ -184,22 +235,6 @@ Head back to http://localhost:3000 and you'll be able to use the links to click 
 
 That's it. This example is simplified, but can easily be extended to a full application.
 
-## Dev vs. Build. vs. Runtime
-
-Cater has three primary modes:
-
-* **Dev**: which is for development. This is a hot-reloading local version that a developer will typically work against.
-* **Build**: which signifies the code is being built for production. Many of the dev-time tools are used, such as Webpack. However, they are configured for production-time execution. For example, built turns on JavaScript minification.
-* **Runtime**: is for running the code at production time.
-
-These are related to your familiar NODE_ENV values, but are slightly different. For example, the build spans both development and production configurations. In Cater idiom, dev also resembles what would often be an integration test.
-
-These modes also have very different performance profiles. The Hello-World example above takes (on typical hardware) 2ms to render in dev and the JavaScript bundle is almost 2MB. In production the code those figures are 0.5ms and 32KB (of gzipped, minified JavaScript).
-
-Dev and Build modes are enabled by the cater-build package. That's why we recommend you install cater-build as a development dependency (devDependency). Runtime is enabled by the cater package, which imports cater-runtime.
-
-In this way, you can test and build your application in a full "cater-build" environment and then only deploy the production packages absolutely necessary for runtime.
-
 ## Examples
 
 There are a number of projects under the example directory. To highlight some:
@@ -218,3 +253,11 @@ By default, Cater in development will launch it's own http.Server. However, you 
 
 **/examples/redux-counter-split**<br/>
 Cater with the Redux framework enabled.
+
+## Alternatives
+
+Cater is very new and still working towards version 1.0. However, there are plenty of great React frameworks out there. To menion a couple:
+
+The first alternative to mention is [Create React App](https://github.com/facebookincubator/create-react-app). It's the best way to get started on a React application.
+
+This library was somewhat inspired from using the [Next.js](https://github.com/zeit/next.js/) Framework. This is an attempt to learn from the ground up, plus take a modular and convention-driven approach.
