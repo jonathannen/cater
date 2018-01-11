@@ -1,6 +1,6 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 import React from 'react';
-import Title from 'app/title';
+import Title from 'app/cater/title';
 
 /* A simple (but friendly) React Component */
 export default () => (

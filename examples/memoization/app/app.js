@@ -2,7 +2,7 @@
 import ExpensiveComponent from './expensive';
 import Memoization from 'app/memoization';
 import React from 'react';
-import Title from 'app/title';
+import Title from 'app/cater/title';
 
 export default () => {
   const cacheKey = 'expensive-component-key';

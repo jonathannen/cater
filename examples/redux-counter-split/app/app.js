@@ -1,7 +1,7 @@
 // Adapted from https://github.com/reactjs/redux/tree/master/examples
 import Counter from './counter';
 import React from 'react';
-import Title from 'app/title';
+import Title from 'app/cater/title';
 
 const title = 'Using Redux with Cater via cater-redux';
 

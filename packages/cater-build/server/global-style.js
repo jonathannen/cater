@@ -1,6 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-import React from 'react';
-import { caterContextTypes } from 'server/cater-provider';
+import ContextComponent from 'server/cater/context-component';
 import PropTypes from 'prop-types';
 
 /**
@@ -23,9 +22,7 @@ import PropTypes from 'prop-types';
  *
  *     <GlobalStyle css="body { background: tomato }"/>
  */
-class GlobalStyle extends React.Component {
-  static contextTypes = caterContextTypes;
-
+class GlobalStyle extends ContextComponent {
   static propTypes = {
     css: PropTypes.string,
     href: PropTypes.string
@@ -37,8 +34,9 @@ class GlobalStyle extends React.Component {
   };
 
   render() {
-    if (this.props.href) this.context.internalCaterContext.addGlobalStyleLink(this.props.href);
-    if (this.props.css) this.context.internalCaterContext.addGlobalStyle(this.props.css);
+    const ctx = this.caterContext();
+    if (this.props.href) ctx.addGlobalStyleLink(this.props.href);
+    if (this.props.css) ctx.addGlobalStyle(this.props.css);
     return false;
   }
 }

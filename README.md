@@ -69,7 +69,7 @@ Now let's say hello:
 In that app/app.js file, use your favorite editor to add in the following:
 
     import React from 'react';
-    import Title from 'app/title';
+    import Title from 'app/cater/title';
     export default () => (
       <div>
         <Title>Hello Down There!</Title>

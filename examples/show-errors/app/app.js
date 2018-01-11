@@ -1,7 +1,7 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 import Broken from 'app/broken';
 import React from 'react';
-import Title from 'app/title';
+import Title from 'app/cater/title';
 
 /* eslint-disable no-unreachable */
 

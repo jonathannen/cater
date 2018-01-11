@@ -34,16 +34,13 @@ function generateReactRenderer(bundlePath, components) {
     const caterWrap = createElement(CaterProvider, { caterContext }, providerWrap);
     const providerAppBody = renderToString(caterWrap);
 
+    caterContext.bodyHTML = providerAppBody;
+
     // Equivalent of:
     // <CaterProvider caterContext={}>
-    // <Layout><div id='root'>{providerAppBody}</div></Layout>
+    // <Layout>{providerAppBody}</Layout>
     // </CaterProvider>
-    const rootDiv = createElement(
-      'div',
-      { id: 'root', dangerouslySetInnerHTML: { __html: providerAppBody } },
-      null
-    );
-    const layout = createElement(components.Layout, null, rootDiv);
+    const layout = createElement(components.Layout, { bodyHTML: providerAppBody }, null);
     const wrappedLayout = createElement(CaterProvider, { caterContext }, layout);
     const reactBody = renderToStaticMarkup(wrappedLayout);
 

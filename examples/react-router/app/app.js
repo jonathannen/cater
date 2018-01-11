@@ -2,7 +2,7 @@
 import Goodbye from './goodbye';
 import Hello from './hello';
 import React from 'react';
-import Title from 'app/title';
+import Title from 'app/cater/title';
 import { Link, Switch, Route } from 'react-router-dom';
 
 const title = 'Cater with React Router';

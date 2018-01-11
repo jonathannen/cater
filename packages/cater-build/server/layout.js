@@ -1,9 +1,7 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-import { caterContextTypes } from 'server/cater-provider';
-import React from 'react';
-import Scripts from 'app/scripts';
-
-/* eslint-disable react/no-danger */
+import Body from 'server/cater/body';
+import Head from 'server/cater/head';
+import React, { Component } from 'react';
 
 /**
  * Layout is used on the Server Side to render the HTML surrounding the
@@ -12,34 +10,12 @@ import Scripts from 'app/scripts';
  * more.
  */
 
-class Layout extends React.Component {
-  static contextTypes = caterContextTypes;
-
+class Layout extends Component {
   render() {
-    const { children } = this.props;
-    const ctx = this.context.internalCaterContext;
-
-    let css = '';
-    if (ctx.globalStyles) {
-      const joinedCss = ctx.globalStyles.join('\n');
-      css = <style dangerouslySetInnerHTML={{ __html: joinedCss }} />;
-    }
-
     return (
       <html lang="en">
-        <head>
-          <meta charSet="utf-8" />
-          <link rel="preload" href={ctx.bundlePath} as="script" />
-          <title>{ctx.title}</title>
-          {ctx.globalStyleLinks.map((href) => (
-            <link href={href} key={href} rel="stylesheet" type="text/css" />
-          ))}
-          {css}
-        </head>
-        <body>
-          {children}
-          <Scripts />
-        </body>
+        <Head />
+        <Body />
       </html>
     );
   }

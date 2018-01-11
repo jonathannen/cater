@@ -1,7 +1,7 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 import React from 'react';
 import SkipServerSideRender from 'app/cater/skipserversiderender';
-import Title from 'app/title';
+import Title from 'app/cater/title';
 
 export default () => (
   <div>

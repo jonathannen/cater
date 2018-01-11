@@ -1,7 +1,7 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 import GlobalStyle from 'app/global-style';
 import React from 'react';
-import Title from 'app/title';
+import Title from 'app/cater/title';
 
 // Import a global stylesheet
 import css from 'assets/bundle.scss';
