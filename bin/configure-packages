@@ -6,13 +6,25 @@ const fs = require('fs');
 const path = require('path');
 
 // Packages that are optionally installed in a example or package directory
-const WHITELIST_PACKAGES = ['express'];
+const WHITELIST_PACKAGES = ['express', 'cater-emotion'];
 
 KEY_VERSIONS = {
   'babel-core': '^6.26.0',
   jest: '^22.0.4',
   webpack: '^3.10.0'
 };
+
+CATER_PACKAGES = [
+  'cater',
+  'cater-assets',
+  'cater-build',
+  'cater-google-cloud',
+  'cater-jest',
+  'cater-memoization',
+  'cater-react-router',
+  'cater-redux',
+  'cater-runtime'
+];
 
 const readPackageFile = function(...args) {
   const packageFile = path.join(...args);
@@ -54,7 +66,7 @@ const updatePackageFile = function(...args) {
 
     // Lock all cater-* packages to the same version
     Object.keys(d)
-      .filter((k) => k.startsWith('cater-'))
+      .filter((k) => CATER_PACKAGES.includes(k))
       .forEach((k) => (d[k] = `^${version}`));
   });
 
