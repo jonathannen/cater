@@ -19,6 +19,9 @@ h1, h2, h3 { color: black; font-weight: 400; margin: 0; padding: 0; }
 h1 span { background: Tomato; color: white; margin 0 10px; padding: 10px; font-size: 26px; }
 h2 { font-size: 20px; margin: 40px 0 10px 0; }
 
+div#root > div { display: none; }
+div#root .cater-error { display: block; }
+
 .cater-error { font-family: monospace; }
 .cater-error-frame { font-size: 14px; margin-bottom: 10px; }
 .cater-error .cater-error-function { font-weight: 800; }
@@ -65,7 +68,8 @@ class Errors extends React.Component {
         );
       });
     } else {
-      lines = (error.stack || []).split(/[\r\n]+/).map((line, index) => (
+      const stack = error.stack || [];
+      lines = stack.split(/[\r\n]+/).map((line, index) => (
         // eslint-disable-next-line react/no-array-index-key
         <li key={line + index} className="cater-error-frame">
           {line}
@@ -74,7 +78,7 @@ class Errors extends React.Component {
     }
 
     return (
-      <div>
+      <div className="cater-error">
         <style>{DEFAULT_CSS}</style>
         <div className="cater-error">
           <h1>

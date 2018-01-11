@@ -1,5 +1,4 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-import './_dev';
 import App from 'app/app';
 import Provider from 'app/provider';
 import React from 'react';

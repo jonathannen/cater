@@ -24,7 +24,7 @@ class Layout extends React.Component {
     }
 
     return (
-      <html lang="en" onError="console.log(2)">
+      <html lang="en">
         <head>
           <meta charSet="utf-8" />
           <link rel="preload" href={ctx.bundlePath} as="script" />
@@ -34,7 +34,7 @@ class Layout extends React.Component {
           ))}
           {css}
         </head>
-        <body onError="console.log(1)">
+        <body>
           {children}
           <Scripts />
         </body>

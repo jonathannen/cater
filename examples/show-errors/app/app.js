@@ -14,7 +14,7 @@ class App extends React.Component {
     return (
       <div>
         <Title>Let&apos;s throw some Exceptions!</Title>
-        <h1>Good luck!</h1>
+        <h1>Good luck!!</h1>
         <Broken />
       </div>
     );

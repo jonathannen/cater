@@ -1,12 +1,22 @@
 // Copyright Jon Williams 2017. See LICENSE file.
+import ErrorProvider from './error-provider';
 import React from 'react';
 
 class Provider extends React.Component {
   render() {
+    let result = this.props.children;
     if (this.props.dangerouslySetInnerHTML) {
-      return <div dangerouslySetInnerHTML={this.props.dangerouslySetInnerHTML} />;
+      result = <span dangerouslySetInnerHTML={this.props.dangerouslySetInnerHTML} />;
     }
-    return <div>{this.props.children}</div>;
+
+    /* eslint-disable no-undef */
+    if (
+      (typeof MODE !== 'undefined' && MODE === 'dev') ||
+      (typeof process !== 'undefined' && process.env.CATER_MODE === 'dev')
+    ) {
+      return <ErrorProvider timestamp={new Date()}>{result}</ErrorProvider>;
+    }
+    return result;
   }
 }
 

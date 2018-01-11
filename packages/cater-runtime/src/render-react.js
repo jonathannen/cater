@@ -2,7 +2,7 @@
 const CaterContext = require('./cater-context');
 const CaterProvider = require('../server/cater-provider');
 const { createElement } = require('react');
-const { renderToString } = require('react-dom/server');
+const { renderToStaticMarkup, renderToString } = require('react-dom/server');
 
 /**
  * http.Handler that renders the App via React.
@@ -45,7 +45,7 @@ function generateReactRenderer(bundlePath, components) {
     );
     const layout = createElement(components.Layout, null, rootDiv);
     const wrappedLayout = createElement(CaterProvider, { caterContext }, layout);
-    const reactBody = renderToString(wrappedLayout);
+    const reactBody = renderToStaticMarkup(wrappedLayout);
 
     res.write(reactBody);
     res.end();
