@@ -3,6 +3,8 @@ import { caterContextTypes } from 'server/cater-provider';
 import React from 'react';
 import Scripts from 'app/scripts';
 
+/* eslint-disable react/no-danger */
+
 /**
  * Layout is used on the Server Side to render the HTML surrounding the
  * #root <div id="root"></div> DOM "home" of the application. Any custom

@@ -2,7 +2,7 @@
 import CustomProvider from 'server/custom-provider';
 import { extractCritical } from 'emotion-server';
 import ParentProvider from 'app/^'; // Note: Inheritance import
-import React, { createElement } from 'react';
+import React from 'react';
 import { renderToString } from 'react-dom/server';
 
 /**

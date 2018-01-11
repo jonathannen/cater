@@ -2,6 +2,8 @@
 import ErrorProvider from './error-provider';
 import React from 'react';
 
+/* eslint-disable react/no-danger */
+
 class Provider extends React.Component {
   render() {
     let result = this.props.children;
