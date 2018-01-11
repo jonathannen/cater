@@ -19,9 +19,6 @@ function index(providedConfig = {}) {
 
   const babelConfig = app.sides.server.babel;
   Object.assign(babelConfig, { cache: false, only: app.sides.server.paths });
-  // webpack HMR requires babel outside of the usual Cater paths, so don't
-  // limit the babel register with only
-  if (app.hotModuleReplacement) delete babelConfig.only;
 
   require('babel-register')(babelConfig); // eslint-disable-line global-require
   return app;

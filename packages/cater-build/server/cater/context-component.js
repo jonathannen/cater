@@ -12,5 +12,4 @@ class ContextComponent extends React.Component {
     return this.context.internalCaterContext;
   }
 }
-
 export default ContextComponent;

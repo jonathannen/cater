@@ -1,15 +1,19 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-import ContextComponent from 'server/cater/context-component';
+import { caterContextTypes } from 'server/cater-provider';
 import { extractCritical } from 'emotion-server';
 import Layout from 'server/^';
 import React from 'react';
+import React from 'react';
 
 /**
+ * Utility component that hooks into the server-side Cater Context.
  */
 
-class EmotionLayout extends ContextComponent {
+class EmotionLayout extends Layout {
+  static contextTypes = caterContextTypes;
+
   render() {
-    const ctx = this.caterContext();
+    const ctx = this.context.internalCaterContext;
     const { ids, css } = extractCritical(ctx.bodyHTML);
 
     ctx.addGlobalStyle(css);

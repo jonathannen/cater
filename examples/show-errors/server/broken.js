@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 
 class Broken extends Component {
   render() {
-    // throw new Error('This error occurs client-side, but only during render.');
+    // throw new Error('This error occurs server-side, but only during render.');
     return (
       <div>
         You will never make it here
