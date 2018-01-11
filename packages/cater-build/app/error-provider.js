@@ -36,7 +36,7 @@ class ErrorProvider extends React.Component {
         node.forEach((e) => e.parentNode.removeChild(e));
       }, 500);
 
-      return <Errors appRootPath="" error={this.state.hasError} />;
+      return <Errors appRootPath="" error={this.state.hasError} hot={this.props.hot} />;
     }
     return this.props.children;
   }

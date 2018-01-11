@@ -14,7 +14,11 @@ class Provider extends React.Component {
       (typeof MODE !== 'undefined' && MODE === 'dev') ||
       (typeof process !== 'undefined' && process.env.CATER_MODE === 'dev')
     ) {
-      return <ErrorProvider timestamp={new Date()}>{result}</ErrorProvider>;
+      return (
+        <ErrorProvider hot={module.hot} timestamp={new Date()}>
+          {result}
+        </ErrorProvider>
+      );
     }
     return result;
   }

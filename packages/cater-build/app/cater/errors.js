@@ -31,7 +31,12 @@ div#root .cater-error { display: block; }
 class Errors extends React.Component {
   static propTypes = {
     appRootPath: PropTypes.string.isRequired,
-    error: PropTypes.object.isRequired
+    error: PropTypes.object.isRequired,
+    hot: PropTypes.bool
+  };
+
+  static defaultProps = {
+    hot: false
   };
 
   // Strips out the path of the application and replaces node_modules
@@ -94,6 +99,9 @@ class Errors extends React.Component {
           ) : (
             <h2 title={error.message}>{this.formatFilename(error.message)}</h2>
           )}
+
+          {!this.props.hot && <p>This error will not hot-reload</p>}
+
           {error.codeFrameHTML && <pre dangerouslySetInnerHTML={{ __html: error.codeFrameHTML }} />}
 
           <ol>{lines}</ol>
