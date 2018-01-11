@@ -1,6 +1,6 @@
 {
   "name": "cater-assets",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Asset pipeline setup for Cater",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "cater-build": "^0.6.0",
+    "cater-build": "^0.7.0",
     "css-loader": "^0.28.8",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",

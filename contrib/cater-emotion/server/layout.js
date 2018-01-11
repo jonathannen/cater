@@ -10,7 +10,7 @@ import React from 'react';
 class EmotionLayout extends ContextComponent {
   render() {
     const ctx = this.caterContext();
-    const { html, ids, css } = extractCritical(ctx.bodyHTML);
+    const { ids, css } = extractCritical(ctx.bodyHTML);
 
     ctx.addGlobalStyle(css);
     ctx.addGlobalJSON('INTERNAL_EMOTION_IDS', ids);
