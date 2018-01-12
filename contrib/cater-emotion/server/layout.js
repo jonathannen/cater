@@ -3,7 +3,6 @@ import { caterContextTypes } from 'server/cater-provider';
 import { extractCritical } from 'emotion-server';
 import Layout from 'server/^';
 import React from 'react';
-import React from 'react';
 
 /**
  * Utility component that hooks into the server-side Cater Context.
