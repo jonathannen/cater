@@ -2,6 +2,7 @@
 import ContextComponent from 'server/cater/context-component';
 import PropTypes from 'prop-types';
 import React from 'react';
+import util from 'util';
 
 /* eslint-disable react/no-danger */
 
@@ -34,7 +35,12 @@ class Head extends ContextComponent {
       <link href={href} key={href} rel="stylesheet" type="text/css" />
     ));
 
-    const children = brains.concat(globalStyleLinks);
+    const links = ctx.links.map((props) => {
+      const key = util.inspect(props);
+      return <link {...props} key={key} />;
+    });
+
+    const children = brains.concat(globalStyleLinks).concat(links);
 
     if (this.props.unwrap) return children;
     return <head>{children}</head>;

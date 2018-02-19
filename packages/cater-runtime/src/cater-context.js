@@ -10,6 +10,7 @@ class CaterContext {
     this.globalJSON = {};
     this.globalStyles = [];
     this.globalStyleLinks = [];
+    this.links = [];
     this.title = '';
     this.url = url;
   }
@@ -42,6 +43,13 @@ class CaterContext {
    */
   addGlobalJSON(name, data) {
     this.globalJSON[name] = data;
+  }
+
+  /**
+   * Adds a <head> link element
+   */
+  addLink(props) {
+    this.links.push(props);
   }
 
   /**

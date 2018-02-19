@@ -3,7 +3,10 @@
   "description": "Workspace for: Modular convention-driven framework for React and Friends.",
   "private": true,
   "version": "0.7.1",
-  "workspaces": ["contrib/*", "packages/*"],
+  "workspaces": [
+    "contrib/*",
+    "packages/*"
+  ],
   "scripts": {
     "docs": "rm -rf docs && jsdoc --configure .jsdoc.conf.js",
     "lint": "eslint . --cache --ext js",
@@ -15,11 +18,13 @@
       "<rootDir>/packages/*",
       "<rootDir>/packages/cater-build/integration/*"
     ],
-    "testPathIgnorePatterns": ["/node_modules/", "/examples/"]
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/examples/"
+    ]
   },
   "dependencies": {
     "express": "^4.16.2"
   },
-  "dependenciesComment":
-    "^^^^^^^^^^^^^^^^^^ Dependencies are included in this top-level package to support testing under examples/*. They're not part of cater"
+  "dependenciesComment": "^^^^^^^^^^^^^^^^^^ Dependencies are included in this top-level package to support testing under examples/*. They're not part of cater"
 }

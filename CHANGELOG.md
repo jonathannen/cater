@@ -7,13 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+* Included a <HeadLink> component to add link tags into the header element server-side.
+
 ## [0.7.1] - 2018-02-19
 
 ### Changed
 
 * Emotion library upgraded from v8 to 9.0.1
 
-###
+### Fixed
 
 * Includes a fix for running Hot Module Replacement (HMR=1).
 

@@ -3,6 +3,7 @@ $background-image: url('assets/cat.png.datauri');
 
 body {
   background-image: $background-image;
+  font-family: Roboto, sans-serif;
 }
 
 body > div {
@@ -26,4 +27,8 @@ a {
 h1,
 h2 {
   font-weight: 200;
+}
+
+h1 {
+  font-family: Merriweather, serif;
 }

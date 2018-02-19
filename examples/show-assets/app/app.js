@@ -1,4 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
+import HeadLink from 'app/cater/head-link';
 import GlobalStyle from 'app/global-style';
 import React from 'react';
 import Title from 'app/cater/title';
@@ -20,6 +21,9 @@ const title = 'Cats on Cats on Cats - Cater Asset Test';
 export default () => (
   <div>
     <Title>{title}</Title>
+    <HeadLink href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+    <HeadLink href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet" />
+
     <h1>{title}</h1>
 
     <GlobalStyle href={css} />
