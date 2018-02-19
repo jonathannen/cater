@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.7.1] - 2018-02-19
+
+### Changed
+
+* Emotion library upgraded from v8 to 9.0.1
+
+###
+
+* Includes a fix for running Hot Module Replacement (HMR=1).
+
 ## [0.6.0] - 2018-01-10
 
 ### Added

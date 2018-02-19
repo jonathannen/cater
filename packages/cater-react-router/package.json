@@ -1,6 +1,6 @@
 {
   "name": "cater-react-router",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Adds React Router to a Cater Application",
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "cater-build": "^0.7.0",
+    "cater-build": "^0.7.1",
     "react-router-dom": "^4.2.2"
   }
 }
