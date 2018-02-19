@@ -55,7 +55,6 @@ In the spirit of no boilerplate, let's get started. First of all, let's create y
 
     mkdir hello-cater
     cd hello-cater
-    yarn init # just accept all the defaults
     yarn add cater
     yarn add --dev cater-build
 

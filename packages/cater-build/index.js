@@ -21,6 +21,7 @@ function index(providedConfig = {}) {
   Object.assign(babelConfig, { cache: false, only: app.sides.server.paths });
 
   require('babel-register')(babelConfig); // eslint-disable-line global-require
+
   return app;
 }
 
