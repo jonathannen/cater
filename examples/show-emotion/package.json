@@ -18,7 +18,7 @@
     "cater-jest": "^0.7.0",
     "jest": "^22.0.4",
     "supertest": "^3.0.0",
-    "cater-emotion": "^0.7.0"
+    "cater-emotion": "^9.0.1"
   },
   "private": true
 }
