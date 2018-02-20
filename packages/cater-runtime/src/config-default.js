@@ -9,12 +9,11 @@ const defaultOptions = {
   babelRegisterDisable: false,
   assetHost: null,
   buildDirectory: 'build',
-  bundleFilename: 'bundle.js',
+  bundleName: 'bundle',
   httpPort: 3000,
   mode: 'runtime',
   publicPath: '/static/',
   renderer: 'react',
-  serverBundleFilename: 'server-bundle.js',
   serveStaticAssets: null // Will default to true unless assetHost is seet
 };
 

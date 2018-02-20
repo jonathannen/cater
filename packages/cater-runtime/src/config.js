@@ -57,6 +57,12 @@ class Config {
     this.buildDirectory = provided.buildDirectory || defaults.buildDirectory;
     this.buildPath = path.join(this.appRootPath, this.buildDirectory);
     this.mode = provided.mode || process.env.CATER_MODE || defaults.mode;
+
+    const reassign = defaults;
+    this.bundleName = defaults.bundleName || provided.bundleName;
+    reassign.bundleFilename = `${this.bundleName}.js`;
+    reassign.serverBundleFilename = `server-${this.bundleName}.js`;
+    return this;
   }
 
   loadConfigurationFiles() {
