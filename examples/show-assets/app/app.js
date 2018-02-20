@@ -1,11 +1,10 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 import HeadLink from 'app/cater/head-link';
-import GlobalStyle from 'app/global-style';
 import React from 'react';
 import Title from 'app/cater/title';
 
 // Import a global stylesheet
-import css from 'assets/bundle.scss';
+import 'assets/all.scss';
 
 // Import four different image types
 import gif from 'assets/cat.gif';
@@ -25,8 +24,6 @@ export default () => (
     <HeadLink href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet" />
 
     <h1>{title}</h1>
-
-    <GlobalStyle href={css} />
 
     <p>
       <img alt="Cute Cat GIF" src={gif} width="100" height="66" />

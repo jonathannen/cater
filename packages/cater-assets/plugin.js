@@ -78,7 +78,14 @@ function generateBabelAssetTransform(state) {
           // Convert the import in to setting a variable with the asset path
           const content = state.manifest[basename] || importName;
 
-          const id = declaration.node.specifiers[0].local.name;
+          // The import could be assigned to a varible, or nothing. If it's
+          // nothing, then put in a random variable name. This is necessary
+          // so that things like extracttext for css still trigger.
+          const specifier = declaration.node.specifiers[0];
+          const id = specifier
+            ? specifier.local.name
+            : `__import${Math.floor(Math.random() * Math.floor(99999))}${Date.now()}`;
+
           const variable = t.variableDeclarator(t.identifier(id), t.stringLiteral(content));
           declaration.replaceWith({
             type: 'VariableDeclaration',
