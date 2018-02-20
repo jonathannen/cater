@@ -17,15 +17,15 @@ const { renderToStaticMarkup, renderToString } = require('react-dom/server');
  *
  * This is currently the default renderer.
  *
- * @module cater-runtime/render-fast
+ * @module cater-runtime/render-react
  */
 
-function generateReactRenderer(bundlePath, components) {
+function generateReactRenderer(defaultContext, components) {
   return function handle(req, res) {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write('<!DOCTYPE html>');
 
-    const caterContext = new CaterContext(bundlePath, req.url);
+    const caterContext = new CaterContext(defaultContext, req.url);
 
     // Equivalent of:
     // <CaterProvider caterContext={}><Provider><App/><Provider></CaterProvider>

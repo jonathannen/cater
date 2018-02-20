@@ -153,6 +153,14 @@ function onWebpackCompiled(state, stats) {
     // changes the manifest refernence to something like
     // https://yourcnd.example.org/static/name.21323131.jpg
     manifest[k] = state.assetHost + state.publicPath + manifest[k];
+
+    const reassign = state;
+    if (k === `${state.bundleName}.css`) {
+      reassign.defaultContext.globalStyleLinks = [manifest[k]];
+    }
+    if (k === `${state.bundleName}.js`) {
+      reassign.defaultContext.globalScriptLinks = [manifest[k]];
+    }
   });
 
   // Run through the modules looking for assets. This will pick up assets
@@ -183,7 +191,10 @@ function onWebpackCompiled(state, stats) {
 // the necessary rules and transforms into the client and server sides
 function onConfigured(app, state) {
   // Update state based upon any changes
-  state.assetHost = app.assetHost || ''; // eslint-disable-line no-param-reassign
+  const reassign = state;
+  reassign.assetHost = app.assetHost || '';
+  reassign.bundleName = app.bundleName;
+  reassign.defaultContext = app.defaultContext;
 
   const babelTransform = generateBabelAssetTransform(state);
   const imageRules = generateWebpackImageRules(state);

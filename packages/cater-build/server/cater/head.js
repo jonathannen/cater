@@ -24,9 +24,12 @@ class Head extends ContextComponent {
       css = <style key="global-css" dangerouslySetInnerHTML={{ __html: joinedCss }} />;
     }
 
+    const preload = ctx.globalScriptLinks.map((src) => (
+      <link key="script-preload" rel="preload" href={src} as="script" />
+    ));
     const brains = [
       <meta key="charset" charSet="utf-8" />,
-      <link key="script-preload" rel="preload" href={ctx.bundlePath} as="script" />,
+      ...preload,
       <title key="title">{ctx.title}</title>,
       css
     ];

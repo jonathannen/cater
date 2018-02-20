@@ -26,6 +26,7 @@ class RuntimeCater extends EventEmitter {
     this.httpPort = config.httpPort;
     this.mode = config.mode;
     this.renderer = config.renderer;
+    this.defaultContext = config.defaultContext;
 
     if (this.mode === 'runtime') this.configureRuntime(config);
   }
@@ -60,6 +61,8 @@ class RuntimeCater extends EventEmitter {
     this.loadManifests();
     const clientBundle = this.clientManifest[config.bundleFilename];
     const serverBundle = this.serverManifest[config.serverBundleFilename];
+
+    this.bundleName = config.bundleName;
     this.bundlePath = path.join(config.publicPath, clientBundle);
     this.serverBundlePath = path.join(this.buildPath, serverBundle);
 
@@ -71,9 +74,9 @@ class RuntimeCater extends EventEmitter {
     const cater = HandlerCater(
       this.renderer,
       this.serverBundlePath,
-      this.bundlePath,
       this.publicPath,
-      this.assetHost
+      this.assetHost,
+      this.defaultContext
     );
 
     // Trigger the cater handler to load the application from the bundle

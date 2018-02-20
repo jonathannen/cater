@@ -1,18 +1,24 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
+const merge = require('deepmerge');
 
 /**
  * Context used by the CaterProvider component.
  */
 class CaterContext {
-  constructor(bundlePath, url) {
-    this.bundlePath = bundlePath;
+  constructor(defaults, url) {
+    // this.bundlePath = bundlePath;
     this.globalJavaScript = [];
     this.globalJSON = {};
+
+    this.globalScriptLinks = [];
     this.globalStyles = [];
     this.globalStyleLinks = [];
+
     this.links = [];
     this.title = '';
     this.url = url;
+
+    Object.assign(this, merge(defaults, this));
   }
 
   /**

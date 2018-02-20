@@ -48,10 +48,10 @@ export class Scripts extends ContextComponent {
     const scripts = ctx.globalJavaScript.map((script) => (
       <script type="text/javascript" dangerouslySetInnerHTML={{ __html: script }} />
     ));
-    results = results.concat(scripts);
 
-    // Add the main bundle script in
-    results.push(<script async src={ctx.bundlePath} />);
+    const links = ctx.globalScriptLinks.map((src) => <script async src={src} />);
+
+    results = results.concat(scripts).concat(links);
     return results;
   }
 }

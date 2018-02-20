@@ -1,14 +1,12 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
+const Render = require('./render-react');
 
 /**
  * Creates a handler with the given entry point (file that loads server
  * components).
  */
-function generate(renderer, entryPath, bundlePath, publicPath, assetHost) {
+function generate(renderer, entryPath, publicPath, assetHost, defaultContext) {
   let render = null;
-
-  // Is a CDN in use?
-  const finalBundlePath = `${assetHost || ''}${bundlePath}`;
 
   const handler = function handler(req, res, next = null) {
     if (!req.url.startsWith(publicPath)) return render(req, res);
@@ -23,10 +21,9 @@ function generate(renderer, entryPath, bundlePath, publicPath, assetHost) {
     Object.assign(handler, components);
   };
 
-  // Determine which Render we're using - either React or Fast
-  // eslint-disable-next-line global-require
-  const Render = renderer === 'fast' ? require('./render-fast') : require('./render-react');
-  render = Render(finalBundlePath, handler);
+  // Currently only supporting the react renderer - potentially will have a
+  // fast-pathing version available once the API/codebase is stable.
+  render = Render(defaultContext, handler);
 
   return handler;
 }

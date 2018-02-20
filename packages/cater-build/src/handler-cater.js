@@ -43,13 +43,13 @@ function checkServerComponents(handler) {
 function generate(app) {
   // Get an instance of the cater-runtime handler
   const { renderer, publicPath, assetHost } = app;
-  const { client, server } = app.sides;
+  const { server } = app.sides;
   const handler = HandlerCater(
     renderer,
     server.entryPath,
-    client.bundlePath,
     publicPath,
-    assetHost
+    assetHost,
+    app.defaultContext
   );
 
   // Wrapped version of the handler that filters out Hot Module Replacement

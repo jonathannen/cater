@@ -10,6 +10,7 @@ const defaultOptions = {
   assetHost: null,
   buildDirectory: 'build',
   bundleName: 'bundle',
+  defaultContext: {},
   httpPort: 3000,
   mode: 'runtime',
   publicPath: '/static/',
