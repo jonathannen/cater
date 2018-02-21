@@ -2,7 +2,7 @@
   "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
   "description": "Workspace for: Modular convention-driven framework for React and Friends.",
   "private": true,
-  "version": "0.7.1",
+  "version": "0.8.0",
   "workspaces": [
     "contrib/*",
     "packages/*"
