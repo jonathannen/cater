@@ -29,7 +29,6 @@ class BuildCater extends RuntimeCater {
 
     this.babel = config.babel;
     this.bundleName = config.bundleName;
-    this.defaultContext = config.defaultContext;
     this.entryScriptFilename = config.entryScriptFilename;
     this.hotModuleReplacement = config.hotModuleReplacement;
     this.startOnError = config.startOnError;

@@ -3,8 +3,8 @@ const PropTypes = require('prop-types');
 const React = require('react');
 
 // Context shared by Layout to it's child components
-const caterContextTypes = {
-  internalCaterContext: PropTypes.object
+const serverContextTypes = {
+  internalServerContext: PropTypes.object
 };
 
 /**
@@ -12,11 +12,11 @@ const caterContextTypes = {
  * Head-level elements from components within the body of the document.
  * Global stylesheets and the document title are two common examples.
  */
-class CaterProvider extends React.Component {
+class ServerProvider extends React.Component {
   getChildContext() {
     if (!this.childContext) {
       this.childContext = {
-        internalCaterContext: this.props.caterContext
+        internalServerContext: this.props.context
       };
     }
     return this.childContext;
@@ -27,9 +27,8 @@ class CaterProvider extends React.Component {
   }
 }
 
-// CommonJS
-CaterProvider.childContextTypes = caterContextTypes;
+ServerProvider.childContextTypes = serverContextTypes;
 // eslint-disable-next-line react/forbid-prop-types
-CaterProvider.propTypes = { caterContext: PropTypes.object.isRequired };
-module.exports = CaterProvider;
-module.exports.caterContextTypes = caterContextTypes;
+ServerProvider.propTypes = { context: PropTypes.object.isRequired };
+module.exports = ServerProvider;
+module.exports.serverContextTypes = serverContextTypes;

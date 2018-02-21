@@ -5,7 +5,7 @@ const Render = require('./render-react');
  * Creates a handler with the given entry point (file that loads server
  * components).
  */
-function generate(renderer, entryPath, publicPath, assetHost, defaultContext) {
+function generate(entryPath, publicPath, assetHost, serverContext) {
   let render = null;
 
   const handler = function handler(req, res, next = null) {
@@ -23,7 +23,7 @@ function generate(renderer, entryPath, publicPath, assetHost, defaultContext) {
 
   // Currently only supporting the react renderer - potentially will have a
   // fast-pathing version available once the API/codebase is stable.
-  render = Render(defaultContext, handler);
+  render = Render(serverContext, handler);
 
   return handler;
 }

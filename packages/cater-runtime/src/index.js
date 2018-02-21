@@ -3,6 +3,7 @@ const EventEmitter = require('events');
 const fs = require('fs');
 const HttpServer = require('./http-server');
 const Middleware = require('./middleware');
+const ServerContext = require('./server-context');
 const path = require('path');
 
 const MANIFEST_FILENAME = 'manifest.json';
@@ -25,9 +26,8 @@ class RuntimeCater extends EventEmitter {
     this.publicPath = config.publicPath;
     this.httpPort = config.httpPort;
     this.mode = config.mode;
-    this.renderer = config.renderer;
-    this.defaultContext = config.defaultContext;
 
+    this.configureServerContext(config);
     if (this.mode === 'runtime') this.configureRuntime(config);
   }
 
@@ -69,14 +69,17 @@ class RuntimeCater extends EventEmitter {
     this.cleanConfig();
   }
 
+  configureServerContext(config) {
+    this.serverContext = new ServerContext(config.serverContext);
+  }
+
   handler() {
     const HandlerCater = require('./handler-cater'); // eslint-disable-line global-require
     const cater = HandlerCater(
-      this.renderer,
       this.serverBundlePath,
       this.publicPath,
       this.assetHost,
-      this.defaultContext
+      this.serverContext
     );
 
     // Trigger the cater handler to load the application from the bundle

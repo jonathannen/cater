@@ -1,5 +1,4 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-// import { createStore } from 'redux';
 import { BrowserRouter } from 'react-router-dom';
 import ParentProvider from 'app/^'; // Note: Inheritance import
 import React from 'react';

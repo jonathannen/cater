@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-import ContextComponent from 'server/cater/context-component';
+import ContextConsumer from 'server/cater/context-consumer';
 import PropTypes from 'prop-types';
 
 /**
@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
  *
  *     <GlobalStyle css="body { background: tomato }"/>
  */
-class GlobalStyle extends ContextComponent {
+class GlobalStyle extends ContextConsumer {
   static propTypes = {
     css: PropTypes.string,
     href: PropTypes.string
@@ -34,9 +34,9 @@ class GlobalStyle extends ContextComponent {
   };
 
   render() {
-    const ctx = this.caterContext();
-    if (this.props.href) ctx.addGlobalStyleLink(this.props.href);
-    if (this.props.css) ctx.addGlobalStyle(this.props.css);
+    const ctx = this.serverContext();
+    if (this.props.href) ctx.addStylesheet(this.props.href);
+    if (this.props.css) ctx.addStyle(this.props.css);
     return false;
   }
 }

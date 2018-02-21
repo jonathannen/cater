@@ -1,12 +1,11 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-import HeadLink from 'app/cater/head-link';
+import Link from 'app/cater/link';
 import React from 'react';
 import Title from 'app/cater/title';
 
-// Import a global stylesheet
-import 'assets/all.scss';
+import 'assets/all.scss'; // Import a global stylesheet
 
-// Import four different image types
+// Import a number of different image types
 import gif from 'assets/cat.gif';
 import png from 'assets/cat.png';
 import pngForceData from 'assets/cat.png.datauri';
@@ -20,8 +19,8 @@ const title = 'Cats on Cats on Cats - Cater Asset Test';
 export default () => (
   <div>
     <Title>{title}</Title>
-    <HeadLink href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
-    <HeadLink href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet" />
+    <Link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+    <Link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet" />
 
     <h1>{title}</h1>
 

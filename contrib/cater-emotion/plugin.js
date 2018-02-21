@@ -1,8 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 
-function plugin() {
-  // Nothing to do yet
-  return true;
-}
-
-module.exports = plugin;
+// Nothing to do. This is purely providing components via the client and server
+// components
+module.exports = () => true;

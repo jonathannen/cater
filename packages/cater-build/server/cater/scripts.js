@@ -1,26 +1,27 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-import ContextComponent from 'server/cater/context-component';
+import ContextConsumer from './context-consumer';
 import React from 'react';
 
 /* eslint-disable react/no-danger */
 
+function errorHandlerScript() {
+  return (
+    <script
+      dangerouslySetInnerHTML={{
+        __html: 'window.onerror = function() { window.errorState = arguments; }'
+      }}
+    />
+  );
+}
+
 /**
  * Renders the script tags based upon the bundled client-side code.
  */
-export class Scripts extends ContextComponent {
+export class Scripts extends ContextConsumer {
   render() {
-    const ctx = this.caterContext();
+    const ctx = this.serverContext();
 
-    let results = [];
-    if (process.env.CATER_MODE === 'dev') {
-      results = [
-        <script
-          dangerouslySetInnerHTML={{
-            __html: 'window.onerror = function() { window.errorState = arguments; }'
-          }}
-        />
-      ];
-    }
+    const errorScript = process.env.CATER_MODE === 'dev' ? errorHandlerScript() : [];
 
     // For each Global JSON object, inject a script with an escaped
     // JSON-based payload. This is extracted and added to the "name"
@@ -29,7 +30,7 @@ export class Scripts extends ContextComponent {
     // Attribute-style escaping is solid XSS-wise, but quite verbose
     // in the resulting document. We may substitute another method in down
     // the line.
-    const json = Object.entries(ctx.globalJSON).map(([name, data]) => {
+    const json = Object.entries(ctx.json).map(([name, data]) => {
       const id = `__json-${name}`;
       const script = `(function() { window.${name} = JSON.parse(document.getElementById('${id}').getAttribute('data-payload')); })();`;
 
@@ -43,16 +44,9 @@ export class Scripts extends ContextComponent {
         />
       );
     });
-    results = results.concat(json);
 
-    const scripts = ctx.globalJavaScript.map((script) => (
-      <script type="text/javascript" dangerouslySetInnerHTML={{ __html: script }} />
-    ));
-
-    const links = ctx.globalScriptLinks.map((src) => <script async src={src} />);
-
-    results = results.concat(scripts).concat(links);
-    return results;
+    const links = ctx.javascripts.map((script) => <script async src={script.src} />);
+    return [...errorScript, ...json, ...links];
   }
 }
 

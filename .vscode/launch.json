@@ -7,12 +7,10 @@
     {
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "name": "Run Jest",
+      "cwd": "${workspaceFolder}/examples/show-assets",
+      "name": "Run Jest - Show Assets",
       "program": "${workspaceRoot}/node_modules/jest-cli/bin/jest.js",
-      "args": [
-        "-i"
-      ],
+      "args": ["-i"]
     },
     {
       "type": "node",
@@ -20,9 +18,7 @@
       "cwd": "${workspaceRoot}/examples/show-errors",
       "name": "Show Errors",
       "program": "${workspaceRoot}/node_modules/cater/bin/cater",
-      "args": [
-        "dev"
-      ],
+      "args": ["dev"]
     },
     {
       "type": "node",
@@ -30,9 +26,7 @@
       "cwd": "${workspaceRoot}/examples/hello-world",
       "name": "Hello World",
       "program": "${workspaceRoot}/node_modules/cater/bin/cater",
-      "args": [
-        "dev"
-      ],
+      "args": ["dev"]
     }
   ]
 }

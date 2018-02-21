@@ -1,12 +1,12 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-import ContextComponent from 'server/cater/context-component';
+import ContextConsumer from './context-consumer';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Scripts from 'server/cater/scripts';
 
 /* eslint-disable react/no-danger */
 
-class Body extends ContextComponent {
+class Body extends ContextConsumer {
   static propTypes = {
     unwrap: PropTypes.bool
   };
@@ -16,7 +16,7 @@ class Body extends ContextComponent {
   };
 
   render() {
-    const ctx = this.caterContext();
+    const ctx = this.serverContext();
     const result = [
       <div key="root" id="root" dangerouslySetInnerHTML={{ __html: ctx.bodyHTML }} />,
       <Scripts key="scripts" />

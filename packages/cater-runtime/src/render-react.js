@@ -1,6 +1,6 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const CaterContext = require('./cater-context');
-const CaterProvider = require('../server/cater-provider');
+const clone = require('clone');
+const ServerProvider = require('../server/server-provider');
 const { createElement } = require('react');
 const { renderToStaticMarkup, renderToString } = require('react-dom/server');
 
@@ -20,28 +20,32 @@ const { renderToStaticMarkup, renderToString } = require('react-dom/server');
  * @module cater-runtime/render-react
  */
 
-function generateReactRenderer(defaultContext, components) {
+function generateReactRenderer(serverContext, components) {
+  const serverContextPrototype = Object.getPrototypeOf(serverContext);
+
   return function handle(req, res) {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write('<!DOCTYPE html>');
 
-    const caterContext = new CaterContext(defaultContext, req.url);
+    // Create a new Server Context
+    const context = Object.assign(Object.create(serverContextPrototype), clone(serverContext));
+    context.url = req.url;
 
     // Equivalent of:
-    // <CaterProvider caterContext={}><Provider><App/><Provider></CaterProvider>
+    // <ServerProvider context={}><Provider><App/><Provider></CaterProvider>
     const app = createElement(components.App, null, null);
     const providerWrap = createElement(components.Provider, null, app);
-    const caterWrap = createElement(CaterProvider, { caterContext }, providerWrap);
+    const caterWrap = createElement(ServerProvider, { context }, providerWrap);
     const providerAppBody = renderToString(caterWrap);
 
-    caterContext.bodyHTML = providerAppBody;
+    context.bodyHTML = providerAppBody;
 
     // Equivalent of:
-    // <CaterProvider caterContext={}>
+    // <CaterProvider context={}>
     // <Layout>{providerAppBody}</Layout>
     // </CaterProvider>
     const layout = createElement(components.Layout, { bodyHTML: providerAppBody }, null);
-    const wrappedLayout = createElement(CaterProvider, { caterContext }, layout);
+    const wrappedLayout = createElement(ServerProvider, { context }, layout);
     const reactBody = renderToStaticMarkup(wrappedLayout);
 
     res.write(reactBody);

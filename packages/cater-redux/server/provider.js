@@ -1,5 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-import CustomProvider from 'server/custom-provider';
+import ContextProvider from 'server/cater/context-provider';
 import { createStore } from 'redux';
 import ParentProvider from 'app/^'; // Note: Inheritance import
 import { Provider } from 'react-redux';
@@ -14,10 +14,10 @@ const store = createStore(Reducer);
  * and puts it in a global JSON variable - the client provider hyrdates
  * from this data.
  */
-class ReduxProvider extends CustomProvider {
+class ReduxProvider extends ContextProvider {
   render() {
     const initialState = store.getState();
-    this.caterContext().addGlobalJSON('INTERNAL_CATER_REDUX', initialState);
+    this.serverContext().addJson('INTERNAL_CATER_REDUX', initialState);
 
     return (
       <ParentProvider>

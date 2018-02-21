@@ -156,10 +156,10 @@ function onWebpackCompiled(state, stats) {
 
     const reassign = state;
     if (k === `${state.bundleName}.css`) {
-      reassign.defaultContext.globalStyleLinks = [manifest[k]];
+      reassign.bundleStylesheet = state.serverContext.addStylesheet(manifest[k]);
     }
     if (k === `${state.bundleName}.js`) {
-      reassign.defaultContext.globalScriptLinks = [manifest[k]];
+      reassign.bundleJavaScript = state.serverContext.addJavaScript(manifest[k]);
     }
   });
 
@@ -194,7 +194,7 @@ function onConfigured(app, state) {
   const reassign = state;
   reassign.assetHost = app.assetHost || '';
   reassign.bundleName = app.bundleName;
-  reassign.defaultContext = app.defaultContext;
+  reassign.serverContext = app.serverContext;
 
   const babelTransform = generateBabelAssetTransform(state);
   const imageRules = generateWebpackImageRules(state);
@@ -216,8 +216,19 @@ function onConfigured(app, state) {
   app.sides.server.babel.plugins.push([babelTransform, {}]);
 }
 
+// Called when the Cater App is being built
+function built(app, build, state) {
+  if (!state.bundleJavaScript && !state.bundleStylesheet) return;
+
+  const serverContext = {};
+  if (state.bundleJavaScript) serverContext.javascripts = [state.bundleJavaScript];
+  if (state.bundleStylesheet) serverContext.stylesheets = [state.bundleStylesheet];
+
+  build.emitConfigurationFile('cater-assets', { serverContext });
+}
+
 // Configures Cater with an asset processing pipeline.
-module.exports = function plugin(caterApp, providedOptions) {
+function plugin(caterApp, providedOptions) {
   const options = providedOptions || DEFAULT_OPTIONS;
 
   // Work out the extensions for different asset classes
@@ -244,8 +255,12 @@ module.exports = function plugin(caterApp, providedOptions) {
   state.extensions.push('datauri');
   state.assetFilenameRegExp = new RegExp(`\\.(${state.extensions.join('|')})$`);
 
+  // Connect to event hooks of interest
+  caterApp.once('built', (app, build) => built(app, build, state));
   caterApp.on('webpack-compiled', (_, stats) => onWebpackCompiled(state, stats));
   caterApp.on('configured', (app) => onConfigured(app, state));
 
   return true;
-};
+}
+
+module.exports = plugin;

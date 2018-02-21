@@ -1,12 +1,11 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-import ContextComponent from 'server/cater/context-component';
+import ContextConsumer from './context-consumer';
 import PropTypes from 'prop-types';
 import React from 'react';
-import util from 'util';
 
 /* eslint-disable react/no-danger */
 
-class Head extends ContextComponent {
+class Head extends ContextConsumer {
   static propTypes = {
     unwrap: PropTypes.bool
   };
@@ -16,37 +15,38 @@ class Head extends ContextComponent {
   };
 
   render() {
-    const ctx = this.caterContext();
+    const ctx = this.serverContext();
 
-    let css = '';
-    if (ctx.globalStyles) {
-      const joinedCss = ctx.globalStyles.join('\n');
-      css = <style key="global-css" dangerouslySetInnerHTML={{ __html: joinedCss }} />;
-    }
-
-    const preload = ctx.globalScriptLinks.map((src) => (
-      <link key="script-preload" rel="preload" href={src} as="script" />
+    const preload = ctx.javascripts.map((script) => (
+      <link key={`script-preload-${script.src}`} rel="preload" href={script.src} as="script" />
     ));
+
+    const styles = ctx.stylesheets
+      .filter((stylesheet) => stylesheet.css)
+      .map((stylesheet) => stylesheet.css)
+      .join('\n');
+
+    const stylesheetLinks = ctx.stylesheets
+      .filter((stylesheet) => stylesheet.href)
+      .map((stylesheet) => (
+        <link href={stylesheet.href} key={stylesheet.href} rel="stylesheet" type="text/css" />
+      ));
+
+    const links = ctx.links.map((props) => <link key={`link-${props.href}`} {...props} />);
+
     const brains = [
       <meta key="charset" charSet="utf-8" />,
       ...preload,
       <title key="title">{ctx.title}</title>,
-      css
+      ...links,
+      ...stylesheetLinks
     ];
+    if (styles.length > 0) {
+      brains.push(<style key="global-css" dangerouslySetInnerHTML={{ __html: styles }} />);
+    }
 
-    const globalStyleLinks = ctx.globalStyleLinks.map((href) => (
-      <link href={href} key={href} rel="stylesheet" type="text/css" />
-    ));
-
-    const links = ctx.links.map((props) => {
-      const key = util.inspect(props);
-      return <link {...props} key={key} />;
-    });
-
-    const children = brains.concat(globalStyleLinks).concat(links);
-
-    if (this.props.unwrap) return children;
-    return <head>{children}</head>;
+    if (this.props.unwrap) return brains;
+    return <head>{brains}</head>;
   }
 }
 

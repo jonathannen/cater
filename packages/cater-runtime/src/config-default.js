@@ -10,11 +10,10 @@ const defaultOptions = {
   assetHost: null,
   buildDirectory: 'build',
   bundleName: 'bundle',
-  defaultContext: {},
   httpPort: 3000,
   mode: 'runtime',
   publicPath: '/static/',
-  renderer: 'react',
+  serverContext: {},
   serveStaticAssets: null // Will default to true unless assetHost is seet
 };
 
