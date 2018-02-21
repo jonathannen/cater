@@ -5,11 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.8.0] - 2018-02-21
 
 ### Added
 
-* Included a <HeadLink> component to add link tags into the header element server-side.
+* Included a <Link> component to add link tags into the header element server-side.
+
+### Changed
+
+* Reworked the "Cater Context" to be "Server Context" and simplified the API. Also configures the context from some defaults. This means cater-assets can output bundle styles/scripts to be included rather than having magic scripts and stylesheets that need to be included.
 
 ## [0.7.1] - 2018-02-19
 
