@@ -26,6 +26,8 @@ class ServerContext {
   }
 
   addJavaScript(src, options = {}) {
+    const existing = this.javascripts.find((v) => v.src === src);
+    if (existing) return existing;
     const script = { src, ...options };
     this.javascripts.push(script);
     return script;
@@ -36,12 +38,16 @@ class ServerContext {
   }
 
   addStyle(css, options = {}) {
+    const existing = this.stylesheets.find((v) => v.css === css);
+    if (existing) return existing;
     const stylesheet = { css, ...options };
     this.stylesheets.push(stylesheet);
     return stylesheet;
   }
 
   addStylesheet(href, options = {}) {
+    const existing = this.stylesheets.find((v) => v.href === href);
+    if (existing) return existing;
     const stylesheet = { href, ...options };
     this.stylesheets.push(stylesheet);
     return stylesheet;
