@@ -16,7 +16,7 @@
   "devDependencies": {
     "cater-build": "^0.8.0",
     "cater-jest": "^0.8.0",
-    "cater-polished": "../../contrib/cater-polished/",
+    "cater-polished": "^0.1.0",
     "jest": "^22.0.4",
     "supertest": "^3.0.0"
   },

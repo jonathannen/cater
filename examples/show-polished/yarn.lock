@@ -1141,8 +1141,9 @@ cater-jest@^0.8.0:
     react "^16.2.0"
     react-test-renderer "^16.2.0"
 
-cater-polished@../../contrib/cater-polished/:
+cater-polished@^0.1.0:
   version "0.1.0"
+  resolved "https://registry.yarnpkg.com/cater-polished/-/cater-polished-0.1.0.tgz#51404943d0e01c050d3e5dde2c2f4530f4b915b2"
   dependencies:
     babel-plugin-polished "^1.1.0"
     polished "^1.9.2"
