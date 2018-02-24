@@ -1,0 +1,16 @@
+{
+  "name": "cater-polished",
+  "version": "0.1.0",
+  "description": "Enables the polished CSS library for cater",
+  "author": "Jon Williams <jon@jonathannen.com> https://jonathannen.com",
+  "license": "MIT",
+  "homepage": "https://github.com/clashbit/cater",
+  "main": "plugin.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "babel-plugin-polished": "^1.1.0",
+    "polished": "^1.9.2"
+  }
+}
