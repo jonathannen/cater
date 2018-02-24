@@ -33,11 +33,13 @@ class Head extends ContextConsumer {
       ));
 
     const links = ctx.links.map((props) => <link key={`link-${props.href}`} {...props} />);
+    const meta = ctx.meta.map((props) => <meta key={`link-${props.href}`} {...props} />);
 
     const brains = [
       <meta key="charset" charSet="utf-8" />,
       ...preload,
       <title key="title">{ctx.title}</title>,
+      ...meta,
       ...links,
       ...stylesheetLinks
     ];

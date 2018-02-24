@@ -9,11 +9,11 @@ const merge = require('deepmerge');
  */
 class ServerContext {
   constructor(defaults) {
-    this.stylesheets = [];
     this.javascripts = [];
     this.json = {};
-
     this.links = [];
+    this.meta = [];
+    this.stylesheets = [];
     this.title = '';
     Object.assign(this, merge(this, defaults));
   }
@@ -23,6 +23,10 @@ class ServerContext {
    */
   addLink(props) {
     this.links.push(props);
+  }
+
+  addMeta(props) {
+    this.meta.push(props);
   }
 
   addJavaScript(src, options = {}) {
