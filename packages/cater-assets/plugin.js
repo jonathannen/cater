@@ -45,6 +45,7 @@ const DEFAULT_OPTIONS = {
 class State {
   constructor(app, options) {
     this.assetHost = app.assetHost;
+    this.contextEntries = [];
     this.imageExtensions = options.image || [];
     this.files = [];
     this.publicPath = app.publicPath;
@@ -179,7 +180,15 @@ function generateWebpackStylesheetRule(state) {
 // modules are passed over to the server-side babel to keep them aligned.
 function onWebpackCompiled(state, stats) {
   const { compilation } = stats;
+  const { serverContext } = state;
   const manifest = {};
+  const entries = [];
+
+  // Clear down the server context
+  ['javascripts', 'stylesheets'].forEach((v) => {
+    const collection = serverContext[v];
+    serverContext[v] = collection.filter((e) => !state.contextEntries.includes(e));
+  });
 
   // Extract manifest chunk JS and CSS from the compilation -- in general
   // this will be references to the JS and CSS files.
@@ -187,11 +196,13 @@ function onWebpackCompiled(state, stats) {
   state.files = Object.values(compilation.namedChunks)
     .map((v) => v.files)
     .reduce((prev, curr) => prev.concat(curr), []);
+  // eslint-disable-next-line no-param-reassign
+  state.contextEntries = entries;
   state.files.forEach((filename) => {
     const extension = path.extname(filename);
     const loc = state.location(filename);
-    if (extension === '.js') state.serverContext.addJavaScript(loc);
-    if (extension === '.css') state.serverContext.addStylesheet(loc);
+    if (extension === '.js') entries.push(state.serverContext.addJavaScript(loc));
+    if (extension === '.css') entries.push(state.serverContext.addStylesheet(loc));
   });
 
   const assetModules = stats.compilation.modules.filter((v) => {
