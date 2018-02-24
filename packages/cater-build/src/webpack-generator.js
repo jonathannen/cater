@@ -31,8 +31,6 @@ function forServer(result, side, app) {
 
 // For BUILD webpack builds.
 function forBuild(result) {
-  result.output.filename = '[name].[chunkhash].js';
-
   const uglify = new UglifyJsPlugin({
     compress: {
       warnings: false,
@@ -129,6 +127,7 @@ function generate(app, side) {
 
   const output = {
     chunkFilename: '[name].[chunkhash].js',
+    filename: '[name].[chunkhash].js',
     path: app.buildPath,
     publicPath: app.publicPath
   };

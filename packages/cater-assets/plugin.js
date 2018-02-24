@@ -41,6 +41,24 @@ const DEFAULT_OPTIONS = {
   stylesheet: ['css', 'scss']
 };
 
+// State values for the currently executing asset compilation
+class State {
+  constructor(app, options) {
+    this.assetHost = app.assetHost;
+    this.imageExtensions = options.image || [];
+    this.files = [];
+    this.publicPath = app.publicPath;
+    this.manifest = {};
+    this.mimimize = app.mode !== 'dev';
+    this.stylesheetExtensions = options.stylesheet || [];
+    this.extensions = this.imageExtensions.concat(this.stylesheetExtensions);
+  }
+
+  location(filename) {
+    return path.join(this.assetHost + this.publicPath, filename);
+  }
+}
+
 /*
  * Generates a Babel transform for the server-side rendering of assets. This
  * allows both the server and client sides to have the same asset definition
@@ -59,24 +77,23 @@ const DEFAULT_OPTIONS = {
  * The substituion could also include data URIs. Whatever is supported on the
  * Webpack side is mirrored here.
  */
-function generateBabelAssetTransform(state) {
+function generateBabelAssetTransform(pluginState) {
+  // const manifest = pluginState.manifest;
+
   return function babelTransform({ types: t }) {
     return {
       visitor: {
-        ImportDeclaration: function importDeclaration(declaration) {
+        ImportDeclaration: function importDeclaration(declaration, state) {
           // Detect assets
           const importName = declaration.node.source.value;
           const ext = importName.split('.').pop();
-          if (!state.extensions.includes(ext)) return;
+          if (!pluginState.extensions.includes(ext)) return;
 
-          // Convert "scss" and friends to plain "css".
-          let basename = importName.replace(/^assets\//, '');
-          if (state.stylesheetExtensions.includes(ext)) {
-            basename = `${basename.slice(0, basename.length - ext.length)}css`;
+          let fullpath = importName;
+          if (!importName.startsWith(path.sep)) {
+            const relative = path.dirname(state.file.opts.filename);
+            fullpath = path.resolve(path.join(relative, importName));
           }
-
-          // Convert the import in to setting a variable with the asset path
-          const content = state.manifest[basename] || importName;
 
           // The import could be assigned to a varible, or nothing. If it's
           // nothing, then put in a random variable name. This is necessary
@@ -85,6 +102,23 @@ function generateBabelAssetTransform(state) {
           const id = specifier
             ? specifier.local.name
             : `__import${Math.floor(Math.random() * Math.floor(99999))}${Date.now()}`;
+
+          // Convert the import in to setting a variable with the asset path
+          let content = pluginState.manifest[fullpath];
+
+          // Shim for tests as webpack hasn't necessarily run
+          if (process.env.NODE_ENV === 'test' && !content) content = importName;
+
+          if (specifier && content === '') {
+            throw new Error(
+              `No asset found for '${importName}' in ${
+                state.file.opts.filename
+              }. This is possibly because you are importing a global asset (like a css/scss file). This can be done, but should not be assigned to a variable. e.g. use import 'hello.css' instead of import hello from 'hello.css'. The latter will not work as the hello.css file is bundled.`
+            );
+          }
+          if (specifier && !content) {
+            throw new Error(`No asset found for '${importName}' in ${state.file.opts.filename}`);
+          }
 
           const variable = t.variableDeclarator(t.identifier(id), t.stringLiteral(content));
           declaration.replaceWith({
@@ -144,47 +178,48 @@ function generateWebpackStylesheetRule(state) {
 // Called when the client-side webpack is done. The manifest and the generated
 // modules are passed over to the server-side babel to keep them aligned.
 function onWebpackCompiled(state, stats) {
-  // Parse the manifest first. This will catch the widest range of assets
-  const manifestSource = stats.compilation.assets['manifest.json'].source();
-  const manifest = JSON.parse(manifestSource);
+  const { compilation } = stats;
+  const manifest = {};
 
-  // Convert the manifest to full paths
-  Object.keys(manifest).forEach((k) => {
-    // changes the manifest refernence to something like
-    // https://yourcnd.example.org/static/name.21323131.jpg
-    manifest[k] = state.assetHost + state.publicPath + manifest[k];
+  // Extract manifest chunk JS and CSS from the compilation -- in general
+  // this will be references to the JS and CSS files.
+  // eslint-disable-next-line no-param-reassign
+  state.files = Object.values(compilation.namedChunks)
+    .map((v) => v.files)
+    .reduce((prev, curr) => prev.concat(curr), []);
+  state.files.forEach((filename) => {
+    const extension = path.extname(filename);
+    const loc = state.location(filename);
+    if (extension === '.js') state.serverContext.addJavaScript(loc);
+    if (extension === '.css') state.serverContext.addStylesheet(loc);
+  });
 
-    const reassign = state;
-    if (k === `${state.bundleName}.css`) {
-      reassign.bundleStylesheet = state.serverContext.addStylesheet(manifest[k]);
-    }
-    if (k === `${state.bundleName}.js`) {
-      reassign.bundleJavaScript = state.serverContext.addJavaScript(manifest[k]);
+  const assetModules = stats.compilation.modules.filter((v) => {
+    if (!v.userRequest) return false;
+    const extension = path.extname(v.userRequest).replace(/^\./, '');
+    return state.extensions.includes(extension);
+  });
+
+  assetModules.forEach((mod) => {
+    if (mod.assets && Object.keys(mod.assets).length > 0) {
+      manifest[mod.userRequest] = state.location(Object.keys(mod.assets)[0]);
+    } else {
+      // The asset is being delivered as a JavaScript code module - usually
+      // this is because it's a datauri asset.
+      const source = mod._source.source(); // eslint-disable-line no-underscore-dangle
+      const sandbox = { module: { exports: {} } };
+      const script = new vm.Script(source);
+      script.runInNewContext(sandbox);
+
+      // Content removed by the ExtractTextPlugin will return an empty object.
+      // This is converted to a plain string.
+      const exp = sandbox.module.exports;
+      manifest[mod.userRequest] = typeof exp === 'string' ? exp : '';
     }
   });
 
-  // Run through the modules looking for assets. This will pick up assets
-  // that may have been converted to data URIs
-  stats.compilation.modules.forEach((mod) => {
-    const id = mod.id.toString();
-    if (!id.match(state.assetFilenameRegExp) || !id.startsWith('./assets/')) return;
-
-    const name = id.substring('./assets/'.length);
-    // Already in the manifest? No need to process.
-    if (manifest[name]) return;
-
-    const source = mod._source.source(); // eslint-disable-line no-underscore-dangle
-
-    // Run the asset module in a sandbox VM
-    const sandbox = { module: { exports: {} } };
-    const script = new vm.Script(source);
-    script.runInNewContext(sandbox);
-
-    manifest[name] = sandbox.module.exports;
-  });
-
-  state.manifest = manifest; // eslint-disable-line no-param-reassign
-  return manifest;
+  // eslint-disable-next-line no-param-reassign
+  state.manifest = manifest;
 }
 
 // Called when the app is configured at dev and build time. This injects
@@ -218,11 +253,18 @@ function onConfigured(app, state) {
 
 // Called when the Cater App is being built
 function built(app, build, state) {
-  if (!state.bundleJavaScript && !state.bundleStylesheet) return;
+  function filterAndLocate(extension) {
+    return state.files
+      .filter((filename) => path.extname(filename) === extension)
+      .map((filename) => state.location(filename));
+  }
 
-  const serverContext = {};
-  if (state.bundleJavaScript) serverContext.javascripts = [state.bundleJavaScript];
-  if (state.bundleStylesheet) serverContext.stylesheets = [state.bundleStylesheet];
+  const serverContext = {
+    javascripts: filterAndLocate('.js').map((filename) => ({ src: filename })),
+    stylesheets: filterAndLocate('.css').map((filename) => ({ href: filename }))
+  };
+
+  if (serverContext.javascripts.length + serverContext.stylesheets.length === 0) return;
 
   build.emitConfigurationFile('cater-assets', { serverContext });
 }
@@ -232,20 +274,11 @@ function plugin(caterApp, providedOptions) {
   const options = providedOptions || DEFAULT_OPTIONS;
 
   // Work out the extensions for different asset classes
-  const state = {
-    assetHost: caterApp.assetHost,
-    imageExtensions: options.image || [],
-    publicPath: caterApp.publicPath,
-    manifest: {},
-    mimimize: caterApp.mode !== 'dev',
-    stylesheetExtensions: options.stylesheet || []
-  };
-  state.extensions = state.imageExtensions.concat(state.stylesheetExtensions);
+  const state = new State(caterApp, options);
   if (state.extensions.length === 0) return false; // Boundary condition. Not asset extensions.
 
   // Plugin rule to pull out the CSS stylesheets
-  const cssFilename = caterApp.mode === 'dev' ? '[name].css' : '[name].[contenthash].css';
-  state.extractCssPlugin = new ExtractTextPlugin({ filename: cssFilename });
+  state.extractCssPlugin = new ExtractTextPlugin({ filename: '[name].[contenthash].css' });
 
   // Image extensions
   state.imageFilenameRegExp = new RegExp(`\\.(${state.imageExtensions.join('|')})$`);

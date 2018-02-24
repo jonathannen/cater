@@ -3,15 +3,15 @@ import Link from 'app/cater/link';
 import React from 'react';
 import Title from 'app/cater/title';
 
-import 'assets/all.scss'; // Import a global stylesheet
+import '../assets/all.scss'; // Import a global stylesheet
 
 // Import a number of different image types
-import gif from 'assets/cat.gif';
-import png from 'assets/cat.png';
-import pngForceData from 'assets/cat.png.datauri';
-import jpg from 'assets/cat.jpg';
-import jpgTiny from 'assets/cat-tiny.jpg';
-import svg from 'assets/cat.svg';
+import gif from '../assets/cat.gif';
+import png from '../assets/cat.png';
+import pngForceData from '../assets/cat.png.datauri';
+import jpg from '../assets/cat.jpg';
+import jpgTiny from '../assets/cat-tiny.jpg';
+import svg from '../assets/cat.svg';
 
 const title = 'Cats on Cats on Cats - Cater Asset Test';
 

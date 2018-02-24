@@ -15,10 +15,18 @@
     {
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceRoot}/examples/show-errors",
-      "name": "Show Errors",
+      "cwd": "${workspaceRoot}/examples/show-assets",
+      "name": "show-assets dev",
       "program": "${workspaceRoot}/node_modules/cater/bin/cater",
       "args": ["dev"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/examples/show-assets",
+      "name": "show-assets start",
+      "program": "${workspaceRoot}/node_modules/cater/bin/cater",
+      "args": ["start"]
     },
     {
       "type": "node",
