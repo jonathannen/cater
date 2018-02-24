@@ -13,6 +13,7 @@
     "ansi-to-html": "^0.6.3",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "cater-assets": "^0.8.0",
     "cater-jest": "^0.8.0",
     "cater-runtime": "^0.8.0",

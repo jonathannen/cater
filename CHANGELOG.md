@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+
+* Included a plugin to enable babel-transformed use of the polished CSS-in-JS utility library. Use cater-polished to add support.
+* Added in spread operators via the babel transformation.
+
 ### Fixed
 
 * Server Context was adding multiple bundle.css and bundle.js entries on reload in dev mode.
