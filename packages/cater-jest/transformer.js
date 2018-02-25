@@ -2,8 +2,6 @@
 // See ./README.md for why these files exist and what they do.
 const babelJest = require('babel-jest');
 const Cater = require('cater');
-const fs = require('fs');
-const path = require('path');
 
 const CARET_PATHS = ['app/^', 'client/^', 'server/^'];
 const CARET_PATH_SEPARATOR = '?filename=';

@@ -1,7 +1,6 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 /* eslint-disable no-param-reassign */
 const CompressionPlugin = require('compression-webpack-plugin');
-const fs = require('fs');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
