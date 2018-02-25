@@ -7,11 +7,11 @@ const path = require('path');
  *
  * For example:
  *
- *     import cat from 'assets/cat.gif';
+ *     import cat from './cat.gif';
  *
  * Is transpiled to:
  *
- *     const cat = 'assets/cat.gif';
+ *     const cat = './cat.gif';
  */
 function process(src, filename) {
   const basename = path.basename(filename).replace("'", "'");

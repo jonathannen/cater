@@ -12,7 +12,7 @@ const emptyModule = path.join(__dirname, 'empty-module.js');
 const resolver = path.join(__dirname, 'resolver.js');
 const transformer = path.join(__dirname, 'transformer.js');
 
-const assetExtensions = ['jpg', 'jpeg', 'gif', 'png', 'svg'];
+const assetExtensions = ['ico', 'jpg', 'jpeg', 'gif', 'png', 'svg'];
 const assetMatch = `\\.(${assetExtensions.join('|')})$`;
 
 const config = {

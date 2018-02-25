@@ -8,7 +8,7 @@ const vm = require('vm');
  *
  * Converts references like:
  *
- *     import css from 'assets/my-stylesheet.scss';
+ *     import css from '../assets/my-stylesheet.scss';
  *
  * To something like:
  *
@@ -37,7 +37,7 @@ const vm = require('vm');
 const DEFAULT_DATA_URI_SIZE_LIMIT = 1024 * 4; // 4KB
 
 const DEFAULT_OPTIONS = {
-  image: ['gif', 'jpeg', 'jpg', 'png', 'svg'],
+  image: ['gif', 'ico', 'jpeg', 'jpg', 'png', 'svg'],
   stylesheet: ['css', 'scss']
 };
 
@@ -70,7 +70,7 @@ class State {
  * via the manifest. This code then interrogates this manifest.
  *
  * Transpiles:
- *     import cuteCatPicture from 'assets/cat.png'
+ *     import cuteCatPicture from '../assets/cat.png'
  *
  * To something like:
  *     const cuteCatPicture = 'https://cdn.example.org/cat.4bb92b2f79c434526c6ea5bdf409ff96.png';

@@ -3,13 +3,13 @@ import React from 'react';
 import GlobalStyle from 'app/global-style';
 
 // Import a global stylesheet
-import css from 'assets/bundle.scss';
+import css from '../assets/bundle.scss';
 
 // Import four different image types
-import gif from 'assets/cat.gif';
-import png from 'assets/cat.png';
-import jpg from 'assets/cat.jpg';
-import svg from 'assets/cat.svg';
+import gif from '../assets/cat.gif';
+import png from '../assets/cat.png';
+import jpg from '../assets/cat.jpg';
+import svg from '../assets/cat.svg';
 
 // Bring back Geocities! Renders assets from the asset pipeline
 export default () => (

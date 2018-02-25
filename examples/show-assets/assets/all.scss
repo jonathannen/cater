@@ -1,5 +1,5 @@
 @import 'body.scss';
-$background-image: url('assets/cat.png.datauri');
+$background-image: url('./cat.png.datauri');
 
 body {
   background-image: $background-image;

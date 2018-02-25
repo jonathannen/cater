@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
  *
  * Typical Usage:
  *
- *     import css from 'assets/my-css-file.scss';
+ *     import css from '../assets/my-css-file.scss';
  *     ...
  *     <GlobalStyle href={css}/>
  *

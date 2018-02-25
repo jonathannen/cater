@@ -5,8 +5,6 @@ const path = require('path');
 const querystring = require('querystring');
 const webpackGenerator = require('./webpack-generator');
 
-const ASSET_PATH = 'assets'; // TODO
-
 /**
  * Resolves the given partial filename source name "app/blah" in the given
  * paths ["/hello/world", "/hello/other"] with the given extensions [".js",
@@ -81,7 +79,7 @@ class SideConfiguration {
   }
 
   configurePaths(context) {
-    this.assetPaths = [path.join(context.appRootPath, 'assets')];
+    this.assetPaths = [path.join(context.appRootPath, 'assets')]; // TODO Issue #1
     this.sidePaths = context.generatePaths([this.name]);
 
     this.paths = context.generatePaths(context.universalNames.concat([this.name]));
@@ -133,18 +131,6 @@ class SideConfiguration {
       if (!filename && query.filename) filename = query.filename;
     }
 
-    // Handle /asset/* imports for Webpack
-    if (this.typeClient) {
-      if (source.startsWith(ASSET_PATH)) {
-        let result = null;
-        this.assetPaths.forEach((assetPath) => {
-          const base = source.substring(ASSET_PATH.length + 1);
-          const candidate = path.join(assetPath, base);
-          if (fs.existsSync(candidate)) result = candidate;
-        });
-        if (result !== null) return result;
-      }
-    }
     // Handle /app/* and similar imports
     const prefixes = Object.keys(this.importPrefixResolvers);
     for (let i = 0; i < prefixes.length; i += 1) {
