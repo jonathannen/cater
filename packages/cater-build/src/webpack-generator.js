@@ -30,23 +30,7 @@ function forServer(result, side, app) {
 
 // For BUILD webpack builds.
 function forBuild(result) {
-  const uglify = new UglifyJsPlugin({
-    compress: {
-      warnings: false,
-      screw_ie8: true,
-      conditionals: true,
-      unused: true,
-      comparisons: true,
-      sequences: true,
-      dead_code: true,
-      evaluate: true,
-      if_return: true,
-      join_vars: true
-    },
-    output: {
-      comments: false
-    }
-  });
+  const uglify = new UglifyJsPlugin();
 
   result.plugins.push(uglify);
   result.plugins.push(new webpack.HashedModuleIdsPlugin());
@@ -128,9 +112,9 @@ function generate(app, side) {
   const output = {
     chunkFilename: '[name].[chunkhash].js',
     filename: '[name].[chunkhash].js',
-    path: app.buildPath,
-    publicPath: app.publicPath
+    path: app.buildPath
   };
+  if (side.typeClient) output.publicPath = app.publicPath;
   if (side.typeClient) output.path = path.join(app.buildPath, app.publicPath);
 
   // Assemble the final pieces in a single Webpack configuration
