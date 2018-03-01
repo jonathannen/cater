@@ -178,7 +178,9 @@ function generateWebpackStylesheetRule(state) {
 
 // Called when the client-side webpack is done. The manifest and the generated
 // modules are passed over to the server-side babel to keep them aligned.
-function onWebpackCompiled(state, stats) {
+function onWebpackCompiled(state, side, stats) {
+  if (!side.typeClient) return;
+
   const { compilation } = stats;
   const { serverContext } = state;
   const manifest = {};
@@ -301,7 +303,7 @@ function plugin(caterApp, providedOptions) {
 
   // Connect to event hooks of interest
   caterApp.once('built', (app, build) => built(app, build, state));
-  caterApp.on('webpack-compiled', (_, stats) => onWebpackCompiled(state, stats));
+  caterApp.on('compiled', (_, side, stats) => onWebpackCompiled(state, side, stats));
   caterApp.on('configured', (app) => onConfigured(app, state));
 
   return true;
