@@ -170,8 +170,8 @@ class BuildCater extends RuntimeCater {
     });
   }
 
-  triggerWebpackCompiled(stats) {
-    this.emit(Events.webpackCompiled, this, stats);
+  triggerWebpackCompiled(side, stats) {
+    this.emit(Events.compiled, this, side, stats);
     this.mergeServerContexts();
   }
 

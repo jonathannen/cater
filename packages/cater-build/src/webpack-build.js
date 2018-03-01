@@ -8,7 +8,7 @@ function builder(app, side) {
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       if (stats.hasErrors()) return reject(stats.compilation.errors);
-      if (app) app.triggerWebpackCompiled(stats);
+      if (app) app.triggerWebpackCompiled(side, stats);
       return resolve(stats);
     });
   });

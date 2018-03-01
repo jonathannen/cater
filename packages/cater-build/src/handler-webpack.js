@@ -30,7 +30,7 @@ function generateHandler(app, reloadCallback = null) {
         return reject(result.compilation.errors);
       }
       // Client side appears all clear
-      app.triggerWebpackCompiled(result);
+      app.triggerWebpackCompiled(app.sides.client, result);
 
       // Next check if there is an error reloading on the server side. Note
       // this isn't a chained promise as the enclosing promise is intended
