@@ -195,9 +195,10 @@ function onWebpackCompiled(state, side, stats) {
   // Extract manifest chunk JS and CSS from the compilation -- in general
   // this will be references to the JS and CSS files.
   // eslint-disable-next-line no-param-reassign
-  state.files = Object.values(compilation.namedChunks)
+  state.files = Array.from(compilation.namedChunks.values()) // TODO: Map->Array approach
     .map((v) => v.files)
     .reduce((prev, curr) => prev.concat(curr), []);
+
   // eslint-disable-next-line no-param-reassign
   state.contextEntries = entries;
   state.files.forEach((filename) => {

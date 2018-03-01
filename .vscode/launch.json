@@ -24,15 +24,15 @@
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceRoot}/examples/show-assets",
-      "name": "show-assets start",
+      "name": "DEV show-assets",
       "program": "${workspaceRoot}/node_modules/cater/bin/cater",
-      "args": ["start"]
+      "args": ["dev"]
     },
     {
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceRoot}/examples/hello-world",
-      "name": "Hello World",
+      "name": "DEV hello-world",
       "program": "${workspaceRoot}/node_modules/cater/bin/cater",
       "args": ["dev"]
     }
