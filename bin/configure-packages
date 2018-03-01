@@ -11,7 +11,7 @@ const WHITELIST_PACKAGES = ['express', 'cater-emotion'];
 KEY_VERSIONS = {
   'babel-core': '^6.26.0',
   jest: '^22.0.4',
-  webpack: '^3.10.0'
+  webpack: '^4.0.1'
 };
 
 CATER_PACKAGES = [
