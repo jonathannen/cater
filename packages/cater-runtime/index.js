@@ -6,6 +6,7 @@ const HandlerLogging = require('./src/handler-logging');
 const HttpServer = require('./src/http-server');
 const Middleware = require('./src/middleware');
 const RuntimeCater = require('./src');
+const ServerContext = require('./src/server-context');
 
 /**
  * The runtime guts of a Cater application. This module is automatically
@@ -38,6 +39,7 @@ const exporting = {
   HttpServer,
   Middleware,
   readyCommandLine,
-  RuntimeCater
+  RuntimeCater,
+  ServerContext
 };
 module.exports = Object.assign(index, exporting);

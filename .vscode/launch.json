@@ -15,8 +15,8 @@
     {
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceRoot}/examples/show-assets",
-      "name": "show-assets dev",
+      "cwd": "${workspaceRoot}/examples/favicon",
+      "name": "DEV",
       "program": "${workspaceRoot}/node_modules/cater/bin/cater",
       "args": ["dev"]
     },

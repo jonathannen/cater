@@ -16,7 +16,7 @@ const DEFAULT_WEBPACK_WATCH_OPTIONS = {
  */
 function generateHandler(app, reloadCallback = null) {
   const compiler = webpack(app.sides.client.webpackConfig);
-  app.triggerWebpackCompiling(compiler);
+  app.triggerWebpackCompiling(app.sides.client, compiler);
 
   let etag = null;
   const client = new Promise((resolve, reject) => {

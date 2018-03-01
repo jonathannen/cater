@@ -1,4 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
+const Events = require('./app-events');
 const fs = require('fs');
 const path = require('path');
 
@@ -71,6 +72,13 @@ function autoDefinePlugins(appRootPath, pkg, defaultPlugins) {
   return plugins;
 }
 
+// Configures any automatic hooks for the plugin
+function configurePluginHooks(cater, plugin) {
+  Object.entries(Events).forEach(([key, value]) => {
+    if (plugin[key]) cater.on(value, plugin[key].bind(plugin));
+  });
+}
+
 function configurePlugin(cater, name, options) {
   const resolve = require.resolve(name);
   if (!resolve) {
@@ -87,6 +95,7 @@ function configurePlugin(cater, name, options) {
   }
 
   // Plugin should export a function to configure itself
+  configurePluginHooks(cater, plugin);
   plugin.result = plugin(cater, options);
   plugin.componentRootPath = path.dirname(resolve);
   return plugin;

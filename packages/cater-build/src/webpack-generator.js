@@ -97,7 +97,8 @@ function forHotModuleReplacement(result, side) {
 function generate(app, side) {
   // Component parts of the Webpack configuration
   const entry = {};
-  entry[side.bundleName] = [side.entryPath];
+  side.bundleEntry = [side.entryPath];
+  entry[side.bundleName] = side.bundleEntry;
 
   const options = side.babel;
   const module = {

@@ -8,7 +8,7 @@ const merge = require('deepmerge');
  * fall outside the actual App being rendered.
  */
 class ServerContext {
-  constructor(defaults) {
+  constructor(defaults = {}) {
     this.javascripts = [];
     this.json = {};
     this.links = [];

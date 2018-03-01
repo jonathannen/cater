@@ -1,11 +1,14 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const webpack = require('webpack');
 
-function builder(config, context) {
+function builder(app, side) {
+  const config = side.webpackConfig;
+  const compiler = webpack(config);
+  app.triggerWebpackCompiling(side, compiler);
   return new Promise((resolve, reject) => {
-    webpack(config).run((err, stats) => {
+    compiler.run((err, stats) => {
       if (stats.hasErrors()) return reject(stats.compilation.errors);
-      if (context) context.triggerWebpackCompiled(stats);
+      if (app) app.triggerWebpackCompiled(stats);
       return resolve(stats);
     });
   });
@@ -19,14 +22,12 @@ function builder(config, context) {
  *
  * Take a look at the production build at cater/examples/production-build.
  */
-function build(context) {
-  const client = context.sides.client.webpackConfig;
-  const server = context.sides.server.webpackConfig;
-
+function build(app) {
   // The builder is sequential rather than using the Webpack Multi-Compiler.
   // This is necessary as the server uses the final assets (such as images,
   // stylesheets) from the client.
-  return builder(client, context).then(() => builder(server));
+  const { client, server } = app.sides;
+  return builder(app, client).then(() => builder(app, server));
 }
 
 module.exports = build;

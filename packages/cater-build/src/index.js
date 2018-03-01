@@ -1,23 +1,15 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const Build = require('./app-build');
-const { Config, RuntimeCater } = require('cater-runtime');
+const { Config, RuntimeCater, ServerContext } = require('cater-runtime');
 const DefaultConfig = require('./config-default.js');
 const errors = require('./app-errors');
+const Events = require('./app-events');
 const fs = require('fs-extra');
+const merge = require('deepmerge');
 const path = require('path');
 const Plugins = require('./plugins.js');
 const SideConfiguration = require('./app-side.js');
 const webpackBuild = require('./webpack-build');
-
-const events = {
-  building: 'building',
-  built: 'built',
-  configuring: 'configuring',
-  configured: 'configured',
-  deploying: 'deploying',
-  webpackCompiled: 'webpack-compiled',
-  webpackCompiling: 'webpack-compiling'
-};
 
 class BuildCater extends RuntimeCater {
   constructor(providedConfig) {
@@ -34,9 +26,15 @@ class BuildCater extends RuntimeCater {
     this.startOnError = config.startOnError;
     this.universalNames = config.universalNames;
 
+    // Build has several server context that are combined in the handler.
+    // This allows plugins to maintain their own server-context state.
+    this.serverContexts = {
+      internal: this.serverContext
+    };
+
     // EVENT: I know we're already configuring, but this is for the benefit
     // of the plugins - which have only just been set up.
-    this.emit(events.configuring, this, config);
+    this.emit(Events.configuring, this, config);
 
     // Set up the key paths and get the client and server sides ready
     this.configurePaths(config);
@@ -44,7 +42,7 @@ class BuildCater extends RuntimeCater {
 
     // EVENT: Allow plugins to make changes at the end of the configuration
     // cycle
-    this.emit(events.configured, this, config);
+    this.emit(Events.configured, this, config);
     this.cleanConfig();
   }
 
@@ -56,7 +54,7 @@ class BuildCater extends RuntimeCater {
       .remove(this.buildPath) // rm -rf ./build
       .then(() => fs.mkdirp(this.buildPath)) // mkdir ./build
       .then(() => {
-        this.emit(events.building, this, currentBuild);
+        this.emit(Events.building, this, currentBuild);
         if (this.devStaticPathExists) {
           const prodStaticPath = path.join(this.buildPath, this.publicPath);
           return fs.copy(this.devStaticPath, prodStaticPath); // cp -r ./static ./build/static
@@ -65,7 +63,7 @@ class BuildCater extends RuntimeCater {
       })
       .then(() => webpackBuild(this)) // webpack -out ./build
       .then(() => {
-        this.emit(events.built, this, currentBuild);
+        this.emit(Events.built, this, currentBuild);
         return Promise.resolve(currentBuild);
       });
   }
@@ -160,11 +158,21 @@ class BuildCater extends RuntimeCater {
   }
 
   triggerWebpackCompiled(stats) {
-    this.emit(events.webpackCompiled, this, stats);
+    this.emit(Events.webpackCompiled, this, stats);
+
+    // TODO: Re-Writes the server context in place. But likely there is
+    // a much better way of handling this. We have separate server context
+    // so plugins like assets and favicon don't need to track individual
+    // context changes.
+    const contexts = Object.values(this.serverContexts);
+    contexts.push({});
+    Object.entries(new ServerContext(merge(...contexts))).forEach(([k, v]) => {
+      this.serverContext[k] = v;
+    });
   }
 
-  triggerWebpackCompiling(compiler) {
-    this.emit(events.webpackCompiling, this, compiler);
+  triggerWebpackCompiling(side, compiler) {
+    this.emit(Events.compiling, this, side, compiler);
   }
 }
 
@@ -177,4 +185,5 @@ BuildCater.prototype.prepareCommandLine = function prepareCommandLine() {
   return true;
 };
 
+BuildCater.Events = Events;
 module.exports = BuildCater;
