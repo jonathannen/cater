@@ -11,11 +11,13 @@ export default () => (
     </p>
 
     <p>
-      In debug mode, Cater also provides the client-side bundle at <a href="/static/bundle.js">/static/bundle.js</a>.
+      In debug mode, Cater also provides the client-side bundle /static/bundle.[hash].js. Use
+      view-source to see your bundle.
     </p>
 
     <p>
-      For reference we&apos;ve also provided a route <a href="/express">served by Express</a> and outside Cater.
+      For reference we&apos;ve also provided a route <a href="/express">served by Express</a> and
+      outside Cater.
     </p>
   </div>
 );
