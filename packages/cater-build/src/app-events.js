@@ -3,11 +3,11 @@
 const Events = {
   building: 'building',
   built: 'built',
+  compiled: 'compiled',
+  compiling: 'compiling',
   configuring: 'configuring',
   configured: 'configured',
-  deploying: 'deploying',
-  webpackCompiled: 'webpack-compiled',
-  compiling: 'webpack-compiling'
+  deploying: 'deploying'
 };
 
 module.exports = Events;

@@ -9,12 +9,7 @@ const merge = require('deepmerge');
  */
 class ServerContext {
   constructor(defaults = {}) {
-    this.javascripts = [];
-    this.json = {};
-    this.links = [];
-    this.meta = [];
-    this.stylesheets = [];
-    this.title = '';
+    this.clear();
     Object.assign(this, merge(this, defaults));
   }
 
@@ -55,6 +50,15 @@ class ServerContext {
     const stylesheet = { href, ...options };
     this.stylesheets.push(stylesheet);
     return stylesheet;
+  }
+
+  clear() {
+    this.javascripts = [];
+    this.json = {};
+    this.links = [];
+    this.meta = [];
+    this.stylesheets = [];
+    this.title = '';
   }
 
   /**

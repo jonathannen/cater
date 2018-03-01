@@ -1,4 +1,5 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
+const Events = require('../src/app-events');
 const fs = require('fs');
 const loaderUtils = require('loader-utils');
 const path = require('path');
@@ -37,10 +38,92 @@ function addHashToFilename(content, filename) {
 }
 
 class Favicon {
-  constructor(appRootPath) {
-    this.appRootPath = appRootPath;
-    this.assetPath = path.join(appRootPath, ...FAVICON_ASSETS_DIRECTORY);
+  constructor(app) {
+    this.appRootPath = app.appRootPath;
+    this.assetPath = path.join(app.appRootPath, ...FAVICON_ASSETS_DIRECTORY);
+    this.mapping = {};
+
     this.serverContext = new ServerContext();
+    app.serverContexts.favicon = this.serverContext;
+
+    // Test Mode Shim
+    if (process.env.NODE_ENV === 'test' && this.configure()) {
+      const { mapping } = this;
+      Object.keys(this.assetMap).forEach((k) => {
+        mapping[k] = `/static/${k}`;
+      });
+      this.assignServerContext();
+    }
+  }
+
+  // Assigns the current mapping values to the server context
+  assignServerContext() {
+    this.serverContext.clear();
+    Object.entries({
+      'apple-touch-icon.png': { rel: 'apple-touch-icon', sizes: '180x180' },
+      'favicon-32x32.png': { rel: 'icon', sizes: '32x32' },
+      'favicon-16x16.png': { rel: 'icon', sizes: '16x16' },
+      'site.webmanifest': { rel: 'manifest ' }
+    }).forEach(([k, v]) => {
+      v.href = this.mapping[k];
+      if (!v.href) return;
+      this.serverContext.addLink(v);
+    });
+    const browserConfig = this.mapping['browserconfig.xml'];
+    if (browserConfig) {
+      this.serverContext.addMeta({ name: 'msapplication-config', content: browserConfig });
+    }
+  }
+
+  // Called when the Cater App is being built
+  built(app, build) {
+    if (!this.configured) return false;
+    const { serverContext } = this;
+    build.emitConfigurationFile('cater-favicon', { serverContext });
+    return true;
+  }
+
+  compiling(app, side, compiler) {
+    if (!side.typeClient) return; // Only takes effect on the client build
+    if (!this.configure()) return; // Check that the favicon is set up
+    this.mapping = {};
+
+    compiler.plugin('emit', (compilation, callback) => {
+      const assets = Object.keys(this.assetMap);
+      const images = assets.filter((v) => v.match(/\.(ico|png|svg)$/));
+
+      this.mapping = images.reduce((prev, curr) => {
+        const buffer = this.loadFile(curr);
+        const filename = addHashToFilename(buffer, curr);
+        compilation.assets[filename] = new RawSource(buffer);
+
+        const location = path.join((app.assetHost || '') + app.publicPath, filename);
+        prev[curr] = location;
+        return prev;
+      }, {});
+
+      const metadata = assets.filter((v) => v.match(/\.(webmanifest|xml)$/));
+      metadata.forEach((name) => {
+        const content = Object.entries(this.mapping).reduce((prev, [k, v]) => {
+          const next = prev.replace(`/${k}`, v);
+          return next;
+        }, this.loadFile(name, 'utf8'));
+
+        const filename = addHashToFilename(content, name);
+        const location = path.join((app.assetHost || '') + app.publicPath, filename);
+        this.mapping[name] = location;
+        compilation.assets[filename] = new RawSource(content);
+      });
+
+      // Special handing for favicon.ico - have an un-fingerprinted version
+      // that can be used for directly serving to browsers.
+      if (this.assetMap['favicon.ico']) {
+        compilation.assets['favicon.ico'] = new RawSource(this.loadFile('favicon.ico'));
+      }
+
+      this.assignServerContext();
+      callback();
+    });
   }
 
   // Configures the favicon object based upon the current working directory.
@@ -51,6 +134,7 @@ class Favicon {
     if (!this.directoryExists()) return false;
     if (Object.keys(this.mapAssetFiles()).length === 0) return false;
 
+    this.configured = true;
     return true;
   }
 
@@ -78,86 +162,12 @@ class Favicon {
   }
 }
 
-// Called when the Cater App is being built
-function built(app, build) {
-  const favicon = app._favicon;
-  if (!favicon.configure()) return false;
-
-  const { serverContext } = favicon;
-  build.emitConfigurationFile('cater-favicon', { serverContext });
-  return true;
-}
-
-function compiling(app, side, compiler) {
-  const favicon = app._favicon;
-  if (!favicon.configure()) return false;
-
-  if (side.typeClient) {
-    compiler.plugin('emit', (compilation, callback) => {
-      const assets = Object.keys(favicon.assetMap);
-      const images = assets.filter((v) => v.match(/\.(ico|png|svg)$/));
-
-      const mapping = images.reduce((prev, curr) => {
-        const buffer = favicon.loadFile(curr);
-        const filename = addHashToFilename(buffer, curr);
-        compilation.assets[filename] = new RawSource(buffer);
-
-        const location = path.join((app.assetHost || '') + app.publicPath, filename);
-        prev[curr] = location;
-        return prev;
-      }, {});
-
-      const metadata = assets.filter((v) => v.match(/\.(webmanifest|xml)$/));
-      metadata.forEach((name) => {
-        const content = Object.entries(mapping).reduce((prev, [k, v]) => {
-          const next = prev.replace(`/${k}`, v);
-          return next;
-        }, favicon.loadFile(name, 'utf8'));
-
-        const filename = addHashToFilename(content, name);
-        const location = path.join((app.assetHost || '') + app.publicPath, filename);
-        mapping[name] = location;
-        compilation.assets[filename] = new RawSource(content);
-      });
-
-      // Special handing for favicon.ico - have an un-fingerprinted version
-      // that can be used for directly serving to browsers.
-      if (favicon.assetMap['favicon.ico']) {
-        compilation.assets['favicon.ico'] = new RawSource(favicon.loadFile('favicon.ico'));
-      }
-
-      Object.entries({
-        'apple-touch-icon.png': { rel: 'apple-touch-icon', sizes: '180x180' },
-        'favicon-32x32.png': { rel: 'icon', sizes: '32x32' },
-        'favicon-16x16.png': { rel: 'icon', sizes: '16x16' },
-        'site.webmanifest': { rel: 'manifest ' }
-      }).forEach(([k, v]) => {
-        v.href = mapping[k];
-        console.log(v);
-        if (!v.href) return;
-        favicon.serverContext.addLink(v);
-      });
-
-      const browserConfig = mapping['browserconfig.xml'];
-      if (browserConfig) {
-        favicon.serverContext.addMeta({ name: 'msapplication-config', content: browserConfig });
-      }
-
-      app.serverContexts.favicon = favicon.serverContext;
-
-      callback();
-    });
-  }
-
-  return true;
-}
-
 function plugin(cater) {
-  cater._favicon = new Favicon(cater.appRootPath);
+  const favicon = new Favicon(cater);
+  cater._favicon = favicon;
+
+  [Events.built, Events.compiling].forEach((v) => cater.on(v, favicon[v].bind(favicon)));
+  return favicon;
 }
 
-Object.assign(plugin, {
-  built,
-  compiling
-});
 module.exports = plugin;

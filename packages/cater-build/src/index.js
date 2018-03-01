@@ -17,6 +17,12 @@ class BuildCater extends RuntimeCater {
     super(config);
 
     this.configureBuildDefaults();
+    // Build has several server context that are combined in the handler.
+    // This allows plugins to maintain their own server-context state.
+    this.serverContexts = {
+      internal: this.serverContext
+    };
+
     this.configuredPlugins = Plugins(this, config);
 
     this.babel = config.babel;
@@ -25,12 +31,6 @@ class BuildCater extends RuntimeCater {
     this.hotModuleReplacement = config.hotModuleReplacement;
     this.startOnError = config.startOnError;
     this.universalNames = config.universalNames;
-
-    // Build has several server context that are combined in the handler.
-    // This allows plugins to maintain their own server-context state.
-    this.serverContexts = {
-      internal: this.serverContext
-    };
 
     // EVENT: I know we're already configuring, but this is for the benefit
     // of the plugins - which have only just been set up.
@@ -43,6 +43,7 @@ class BuildCater extends RuntimeCater {
     // EVENT: Allow plugins to make changes at the end of the configuration
     // cycle
     this.emit(Events.configured, this, config);
+    this.mergeServerContexts();
     this.cleanConfig();
   }
 
@@ -139,6 +140,18 @@ class BuildCater extends RuntimeCater {
       .concat('assets');
   }
 
+  mergeServerContexts() {
+    // TODO: Re-Writes the server context in place. But likely there is
+    // a much better way of handling this. We have separate server context
+    // so plugins like assets and favicon don't need to track individual
+    // context changes.
+    const contexts = Object.values(this.serverContexts);
+    contexts.push({});
+    Object.entries(new ServerContext(merge(...contexts))).forEach(([k, v]) => {
+      this.serverContext[k] = v;
+    });
+  }
+
   package(bail = false) {
     const packageFile = path.join(this.appRootPath, 'package.json');
     if (!fs.existsSync(packageFile)) {
@@ -159,16 +172,7 @@ class BuildCater extends RuntimeCater {
 
   triggerWebpackCompiled(stats) {
     this.emit(Events.webpackCompiled, this, stats);
-
-    // TODO: Re-Writes the server context in place. But likely there is
-    // a much better way of handling this. We have separate server context
-    // so plugins like assets and favicon don't need to track individual
-    // context changes.
-    const contexts = Object.values(this.serverContexts);
-    contexts.push({});
-    Object.entries(new ServerContext(merge(...contexts))).forEach(([k, v]) => {
-      this.serverContext[k] = v;
-    });
+    this.mergeServerContexts();
   }
 
   triggerWebpackCompiling(side, compiler) {
