@@ -88,7 +88,7 @@ class Favicon {
     if (!this.configure()) return; // Check that the favicon is set up
     this.mapping = {};
 
-    compiler.plugin('emit', (compilation, callback) => {
+    compiler.hooks.emit.tapAsync('cater-build/favicon', (compilation, callback) => {
       const assets = Object.keys(this.assetMap);
       const images = assets.filter((v) => v.match(/\.(ico|png|svg)$/));
 

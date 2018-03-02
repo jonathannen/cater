@@ -20,7 +20,7 @@ function generateHandler(app, reloadCallback = null) {
 
   let etag = null;
   const client = new Promise((resolve, reject) => {
-    compiler.plugin('done', (result) => {
+    compiler.hooks.done.tap('cater-build', (result) => {
       app.triggerRetry('client');
       etag = null;
       // Check for client side errors

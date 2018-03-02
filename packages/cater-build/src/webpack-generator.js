@@ -133,6 +133,9 @@ function generate(app, side) {
 
   if (app.hotModuleReplacement && side.typeClient) forHotModuleReplacement(config, side);
 
+  // Webpack mode
+  config.mode = app.mode === 'build' ? 'production' : 'development';
+
   return config;
 }
 
