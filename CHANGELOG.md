@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+* Upgraded from Webpack 3 to Webpack 4.
+
 * Major revision of cater-assets. Instead of the special 'assets/' import, just use relative paths instead. Required dropping the approach of scanning the manifest. However, it means asset imports can be relative -- this makes things neater. It also means libraries can reference the same asset names without collisons.
 
 ## [0.8.0] - 2018-02-21
