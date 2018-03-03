@@ -5,7 +5,6 @@ const DefaultConfig = require('./config-default.js');
 const errors = require('./app-errors');
 const Events = require('./app-events');
 const fs = require('fs-extra');
-const merge = require('deepmerge');
 const path = require('path');
 const Plugins = require('./plugins.js');
 const SideConfiguration = require('./app-side.js');
@@ -20,8 +19,9 @@ class BuildCater extends RuntimeCater {
     // Build has several server context that are combined in the handler.
     // This allows plugins to maintain their own server-context state.
     this.serverContexts = {
-      internal: this.serverContext
+      internal: this.serverContext // TODO
     };
+    this.serverContext = new ServerContext(); // TODO
 
     this.configuredPlugins = Plugins(this, config);
 
@@ -130,25 +130,27 @@ class BuildCater extends RuntimeCater {
     return Middleware(this);
   }
 
-  // Returns all the "sides" of this application, as an array of string. This
-  // will typically return `['app', 'client', 'server', 'assets']`.
-  listSides() {
-    // Assets hardcoded. See https://github.com/clashbit/cater/issues/1
-    return Object.values(this.sides)
-      .map((s) => s.name)
-      .concat(this.universalNames)
-      .concat('assets');
-  }
-
   mergeServerContexts() {
     // TODO: Re-Writes the server context in place. But likely there is
     // a much better way of handling this. We have separate server context
     // so plugins like assets and favicon don't need to track individual
     // context changes.
+
     const contexts = Object.values(this.serverContexts);
-    contexts.push({});
-    Object.entries(new ServerContext(merge(...contexts))).forEach(([k, v]) => {
-      this.serverContext[k] = v;
+    if (contexts.length === 0) {
+      throw new Error(
+        'Strange. BuildCater.serverContexts does not have any entries. It should at least have the internal value'
+      );
+    }
+
+    Object.keys(this.serverContext).forEach((key) => {
+      const values = contexts.map((v) => v[key]);
+      if (Array.isArray(this.serverContext[key])) {
+        const value = values.reduce((prev, curr) => prev.concat(curr), []);
+        this.serverContext[key] = value;
+      } else {
+        [this.serverContext[key]] = values;
+      }
     });
   }
 
