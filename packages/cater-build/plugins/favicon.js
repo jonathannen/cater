@@ -1,5 +1,4 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
-const Events = require('../src/app-events');
 const fs = require('fs');
 const loaderUtils = require('loader-utils');
 const path = require('path');
@@ -162,12 +161,4 @@ class Favicon {
   }
 }
 
-function plugin(cater) {
-  const favicon = new Favicon(cater);
-  cater._favicon = favicon;
-
-  [Events.built, Events.compiling].forEach((v) => cater.on(v, favicon[v].bind(favicon)));
-  return favicon;
-}
-
-module.exports = plugin;
+module.exports = (app) => new Favicon(app);

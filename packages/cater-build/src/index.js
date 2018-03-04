@@ -172,6 +172,11 @@ class BuildCater extends RuntimeCater {
     });
   }
 
+  triggerDeploy() {
+    this.emit(Events.deploying, this);
+    this.emit(Events.deployed, this);
+  }
+
   triggerWebpackCompiled(side, stats) {
     this.emit(Events.compiled, this, side, stats);
     this.mergeServerContexts();

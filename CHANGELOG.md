@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Included a plugin to enable babel-transformed use of the polished CSS-in-JS utility library. Use cater-polished to add support.
 * Added in spread operators via the babel transformation.
 * Simple plugins can now be created by dropping a _.js file in the /plugins directory of your app, or in any of the included cater-_ packages.
+* Added support for favicons via the cater-build/favicon plugin.
+* Added support for deploying static client assets to Google Cloud Storage via the cater-deploy-google-cloud-storage contrib plugin.
 
 ### Fixed
 
