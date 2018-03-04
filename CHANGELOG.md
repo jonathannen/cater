@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### [0.10.0] - 2018-03-03
+
 ### Added
 
 * Included a plugin to enable babel-transformed use of the polished CSS-in-JS utility library. Use cater-polished to add support.
