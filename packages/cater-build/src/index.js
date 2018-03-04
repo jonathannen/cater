@@ -49,7 +49,7 @@ class BuildCater extends RuntimeCater {
 
   // Returns a build as a Promise object
   build() {
-    const currentBuild = new Build(this.buildPath);
+    const currentBuild = new Build(this.appRootPath, this.buildPath);
 
     return fs
       .remove(this.buildPath) // rm -rf ./build
