@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+
+* Icon order influences which favicon Firefox selects. Made sure the higher resolution ones are later. This prevents the fuzzies on retina favicons.
+
 ### [0.10.0] - 2018-03-03
 
 ### Added

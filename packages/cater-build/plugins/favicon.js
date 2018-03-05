@@ -58,10 +58,14 @@ class Favicon {
   // Assigns the current mapping values to the server context
   assignServerContext() {
     this.serverContext.clear();
+
+    // Note that Firefox (at v58) won't interrogate the icon sizes. It takes
+    // the last icon that is specified. Hence, the order of having the 16x16
+    // first is important here.
     Object.entries({
-      'apple-touch-icon.png': { rel: 'apple-touch-icon', sizes: '180x180' },
-      'favicon-32x32.png': { rel: 'icon', sizes: '32x32' },
       'favicon-16x16.png': { rel: 'icon', sizes: '16x16' },
+      'favicon-32x32.png': { rel: 'icon', sizes: '32x32' },
+      'apple-touch-icon.png': { rel: 'apple-touch-icon', sizes: '180x180' },
       'site.webmanifest': { rel: 'manifest ' }
     }).forEach(([k, v]) => {
       v.href = this.mapping[k];
