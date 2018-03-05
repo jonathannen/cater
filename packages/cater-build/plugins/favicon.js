@@ -41,6 +41,7 @@ class Favicon {
     this.appRootPath = app.appRootPath;
     this.assetPath = path.join(app.appRootPath, ...FAVICON_ASSETS_DIRECTORY);
     this.mapping = {};
+    this.metadata = {};
 
     this.serverContext = new ServerContext();
     app.serverContexts.favicon = this.serverContext;
@@ -59,6 +60,23 @@ class Favicon {
   assignServerContext() {
     this.serverContext.clear();
 
+    // Microsoft Tile Meta-Data
+    const browserConfig = this.mapping['browserconfig.xml'];
+    if (browserConfig) {
+      this.serverContext.addMeta({ name: 'msapplication-config', content: browserConfig });
+
+      const match = this.metadata['browserconfig.xml'].match(/<TileColor>([^<]*)<\/TileColor>/);
+      if (match) this.serverContext.addMeta({ name: 'msapplication-TileColor', content: match[1] });
+    }
+
+    // Generate Theme Meta-Data
+    let color = null;
+    const siteManifest = this.metadata['site.webmanifest'];
+    if (siteManifest) {
+      color = JSON.parse(siteManifest).theme_color;
+      if (color) this.serverContext.addMeta({ name: 'theme', content: color });
+    }
+
     // Note that Firefox (at v58) won't interrogate the icon sizes. It takes
     // the last icon that is specified. Hence, the order of having the 16x16
     // first is important here.
@@ -66,16 +84,13 @@ class Favicon {
       'favicon-16x16.png': { rel: 'icon', sizes: '16x16' },
       'favicon-32x32.png': { rel: 'icon', sizes: '32x32' },
       'apple-touch-icon.png': { rel: 'apple-touch-icon', sizes: '180x180' },
-      'site.webmanifest': { rel: 'manifest ' }
+      'safari-pinned-tab.svg': { rel: 'mask-icon', color },
+      'site.webmanifest': { rel: 'manifest' }
     }).forEach(([k, v]) => {
       v.href = this.mapping[k];
       if (!v.href) return;
       this.serverContext.addLink(v);
     });
-    const browserConfig = this.mapping['browserconfig.xml'];
-    if (browserConfig) {
-      this.serverContext.addMeta({ name: 'msapplication-config', content: browserConfig });
-    }
   }
 
   // Called when the Cater App is being built
@@ -115,6 +130,7 @@ class Favicon {
         const filename = addHashToFilename(content, name);
         const location = path.join((app.assetHost || '') + app.publicPath, filename);
         this.mapping[name] = location;
+        this.metadata[name] = content;
         compilation.assets[filename] = new RawSource(content);
       });
 

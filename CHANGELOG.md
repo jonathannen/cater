@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 * Icon order influences which favicon Firefox selects. Made sure the higher resolution ones are later. This prevents the fuzzies on retina favicons.
+* Favicon plugin now also generates the Microsoft Tile and Theme color meta tags.
 
 ### [0.10.0] - 2018-03-03
 
