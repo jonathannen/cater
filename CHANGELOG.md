@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+
+* Deploy Google Cloud Storage now lets you explictly set the bucket name. Useful as extra "web site" features of Google Storage require a specific naming format.
+* Added the ability to "require" JavaScript files in SCSS. Useful to allow the sharing of variables (like fonts, colors) between JavaScript and SCSS.
+
 ### Fixed
 
 * Icon order influences which favicon Firefox selects. Made sure the higher resolution ones are later. This prevents the fuzzies on retina favicons.

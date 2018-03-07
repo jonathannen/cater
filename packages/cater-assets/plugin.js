@@ -171,7 +171,8 @@ function generateWebpackStylesheetRule(state) {
     use: state.extractCssPlugin.extract({
       use: [
         { loader: 'css-loader', options: { minimize: state.mimimize } }, //
-        { loader: 'sass-loader' }
+        { loader: 'sass-loader' },
+        { loader: 'js-to-styles-var-loader' }
       ]
     })
   };
