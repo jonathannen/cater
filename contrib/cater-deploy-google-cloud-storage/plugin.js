@@ -10,7 +10,6 @@ class DeployGoogleCloudStorage {
 
     this.publicPath = app.publicPath;
     this.sourceDirectory = path.join(app.buildPath, app.publicPath);
-    this.calculateBucketName();
   }
 
   calculateBucketName() {
@@ -20,12 +19,13 @@ class DeployGoogleCloudStorage {
       errors.push('No project is defined in the GOOGLE_CLOUD_PROJECT environment variable.');
     }
     if (errors.length > 0) {
-      errors.push('This is required for cater-deploy-google-cloud-storage.');
+      errors.push(
+        'This or the config item "deployGoogleCloudBucketName" is required for cater-deploy-google-cloud-storage.'
+      );
       throw new Error(errors.join(' '));
     }
 
     this.bucketName = `${this.project}-${this.name}`;
-    this.bucketUrl = `gs://${this.bucketName}`;
     return this.bucketName;
   }
 
@@ -44,6 +44,16 @@ class DeployGoogleCloudStorage {
     return files;
   }
 
+  configured(app, config) {
+    if (config.deployGoogleCloudBucketName) {
+      this.bucketName = config.deployGoogleCloudBucketName;
+    } else {
+      this.calculateBucketName();
+    }
+    this.bucketUrl = `gs://${this.bucketName}`;
+    return this.bucketName;
+  }
+
   deploying() {
     const files = this.calculateUploadList();
     if (files.length === 0) return null;
@@ -53,6 +63,9 @@ class DeployGoogleCloudStorage {
       const source = path.join(this.sourceDirectory, curr);
       const target = path.join(this.publicPath, curr);
       prev.push([source, target]);
+
+      // Put a favicon.ico in the root directory too. This is to map to
+      // older browsers that look directly for /favicon.ico.
       if (curr === 'favicon.ico') prev.push([source, 'favicon.ico']);
       return prev;
     }, []);
