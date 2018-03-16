@@ -1,5 +1,6 @@
 // Copyright Jon Williams 2017-2018. See LICENSE file.
 const fs = require('fs');
+const mime = require('mime-types');
 const path = require('path');
 const Storage = require('@google-cloud/storage');
 
@@ -70,12 +71,6 @@ class DeployGoogleCloudStorage {
       return prev;
     }, []);
 
-    // Upload options
-    const options = {
-      gzip: true,
-      metadata: { cacheControl: 'public, max-age=31536000' }
-    };
-
     const storage = Storage();
     const storageBucket = storage.bucket(this.bucketName);
 
@@ -87,6 +82,27 @@ class DeployGoogleCloudStorage {
       })
       .then(([bucket]) => {
         const promises = destinations.map(([source, destination]) => {
+          const ext = path.extname(source);
+          console.log(ext);
+
+          const contentType = mime.contentType(ext);
+
+          // Upload options
+          const options = {
+            gzip: [
+              'text/plain',
+              'text/css',
+              'application/json',
+              'application/x-javascript',
+              'application/javascript',
+              'text/xml',
+              'application/xml',
+              'application/xml+rss',
+              'text/javascript'
+            ].includes(contentType.split(';')[0]),
+            metadata: { cacheControl: 'public, max-age=31536000', contentType }
+          };
+
           const file = bucket.file(destination);
           return file.exists().then((data) => {
             if (data[0]) return file;

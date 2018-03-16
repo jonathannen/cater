@@ -62,7 +62,7 @@ class Favicon {
 
     // Microsoft Tile Meta-Data
     const browserConfig = this.mapping['browserconfig.xml'];
-    if (browserConfig) {
+    if (browserConfig && this.metadata['browserconfig.xml']) {
       this.serverContext.addMeta({ name: 'msapplication-config', content: browserConfig });
 
       const match = this.metadata['browserconfig.xml'].match(/<TileColor>([^<]*)<\/TileColor>/);

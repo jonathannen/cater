@@ -31,6 +31,7 @@ class BuildCater extends RuntimeCater {
     this.hotModuleReplacement = config.hotModuleReplacement;
     this.startOnError = config.startOnError;
     this.universalNames = config.universalNames;
+    this.useLogging = config.useLogging;
 
     // EVENT: I know we're already configuring, but this is for the benefit
     // of the plugins - which have only just been set up.
